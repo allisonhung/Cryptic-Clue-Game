@@ -1,56 +1,66 @@
 // Learn more at developers.reddit.com/docs
-import { Devvit, useState } from '@devvit/public-api';
+import { Devvit, } from '@devvit/public-api';
+import GiveClue from './components/GiveClue.js';
+import HowToPlay from './components/HowToPlay.js';
 
 Devvit.configure({
   redditAPI: true,
 });
 
-// Add a menu item to the subreddit menu for instantiating the new experience post
-Devvit.addMenuItem({
-  label: 'Add my post',
-  location: 'subreddit',
-  forUserType: 'moderator',
-  onPress: async (_event, context) => {
-    const { reddit, ui } = context;
-    const subreddit = await reddit.getCurrentSubreddit();
-    await reddit.submitPost({
-      title: 'My devvit post',
-      subredditName: subreddit.name,
-      // The preview appears while the post loads
-      preview: (
-        <vstack height="100%" width="100%" alignment="middle center">
-          <text size="large">Loading ...</text>
-        </vstack>
-      ),
-    });
-    ui.showToast({ text: 'Created post!' });
-  },
-});
+type PageProps = {
+  setPage: (page: string) => void;
+}
 
-// Add a post type definition
 Devvit.addCustomPostType({
-  name: 'Experience Post',
-  height: 'regular',
-  render: (_context) => {
-    const [counter, setCounter] = useState(0);
-
+  name: 'Cryptic Clue Game',
+  render: context => {
+    const {useState} = context;
+    const [page, setPage] = useState('Home');
+    let currentPage;
+    
+    switch (page) {
+      case 'Home':
+        currentPage = <Home setPage={setPage} />;
+        break;
+      case 'GiveClue':
+        currentPage = <GiveClue setPage={setPage} />;
+        break;
+      case 'HowToPlay':
+        currentPage = <HowToPlay setPage={setPage} />;
+        break;
+      default:
+        currentPage = <Home setPage={setPage} />;
+    }
     return (
-      <vstack height="100%" width="100%" gap="medium" alignment="center middle">
-        <image
-          url="logo.png"
-          description="logo"
-          imageHeight={256}
-          imageWidth={256}
-          height="48px"
-          width="48px"
-        />
-        <text size="large">{`Click counter: ${counter}`}</text>
-        <button appearance="primary" onPress={() => setCounter((counter) => counter + 1)}>
-          Click me!
-        </button>
-      </vstack>
+      <blocks>
+        {currentPage}
+      </blocks>
     );
   },
 });
+
+const Home = ({setPage}: PageProps) => (
+  <zstack height="100%" width="100%" alignment="center middle">
+    //background
+    <image
+      url="wood_background.jpg"
+      description="wooden background"
+      imageHeight={1024}
+      imageWidth={2048}
+      height="100%"
+      width="100%"
+      resizeMode="cover" />
+    <vstack alignment="center middle" gap="small">
+      <text size='large' weight='bold'>
+      Cryptic Clue Game </text>
+      <button onPress={() => setPage('GiveClue')}>
+        Give a Clue
+      </button>
+      <button onPress={() => setPage('HowToPlay')}>
+        How to Play
+      </button>
+    </vstack>
+  </zstack>
+)
 
 export default Devvit;
