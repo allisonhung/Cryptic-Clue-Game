@@ -53,7 +53,9 @@ const Home = ({setPage}: PageProps) => (
     <vstack alignment="center middle" gap="small">
       <text size='large' weight='bold'>
       Cryptic Clue Game </text>
-      <button onPress={() => setPage('GiveClue')}>
+      <button onPress={() => {
+        setPage('GiveClue');
+      }}>
         Give a Clue
       </button>
       <button onPress={() => setPage('HowToPlay')}>
