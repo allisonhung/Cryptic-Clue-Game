@@ -22,7 +22,7 @@ const HowToPlay = ({ setPage }: PageProps) => (
             alignment="middle center"
             gap="medium"
         >
-            <text size='large' weight='bold'>How to Play</text>
+            <text size='xxlarge' color="white" outline="thick">How to Play!</text>
             <vstack> 
                 <spacer size="small" /> 
                 <text color="white" outline="thin"> The clue-giver provides a hint along with the number of cards it applies to. </text>

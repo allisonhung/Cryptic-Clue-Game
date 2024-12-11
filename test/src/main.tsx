@@ -49,8 +49,8 @@ const Home = ({setPage}: PageProps) => (
       height="100%"
       width="100%"
       resizeMode="cover" />
-    <vstack alignment="center middle" gap="small">
-      <text size='large' weight='bold'>
+    <vstack alignment="center middle" gap="medium">
+      <text size='xxlarge' outline="thin" weight='bold'>
       Cryptic Clue Game </text>
       <button onPress={() => {
         setPage('GiveClue');
