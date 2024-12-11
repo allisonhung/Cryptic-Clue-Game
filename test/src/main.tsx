@@ -15,7 +15,7 @@ Devvit.addCustomPostType({
   name: 'Cryptic Clue Game',
   render: context => {
     const {useState} = context;
-    const [page, setPage] = useState('Home');
+    const [page, setPage] = useState('Home');    
     let currentPage;
     
     switch (page) {

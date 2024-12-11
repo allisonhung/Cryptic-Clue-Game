@@ -50,25 +50,34 @@ const GiveClue = ({ setPage }: PageProps) => {
     const [colors, setColors] = useState<string[]>([]);
     const [dataFetched, setDataFetched] = useState(false);
 
+    const [counter, setCounter] = useState(1000);  
+
+    const updateInterval = useInterval(() => {  
+    setCounter((counter) => counter - 1);  
+    }, 1000);  
+
+    updateInterval.start();
+
     const fetchWordsAndColors = async () => {
         console.log("Fetching words...");
         const allWords = await loadWords();
-        console.log("All words:", allWords);
+
         const randomWords = getRandomWords(allWords, 25);
-        console.log("Random words:", randomWords);
-        setWords(randomWords);
         const assignedColors = assignColors(25);
-        console.log("Assigned colors:", assignedColors);
+        setWords(randomWords);
         setColors(assignedColors);
+
+        console.log("Random words:", randomWords);
+        console.log("Assigned colors:", assignedColors);
+
         setDataFetched(true);
     };
     
     if (!dataFetched) {
+        console.log("Triggering fetchWordsAndColors on re-entry.");
         fetchWordsAndColors();
     };
 
-    console.log("Words state:", words);
-    console.log("Colors state:", colors);
     return (
         <vstack
             width="100%"
@@ -78,7 +87,10 @@ const GiveClue = ({ setPage }: PageProps) => {
             backgroundColor="lightblue">
             <text size="xxlarge">Clue giving page</text>
             <hstack width="100%" height="2px" />
+            console.log("Words:", words);
+            console.log("Colors state:", colors);
             {words.length === 25 && colors.length === 25 ? (
+                //console.log("Rendering board..."),
                 <Board words={words} colors={colors} />
             ) : (
                 <text>Loading...</text>
