@@ -1,5 +1,5 @@
 // Learn more at developers.reddit.com/docs
-import { Devvit, } from '@devvit/public-api';
+import { Devvit, useState, } from '@devvit/public-api';
 import GiveClue from './components/GiveClue.js';
 import HowToPlay from './components/HowToPlay.js';
 
@@ -13,8 +13,7 @@ type PageProps = {
 
 Devvit.addCustomPostType({
   name: 'Cryptic Clue Game',
-  render: context => {
-    const {useState} = context;
+  render: () => {
     const [page, setPage] = useState('Home');    
     let currentPage;
     

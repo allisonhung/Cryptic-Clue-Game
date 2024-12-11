@@ -1,4 +1,4 @@
-import { Devvit, useState, useInterval} from "@devvit/public-api";
+import { Devvit, useState, useInterval, useForm} from "@devvit/public-api";
 import {loadWords, getRandomWords, assignColors} from "../util/loadWords.js";
 
 type PageProps = {
@@ -23,8 +23,8 @@ export const Board = ({words, colors}: BoardProps) => {
                     border={"thick"}
                     alignment={"middle center"}
                     cornerRadius={"small"}
-                    width="40px"
-                    height="20px"
+                    width="80px"
+                    height="30px"
                     backgroundColor={colors[wordIndex]}
                 >
                     <text>{words[wordIndex]}</text>
@@ -33,7 +33,7 @@ export const Board = ({words, colors}: BoardProps) => {
             wordIndex++;
         }
         rows.push(
-            <hstack key={row.toString()} gap="large"> 
+            <hstack key={row.toString()} gap="small"> 
                 {cells}
             </hstack>
         );
@@ -78,26 +78,33 @@ const GiveClue = ({ setPage }: PageProps) => {
         fetchWordsAndColors();
     };
 
+
     return (
         <vstack
             width="100%"
             height="100%"
             alignment="middle center"
-            gap="large"
+            gap="small"
             backgroundColor="lightblue">
-            <text size="xxlarge">Clue giving page</text>
-            <hstack width="100%" height="2px" />
-            console.log("Words:", words);
-            console.log("Colors state:", colors);
-            {words.length === 25 && colors.length === 25 ? (
-                //console.log("Rendering board..."),
-                <Board words={words} colors={colors} />
-            ) : (
-                <text>Loading...</text>
-            )}
-            <button onPress={() => {
-                setPage('Home');
-                setDataFetched(false);
+
+            <text size="xlarge">Clue giving page</text>
+            <hstack>
+                <vstack>
+                    <text>clue goes here</text>
+                    <button>Change name</button>
+                </vstack>
+                console.log("Words:", words);
+                console.log("Colors state:", colors);
+                {words.length === 25 && colors.length === 25 ? (
+                    //console.log("Rendering board..."),
+                    <Board words={words} colors={colors} />
+                ) : (
+                    <text>Loading...</text>
+                )}
+            </hstack>
+                <button onPress={() => {
+                    setPage('Home');
+                    setDataFetched(false);
             }}>Back to menu</button>
         </vstack>
     );
