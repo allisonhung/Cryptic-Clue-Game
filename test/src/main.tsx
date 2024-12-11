@@ -1,6 +1,5 @@
-// Learn more at developers.reddit.com/docs
 import { Devvit, useState, } from '@devvit/public-api';
-import GiveClue from './components/GiveClue.js';
+import {CluePages} from './components/CluePages.js';
 import HowToPlay from './components/HowToPlay.js';
 
 Devvit.configure({
@@ -21,8 +20,8 @@ Devvit.addCustomPostType({
       case 'Home':
         currentPage = <Home setPage={setPage} />;
         break;
-      case 'GiveClue':
-        currentPage = <GiveClue setPage={setPage} />;
+      case 'CluePages':
+        currentPage = <CluePages setPage={setPage} />;
         break;
       case 'HowToPlay':
         currentPage = <HowToPlay setPage={setPage} />;
@@ -53,7 +52,7 @@ const Home = ({setPage}: PageProps) => (
       <text size='xxlarge' outline="thin" weight='bold'>
       Cryptic Clue Game </text>
       <button onPress={() => {
-        setPage('GiveClue');
+        setPage('CluePages');
       }}>
         Give a Clue
       </button>

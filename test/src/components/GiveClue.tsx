@@ -1,16 +1,26 @@
+// import statements
+// Need Context and useForm for fill form
+// Need useInterval to force re-render
+import type { Context } from '@devvit/public-api';
 import { Devvit, useState, useInterval, useForm} from "@devvit/public-api";
 import {loadWords, getRandomWords, assignColors} from "../util/loadWords.js";
 
-type PageProps = {
-  setPage: (page: string) => void;
-};
+// I think we'll need this for creating a new post but idk yet
+Devvit.configure({
+    redditAPI: true,
+  });
 
+// For page navigation
+interface GiveClueProps{
+    setPage: (page: string) => void;
+    onNext: (clue: string, wordcount: number) => void;
+}
+
+// To set up the board of 5 by 5
 type BoardProps={
     words: string[];
     colors: string[];
 };
-
-// create a board of 5 by 5 
 export const Board = ({words, colors}: BoardProps) => {
     const rows: JSX.Element[] = [];
     let wordIndex=0;
@@ -45,19 +55,12 @@ export const Board = ({words, colors}: BoardProps) => {
     );
 };
 
-const GiveClue = ({ setPage }: PageProps) => {
+// Main function
+export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element => {
+    // Generate and display board
     const [words, setWords] = useState<string[]>([]);
     const [colors, setColors] = useState<string[]>([]);
     const [dataFetched, setDataFetched] = useState(false);
-
-    const [counter, setCounter] = useState(1000);  
-
-    const updateInterval = useInterval(() => {  
-    setCounter((counter) => counter - 1);  
-    }, 1000);  
-
-    updateInterval.start();
-
     const fetchWordsAndColors = async () => {
         console.log("Fetching words...");
         const allWords = await loadWords();
@@ -72,13 +75,43 @@ const GiveClue = ({ setPage }: PageProps) => {
 
         setDataFetched(true);
     };
-    
     if (!dataFetched) {
         console.log("Triggering fetchWordsAndColors on re-entry.");
         fetchWordsAndColors();
     };
 
+    // Clue giving
+    const [clue, setClue] = useState<string>("");
+    const [wordCount, setWordCount] = useState<number>(0);
+    const clueForm = useForm(
+        {
+            fields: [
+                {
+                    name: "clue",
+                    label: "Enter your clue",
+                    type: "string",
+                },
+                {
+                    name: "wordCount",
+                    label: "Number of words",
+                    type: "number",
+                },
+            ],
+        },
+        (values) => {
+            setClue(values.clue as string);
+            setWordCount(values.wordCount as number);
+        }
+    );
 
+    // Regularly force re-render every second
+    const [counter, setCounter] = useState(1000);  
+    const updateInterval = useInterval(() => {  
+    setCounter((counter) => counter - 1);  
+    }, 1000);  
+    updateInterval.start();
+
+    // main return function
     return (
         <vstack
             width="100%"
@@ -90,8 +123,8 @@ const GiveClue = ({ setPage }: PageProps) => {
             <text size="xlarge">Clue giving page</text>
             <hstack>
                 <vstack>
-                    <text>clue goes here</text>
-                    <button>Change name</button>
+                    <text>{clue ? `${clue}: ${wordCount} words` : "No clue given yet"}</text>
+                    <button onPress={() => context.ui.showForm(clueForm)}>Give Clue</button>
                 </vstack>
                 console.log("Words:", words);
                 console.log("Colors state:", colors);
@@ -103,12 +136,21 @@ const GiveClue = ({ setPage }: PageProps) => {
                 )}
             </hstack>
                 <button onPress={() => {
-                    setPage('Home');
+                    props.setPage('Home');
                     setDataFetched(false);
-            }}>Back to menu</button>
+                }}>Back to menu</button>
+                <button 
+                    onPress={() => {
+                    console.log(clue);
+                    console.log(wordCount);
+                    console.log("onNext type:", typeof props.onNext);
+                    props.onNext(clue, wordCount);
+                    }}
+                    disabled={!clue || wordCount===0}
+                    >Submit</button>
         </vstack>
     );
 };
 
-
+// Export page
 export default GiveClue;

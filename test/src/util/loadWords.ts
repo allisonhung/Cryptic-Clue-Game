@@ -1,7 +1,10 @@
+// Functions to extract words from a json file and randomly generate colors
+// words.json is just a list of strings! Taken from the Pixelary docs.
+
 import Words from '../data/words.json';
 
 export const loadWords = async (): Promise<string[]> => {
-    return Words; // Assuming `Words` is an array of strings.
+    return Words; 
 };
   
 export const getRandomWords = (words: string[], count: number): string[] => {
