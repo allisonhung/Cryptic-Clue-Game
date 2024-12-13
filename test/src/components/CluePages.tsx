@@ -7,7 +7,6 @@ import {GiveClue} from './GiveClue.js';
 interface CluePagesProps {
     setPage: (page: string) => void;
     context: Context;
-    onCancel: () => void;
 }
 
 export const CluePages = (props: CluePagesProps): JSX.Element => {
@@ -26,7 +25,6 @@ export const CluePages = (props: CluePagesProps): JSX.Element => {
         ConfirmClue: <ConfirmClue 
         {...props}
         clue={clue} wordcount={wordcount} 
-        onCancel={() => {props.onCancel}}
         />};
 
     return (

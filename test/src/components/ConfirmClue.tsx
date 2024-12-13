@@ -4,11 +4,10 @@ import type { Context } from "@devvit/public-api";
 interface ConfirmClueProps {
     clue: string;
     wordcount: number;
-    onCancel: () => void;
     setPage: (page: string) => void;
   }
 
-export const ConfirmClue = ({clue, wordcount, onCancel, setPage}: ConfirmClueProps, context: Context): JSX.Element => {
+export const ConfirmClue = ({clue, wordcount, setPage}: ConfirmClueProps, context: Context): JSX.Element => {
     
     async function postClue() {
         context.ui.showToast("Clue posted!");
