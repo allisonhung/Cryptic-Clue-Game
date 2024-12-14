@@ -1,6 +1,7 @@
 import { Devvit, useAsync} from "@devvit/public-api";
 import type { Context } from "@devvit/public-api";
 import {PostData} from './util/PostData.js';
+import { Board } from "./util/GenerateBoard.js";
 
 interface GuessmainProps {
 
@@ -44,8 +45,7 @@ export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
                     <text>Clue: {clue}</text>
                     <text>Word Count: {wordCount}</text>
                     <text>Post ID: {postId}</text>
-                    <text>Words: {words.join(', ')}</text>
-                    <text>Colors: {colors.join(', ')}</text>
+                    <Board words={words} colors={colors} />
                 </vstack>
             </blocks>
         );
