@@ -38,12 +38,11 @@ const Router: Devvit.CustomPostComponent = (context: Context) => {
   if (error) {
     return <text>Error: {error.message}</text>;
   }
-  console.log("Final isPinned value:", isPinned);
-  return isPinned ? <Cluemain {...context} /> : <Guessmain {...context} />;
+  
+  return isPinned ? <Cluemain {...context} /> : <Guessmain {...context}/>;
 }
 
 
-//create a router function so that it will either lead to Cluemain or Guessmain, depending on the post type. Then, the below should say render: Router
 Devvit.addCustomPostType({
   name: 'Cryptic Clue Game',
   description: 'based on Codenames',

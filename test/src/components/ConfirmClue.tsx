@@ -30,9 +30,9 @@ export const ConfirmClue = ({clue, wordcount, setPage}: ConfirmClueProps, contex
         });
         
         postdata.submitClue({
+            postId: post.id,
             clue: clue,
             wordCount: wordcount,
-            postId: post.id,
         })
         context.ui.showToast("Clue posted!");
         context.ui.navigateTo(post);
