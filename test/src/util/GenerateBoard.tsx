@@ -6,18 +6,35 @@ type BoardProps={
     isGuessMode?: boolean;
     onCellClick?: (index: number) => void;
     selectedCells?: number[];
+    wordCount?: number;
 };
 
 // Board component
-export const Board = ({words, colors, isGuessMode = false, onCellClick, selectedCells=[]}: BoardProps) => {
+export const Board = ({
+    words, 
+    colors, 
+    isGuessMode = false, 
+    onCellClick, 
+    selectedCells=[],
+    wordCount=0
+}: BoardProps) => {
     const [lastClickTime, setLastClickTime] = useState(0);
     const DEBOUNCE_TIME = 100; // milliseconds
 
     const handleCellClick = (index: number) => {
         const now = Date.now();
         if (now - lastClickTime >= DEBOUNCE_TIME) {
-            onCellClick?.(index);
-            setLastClickTime(now);
+            // If cell is already selected, allow deselection
+            if (selectedCells.includes(index)) {
+                onCellClick?.(index);
+                setLastClickTime(now);
+                return;
+            }
+            // If not selected, only allow selection if under wordCount limit
+            if (selectedCells.length < wordCount) {
+                onCellClick?.(index);
+                setLastClickTime(now);
+            }
         }
     };
 

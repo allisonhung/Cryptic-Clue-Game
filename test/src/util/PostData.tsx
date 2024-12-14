@@ -15,9 +15,9 @@ export class PostData {
     this.scheduler = context.scheduler;
     }
 
-  private getKey(postId: string){
-    return `post:${postId}`;
-  }
+    private getKey(postId: string){
+        return `post:${postId}`;
+    }
 
   async submitClue(data: {
     postId: string;

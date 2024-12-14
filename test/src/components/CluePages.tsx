@@ -31,8 +31,9 @@ export const CluePages = (props: CluePagesProps): JSX.Element => {
         />};
 
     return (
-        <vstack width="100%" height="100%">
+        <zstack width="100%" height="100%">
+            <image url="wood_background.jpg" description="wooden background" imageHeight={1024} imageWidth={2048} height="100%" width="100%" resizeMode="cover" />
             {steps[currentStep] || <text>Error: Step not found</text>}
-        </vstack>
+        </zstack>
     );
 };

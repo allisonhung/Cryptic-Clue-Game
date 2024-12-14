@@ -72,7 +72,8 @@ export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
                     colors={colors}
                     isGuessMode={true}
                     onCellClick={handleCellClick}
-                    selectedCells={selectedCells} />
+                    selectedCells={selectedCells}
+                    wordCount={wordCount} />
                 </vstack>
                 </zstack>
             </blocks>

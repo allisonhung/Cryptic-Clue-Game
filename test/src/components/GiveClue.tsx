@@ -81,7 +81,7 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
             height="100%"
             alignment="middle center"
             gap="small"
-            backgroundColor="lightblue">
+            >
 
             <text size="xlarge">Clue giving page</text>
             <hstack>
@@ -104,8 +104,8 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
                 }}>Back to menu</button>
                 <button 
                     onPress={() => {
-                    console.log("words:", words);
-                    console.log("colors:", colors);
+                    //console.log("words:", words);
+                    //console.log("colors:", colors);
                     props.onNext(clue, wordCount, words, colors);
                     }}
                     disabled={!clue || wordCount===0}
