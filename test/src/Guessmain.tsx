@@ -37,20 +37,34 @@ export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
     }
 
     const [selectedCells, setSelectedCells] = useState<number[]>([]);
-    const handleCellClick = (index: number) => {
-        setSelectedCells(prev => {
-            const newSelection = prev.includes(index) 
-            ? prev.filter(i => i !== index) 
-            : [...prev, index];
-            console.log('cell clicked', index);
-            console.log('updated cells', newSelection);
-            return newSelection;
-    });
-    };
+    
     
 
     if (data) {
         const [clue, wordCount, postId, words, colors, correctCells] = data;
+        const [feedback, setFeedback] = useState<string>('');
+
+        const handleCellClick = (index: number) => {
+            setSelectedCells(prev => {
+                if (prev.includes(index)) {
+                    const newSelection = prev.filter(i => i !== index);
+                    console.log('cell clicked', index);
+                    console.log('updated cells', newSelection);
+                    return newSelection;
+                }
+                else if (prev.length < wordCount) {
+                    const newSelection = [...prev, index];
+                    const isCorrect = correctCells.includes(index);
+                    setFeedback(isCorrect ? 'Correct!' : 'Incorrect');
+                    console.log('cell clicked', index);
+                    console.log('updated cells', newSelection);
+                    return newSelection;
+                }
+                
+                return prev;
+        });
+        };
+
         console.log("correctCells", correctCells);
         const onGuessHandler = (): void => {
             // Sort both arrays for comparison
@@ -85,6 +99,7 @@ export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
                     <vstack height="100%" width="100%" alignment="center middle">
                         <hstack>
                             <vstack>
+                            <text>{feedback}</text>
                             <text>Clue: {clue}</text>
                             <text>Word Count: {wordCount}</text>
                             </vstack>
@@ -94,12 +109,12 @@ export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
                             </vstack>
                         </hstack>
                         <Board 
-                        words={words} 
-                        colors={colors}
-                        isGuessMode={true}
-                        onCellClick={handleCellClick}
-                        selectedCells={selectedCells}
-                        wordCount={wordCount} />
+                            words={words} 
+                            colors={colors}
+                            isGuessMode={true}
+                            onCellClick={handleCellClick}
+                            selectedCells={selectedCells}
+                            wordCount={wordCount} />
                     </vstack>
                 </zstack>
             </blocks>
