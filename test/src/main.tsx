@@ -12,12 +12,12 @@ Devvit.configure({
 
 async function checkIfPostIsPinned(postId: string, context: Context) {
   const post = await context.reddit.getPostById(postId);
-  console.log("post", post);
+  //console.log("post", post);
   return post.isStickied();
 }
 
 const Router: Devvit.CustomPostComponent = (context: Context) => {
-  console.log("Router context", context);
+  //console.log("Router context", context);
   // Add null check for postId
   if (!context.postId) {
     return <text>Error: No post ID found</text>;
@@ -38,7 +38,6 @@ const Router: Devvit.CustomPostComponent = (context: Context) => {
   if (error) {
     return <text>Error: {error.message}</text>;
   }
-  
   return isPinned ? <Cluemain {...context} /> : <Guessmain {...context}/>;
 }
 

@@ -1,4 +1,4 @@
-import { Devvit, useAsync} from "@devvit/public-api";
+import { Devvit, useAsync, useState} from "@devvit/public-api";
 import type { Context } from "@devvit/public-api";
 import {PostData} from './util/PostData.js';
 import { Board } from "./util/GenerateBoard.js";
@@ -36,6 +36,19 @@ export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
         );
     }
 
+    const [selectedCells, setSelectedCells] = useState<number[]>([]);
+    const handleCellClick = (index: number) => {
+        setSelectedCells(prev => {
+            const newSelection = prev.includes(index) 
+            ? prev.filter(i => i !== index) 
+            : [...prev, index];
+            console.log('cell clicked', index);
+            console.log('updated cells', newSelection);
+            return newSelection;
+    });
+    };
+    
+
     if (data) {
         const [clue, wordCount, postId, words, colors] = data;
         return (
@@ -45,7 +58,11 @@ export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
                     <text>Clue: {clue}</text>
                     <text>Word Count: {wordCount}</text>
                     <text>Post ID: {postId}</text>
-                    <Board words={words} colors={colors} />
+                    <Board 
+                    words={words} 
+                    colors={colors}
+                    isGuessMode={true}
+                    onCellClick={handleCellClick} />
                 </vstack>
             </blocks>
         );

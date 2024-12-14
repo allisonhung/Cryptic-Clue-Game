@@ -28,7 +28,7 @@ export const ConfirmClue = ({clue, wordcount, words, colors, setPage}: ConfirmCl
                   height="100%"
                   width="100%"
                   resizeMode="cover" />
-                <text>{clue}</text>
+                <text>Loading...</text>
               </zstack>
             ),
         });
