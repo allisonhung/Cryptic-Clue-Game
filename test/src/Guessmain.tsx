@@ -53,6 +53,15 @@ export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
         const [clue, wordCount, postId, words, colors] = data;
         return (
             <blocks>
+                <zstack height="100%" width="100%" alignment="center middle">
+                    <image
+                    url="wood_background.jpg"
+                    description="wooden background"
+                    imageHeight={1024}
+                    imageWidth={2048}
+                    height="100%"
+                    width="100%"
+                    resizeMode="cover" />
                 <vstack height="100%" width="100%" alignment="center middle">
                     <text>Guess the Words!</text>
                     <text>Clue: {clue}</text>
@@ -62,8 +71,10 @@ export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
                     words={words} 
                     colors={colors}
                     isGuessMode={true}
-                    onCellClick={handleCellClick} />
+                    onCellClick={handleCellClick}
+                    selectedCells={selectedCells} />
                 </vstack>
+                </zstack>
             </blocks>
         );
     }
