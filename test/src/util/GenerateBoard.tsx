@@ -23,10 +23,15 @@ export const Board = ({words, colors, isGuessMode = false, onCellClick}: BoardPr
                     cornerRadius={"small"}
                     width="80px"
                     height="30px"
-                    backgroundColor={colors[wordIndex]}
+                    backgroundColor={isGuessMode ? "white" : colors[wordIndex]}
                     onPress={isGuessMode ? () => onCellClick?.(currentIndex) : undefined}
                 >
-                    <text>{words[wordIndex]}</text>
+                    <text 
+                    color="black" 
+                    outline="thin"
+                    >
+                        {words[wordIndex]}
+                    </text>
                 </vstack>
             );
             wordIndex++;
