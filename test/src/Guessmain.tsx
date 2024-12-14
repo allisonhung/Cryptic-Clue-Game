@@ -50,16 +50,12 @@ export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
     
 
     if (data) {
-        const [clue, wordCount, postId, words, colors] = data;
+        const [clue, wordCount, postId, words, colors, correctCells] = data;
+        console.log("correctCells", correctCells);
         const onGuessHandler = (): void => {
-            // Find indices of blue cells
-            const blueCellIndices = colors
-                .map((color, index) => color === 'AlienBlue-500' ? index : -1)
-                .filter(index => index !== -1);
-            
             // Sort both arrays for comparison
             const sortedSelected = [...selectedCells].sort();
-            const sortedBlue = [...blueCellIndices].sort();
+            const sortedBlue = [...correctCells].sort();
             console.log("sortedSelected", sortedSelected);
             console.log("sortedBlue", sortedBlue);
             

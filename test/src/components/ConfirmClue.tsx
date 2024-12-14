@@ -15,6 +15,7 @@ export const ConfirmClue = ({clue, wordcount, words, colors, setPage, correctCel
     const postdata = new PostData(context);
     //console.log("words:", words);
     //console.log("colors:", colors);
+    console.log("correctCells", correctCells);
     async function postClue() {
         const post = await context.reddit.submitPost({
             title: 'Guess the words!',
@@ -40,6 +41,7 @@ export const ConfirmClue = ({clue, wordcount, words, colors, setPage, correctCel
             wordCount: wordcount,
             words: words,
             colors: colors,
+            correctCells: correctCells,
         })
 
         //console.log("words:", words);

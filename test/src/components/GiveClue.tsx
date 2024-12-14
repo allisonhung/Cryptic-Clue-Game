@@ -131,10 +131,12 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
                     props.setPage('Home');
                     setDataFetched(false);
                 }}>Back to menu</button>
+                <spacer width="10px"/>
                 <button 
                     onPress={() => {
                     //console.log("words:", words);
                     //console.log("colors:", colors);
+                    console.log("Correct cells:", correctCells);
                     props.onNext(clue, wordCount, words, colors, correctCells);
                     }}
                     disabled={!clue || wordCount===0}
