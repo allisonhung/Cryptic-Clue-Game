@@ -23,6 +23,7 @@ export const Board = ({
 
     const handleCellClick = (index: number) => {
         const now = Date.now();
+        console.log(wordCount)
         if (now - lastClickTime >= DEBOUNCE_TIME) {
             // If cell is already selected, allow deselection
             if (selectedCells.includes(index)) {
@@ -31,7 +32,7 @@ export const Board = ({
                 return;
             }
             // If not selected, only allow selection if under wordCount limit
-            if (selectedCells.length < wordCount) {
+            if (wordCount === 0 || selectedCells.length < wordCount) {
                 onCellClick?.(index);
                 setLastClickTime(now);
             }
@@ -56,7 +57,7 @@ export const Board = ({
                     width="80px"
                     height="30px"
                     backgroundColor={isGuessMode ? "white" : colors[wordIndex]}
-                    onPress={isGuessMode ? () => handleCellClick(currentIndex) : undefined}
+                    onPress={() => handleCellClick(currentIndex)}
                 >
                     <text 
                     color="white" 

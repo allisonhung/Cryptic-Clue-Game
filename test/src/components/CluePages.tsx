@@ -14,20 +14,26 @@ export const CluePages = (props: CluePagesProps): JSX.Element => {
     const [wordcount, setWordcount] = useState<number>(0);
     const [words, setWords] = useState<string[]>([]);
     const [colors, setColors] = useState<string[]>([]);
+    const [correctCells, setCorrectCells] = useState<number[]>([]);
 
     const steps: Record<string, JSX.Element> = {
         GiveClue: <GiveClue 
             {...props}
-            onNext = {(clue, wordcount, words, colors) => {
+            onNext = {(clue, wordcount, words, colors, ) => {
                 setClue(clue);
                 setWordcount(wordcount);
                 setWords(words);
                 setColors(colors);
                 setCurrentStep("ConfirmClue");
+                setCorrectCells(correctCells);
         }} />,
         ConfirmClue: <ConfirmClue 
         {...props}
-        clue={clue} wordcount={wordcount} words = {words} colors = {colors}
+        clue={clue} 
+        wordcount={wordcount} 
+        words = {words} 
+        colors = {colors}
+        correctCells = {correctCells}
         />};
 
     return (

@@ -51,6 +51,30 @@ export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
 
     if (data) {
         const [clue, wordCount, postId, words, colors] = data;
+        const onGuessHandler = (): void => {
+            // Find indices of blue cells
+            const blueCellIndices = colors
+                .map((color, index) => color === 'AlienBlue-500' ? index : -1)
+                .filter(index => index !== -1);
+            
+            // Sort both arrays for comparison
+            const sortedSelected = [...selectedCells].sort();
+            const sortedBlue = [...blueCellIndices].sort();
+            console.log("sortedSelected", sortedSelected);
+            console.log("sortedBlue", sortedBlue);
+            
+            // Compare lengths first
+            if (sortedSelected.length !== sortedBlue.length) {
+                console.log('Incorrect guess');
+                return;
+            }
+            
+            // Compare each index
+            if (sortedSelected.every((value, index) => value === sortedBlue[index])){
+                console.log('Correct guess');
+                return;
+            }
+        };
         return (
             <blocks>
                 <zstack height="100%" width="100%" alignment="center middle">
@@ -62,23 +86,36 @@ export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
                     height="100%"
                     width="100%"
                     resizeMode="cover" />
-                <vstack height="100%" width="100%" alignment="center middle">
-                    <text>Guess the Words!</text>
-                    <text>Clue: {clue}</text>
-                    <text>Word Count: {wordCount}</text>
-                    <text>Post ID: {postId}</text>
-                    <Board 
-                    words={words} 
-                    colors={colors}
-                    isGuessMode={true}
-                    onCellClick={handleCellClick}
-                    selectedCells={selectedCells}
-                    wordCount={wordCount} />
-                </vstack>
+                    <vstack height="100%" width="100%" alignment="center middle">
+                        <hstack>
+                            <vstack>
+                            <text>Clue: {clue}</text>
+                            <text>Word Count: {wordCount}</text>
+                            </vstack>
+                            <vstack>
+                                <text>Words selected: {selectedCells.length}</text>
+                                <button onPress={onGuessHandler}>Submit</button>
+                            </vstack>
+                        </hstack>
+                        <Board 
+                        words={words} 
+                        colors={colors}
+                        isGuessMode={true}
+                        onCellClick={handleCellClick}
+                        selectedCells={selectedCells}
+                        wordCount={wordCount} />
+                    </vstack>
                 </zstack>
             </blocks>
         );
     }
+
+    //add onGuessHandler function that compares selectedCells to correct cells
+    //if correct, navigate to next page and give user one point
+    // SOMETHING LIKE THIS:
+    
+    
+    
 
     return (
         <blocks>

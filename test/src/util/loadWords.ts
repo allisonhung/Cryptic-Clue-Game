@@ -28,8 +28,8 @@ export const assignColors = (count: number): string[] => {
         }
     }
 
-    redIndices.forEach(index => colors[index] = 'red');
-    blueIndices.forEach(index => colors[index] = 'blue');
+    redIndices.forEach(index => colors[index] = 'PureGray-500');
+    blueIndices.forEach(index => colors[index] = 'AlienBlue-500');
 
     return colors;
 };

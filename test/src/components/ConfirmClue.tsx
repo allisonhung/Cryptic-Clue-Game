@@ -8,12 +8,13 @@ interface ConfirmClueProps {
     words: string[];
     colors: string[];
     setPage: (page: string) => void;
+    correctCells: number[];
   }
 
-export const ConfirmClue = ({clue, wordcount, words, colors, setPage}: ConfirmClueProps, context: Context): JSX.Element => {
+export const ConfirmClue = ({clue, wordcount, words, colors, setPage, correctCells}: ConfirmClueProps, context: Context): JSX.Element => {
     const postdata = new PostData(context);
-    console.log("words:", words);
-    console.log("colors:", colors);
+    //console.log("words:", words);
+    //console.log("colors:", colors);
     async function postClue() {
         const post = await context.reddit.submitPost({
             title: 'Guess the words!',
@@ -41,8 +42,8 @@ export const ConfirmClue = ({clue, wordcount, words, colors, setPage}: ConfirmCl
             colors: colors,
         })
 
-        console.log("words:", words);
-        console.log("colors:", colors);
+        //console.log("words:", words);
+        //console.log("colors:", colors);
         context.ui.showToast("Clue posted!");
         context.ui.navigateTo(post);
     }
