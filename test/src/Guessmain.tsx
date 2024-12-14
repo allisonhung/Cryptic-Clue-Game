@@ -36,7 +36,7 @@ export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
     }
 
     if (data) {
-        const [clue, wordCount, postId] = data;
+        const [clue, wordCount, postId, words, colors] = data;
         return (
             <blocks>
                 <vstack height="100%" width="100%" alignment="center middle">
@@ -44,6 +44,8 @@ export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
                     <text>Clue: {clue}</text>
                     <text>Word Count: {wordCount}</text>
                     <text>Post ID: {postId}</text>
+                    <text>Words: {words.join(', ')}</text>
+                    <text>Colors: {colors.join(', ')}</text>
                 </vstack>
             </blocks>
         );

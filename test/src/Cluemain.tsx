@@ -20,7 +20,7 @@ export const Cluemain: Devvit.CustomPostComponent = (context: Context) => {
         currentPage = <Home setPage={setPage} />;
         break;
       case 'CluePages':
-        currentPage = <CluePages setPage={setPage} context= {context} />;
+        currentPage = <CluePages setPage={setPage} />;
         break;
       case 'HowToPlay':
         currentPage = <HowToPlay setPage={setPage} />;

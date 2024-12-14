@@ -6,25 +6,28 @@ import {GiveClue} from './GiveClue.js';
 
 interface CluePagesProps {
     setPage: (page: string) => void;
-    context: Context;
 }
 
 export const CluePages = (props: CluePagesProps): JSX.Element => {
     const [currentStep, setCurrentStep] = useState<string>("GiveClue");
     const [clue, setClue] = useState<string>("");
     const [wordcount, setWordcount] = useState<number>(0);
+    const [words, setWords] = useState<string[]>([]);
+    const [colors, setColors] = useState<string[]>([]);
 
     const steps: Record<string, JSX.Element> = {
         GiveClue: <GiveClue 
             {...props}
-            onNext = {(clue, wordcount) => {
+            onNext = {(clue, wordcount, words, colors) => {
                 setClue(clue);
                 setWordcount(wordcount);
+                setWords(words);
+                setColors(colors);
                 setCurrentStep("ConfirmClue");
         }} />,
         ConfirmClue: <ConfirmClue 
         {...props}
-        clue={clue} wordcount={wordcount} 
+        clue={clue} wordcount={wordcount} words = {words} colors = {colors}
         />};
 
     return (

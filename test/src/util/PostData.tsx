@@ -23,6 +23,8 @@ export class PostData {
     postId: string;
     clue: string;
     wordCount: number;
+    words: string[];
+    colors: string[];
   }): Promise<void> {
     if (!this.scheduler || !this.reddit) {
         console.error('Scheduler or Reddit API not available');
@@ -34,9 +36,11 @@ export class PostData {
             postId: data.postId,
             clue: data.clue,
             wordCount: data.wordCount.toString(),
+            words: data.words.join(','),
+            colors: data.colors.join(','),
         });
     }
-    async getClue(postId: string): Promise<[string, number, string]> {
+    async getClue(postId: string): Promise<[string, number, string, string[], string[]]> {
         try {
             const key = this.getKey(postId);
             const data = await this.redis.hGetAll(key);
@@ -48,7 +52,9 @@ export class PostData {
             return [
                 data.clue,
                 parseInt(data.wordCount, 10),
-                data.postId
+                data.postId,
+                data.words.split(','),
+                data.colors.split(',')
             ];
         } catch (error) {
             console.error('Failed to get clue data:', error);

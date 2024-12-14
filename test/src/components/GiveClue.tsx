@@ -4,8 +4,8 @@
 import type { Context } from '@devvit/public-api';
 import { Devvit, useState, useInterval, useForm} from "@devvit/public-api";
 import {loadWords, getRandomWords, assignColors} from "../util/loadWords.js";
+import { Board } from '../util/GenerateBoard.js';
 
-// I think we'll need this for creating a new post but idk yet
 Devvit.configure({
     redditAPI: true,
   });
@@ -13,47 +13,10 @@ Devvit.configure({
 // For page navigation
 interface GiveClueProps{
     setPage: (page: string) => void;
-    onNext: (clue: string, wordcount: number) => void;
+    onNext: (clue: string, wordcount: number, words: string[], colors: string[]) => void;
 }
 
-// To set up the board of 5 by 5
-type BoardProps={
-    words: string[];
-    colors: string[];
-};
-export const Board = ({words, colors}: BoardProps) => {
-    const rows: JSX.Element[] = [];
-    let wordIndex=0;
-    for (let row = 0; row < 5; ++row) {
-        const cells: JSX.Element[] = [];
-        for (let col = 0; col < 5; ++col) {
-            cells.push(
-                <vstack
-                    key={`${row}-${col}`} 
-                    border={"thick"}
-                    alignment={"middle center"}
-                    cornerRadius={"small"}
-                    width="80px"
-                    height="30px"
-                    backgroundColor={colors[wordIndex]}
-                >
-                    <text>{words[wordIndex]}</text>
-                </vstack>
-            );
-            wordIndex++;
-        }
-        rows.push(
-            <hstack key={row.toString()} gap="small"> 
-                {cells}
-            </hstack>
-        );
-    }
-    return (
-        <vstack gap="small" alignment="center middle">
-            {rows}
-        </vstack>
-    );
-};
+
 
 // Main function
 export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element => {
@@ -141,10 +104,9 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
                 }}>Back to menu</button>
                 <button 
                     onPress={() => {
-                    console.log(clue);
-                    console.log(wordCount);
-                    console.log("onNext type:", typeof props.onNext);
-                    props.onNext(clue, wordCount);
+                    console.log("words:", words);
+                    console.log("colors:", colors);
+                    props.onNext(clue, wordCount, words, colors);
                     }}
                     disabled={!clue || wordCount===0}
                     >Submit</button>
