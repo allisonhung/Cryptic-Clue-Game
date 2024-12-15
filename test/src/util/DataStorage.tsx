@@ -20,6 +20,7 @@ export class DataStorage {
         userPosts: (userId: string) => `user-posts:${userId}`,
         userData: (userId: string) => `user-data:${userId}`,
         postScores: (postId: string) => `post-scores:${postId}`,
+        postGuesses: (postId: string) => `post-guesses:${postId}`,
     }
 
   async submitClue(data: {
@@ -95,7 +96,11 @@ export class DataStorage {
                 member: data.username, 
                 score: data.score,
             });
-            console.log('post score added:', data);
+            await this.redis.zAdd(this.keys.postGuesses(data.postId), {
+                member: data.username,
+                score: data.score,
+            });
+            //console.log('post score added:', data);
         } catch (error) {
             console.error('Failed to add guess:', error);
             throw error;
@@ -114,6 +119,28 @@ export class DataStorage {
             throw error;
         }
     }
+    async getGuesses(postId: string): Promise<{username: string, score: number}[]> {
+        try {
+            const key = this.keys.postGuesses(postId);
+            const guesses = await this.redis.zRange(key, 0, -1);
+            return guesses.map(guess => ({
+                username: guess.member,
+                score: guess.score,
+            }));
+        } catch (error) {
+            console.error('Failed to get guesses:', error);
+            throw error;
+        }
+    }
+    async getUserPosts(username: string): Promise<string[]> {
+        try{
+            const key = this.keys.userPosts(username);
+            const postIds = await this.redis.zRange(key, 0, -1);
+            return postIds.map(post => post.member);
+        } catch (error) {
+            console.error('Failed to get user posts:', error);
+            throw error;
+    }}
 
 }
 

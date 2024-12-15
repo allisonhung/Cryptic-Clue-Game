@@ -2,6 +2,7 @@ import { Devvit, useState, } from '@devvit/public-api';
 import {CluePages} from './Clue/CluePages.js';
 import HowToPlay from './Clue/HowToPlay.js';
 import type { Context } from '@devvit/public-api';
+import {Leaderboard} from './Leaderboard.js';
 
 Devvit.configure({
   redditAPI: true,
@@ -30,6 +31,9 @@ export const Cluemain = (props: CluemainProps, context: Context): JSX.Element =>
         break;
       case 'HowToPlay':
         currentPage = <HowToPlay setPage={setPage} username={props.username}/>;
+        break;
+      case 'Leaderboard':
+        currentPage = <Leaderboard setPage={setPage} username={props.username}/>;
         break;
       default:
         currentPage = <Home setPage={setPage} username = {props.username}/>;
@@ -62,6 +66,9 @@ const Home = ({setPage}: PageProps) => (
       </button>
       <button onPress={() => setPage('HowToPlay')}>
         How to Play
+      </button>
+      <button onPress={() => setPage('Leaderboard')}>
+        See your posts / leaderboard
       </button>
     </vstack>
   </zstack>
