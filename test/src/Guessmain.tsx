@@ -13,7 +13,7 @@ type GuessmainProps = {
 
 export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element => {
     const postdata = new DataStorage(context);
-    console.log('username', props.username);
+    //console.log('username', props.username);
     const { data, loading, error } = useAsync(async () => {
         if (!context.postId) {
             throw new Error('Post ID is missing');
@@ -51,21 +51,15 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
         const [isGameOver, setIsGameOver] = useState<boolean>(false);
         const [score, setScore] = useState<number>(0);
         const [currentPage, setCurrentPage] = useState<string>('Guessmain');
-        console.log('authorId', authorId);
-        console.log('postId', postId);
+        //console.log('authorId', authorId);
+        //console.log('postId', postId);
         
         const handleCellClick = (index: number) => {
             if (isGameOver) {
                 return;
             }
             setSelectedCells(prev => {
-                if (prev.includes(index)) {
-                    const newSelection = prev.filter(i => i !== index);
-                    console.log('cell clicked', index);
-                    console.log('updated cells', newSelection);
-                    return newSelection;
-                }
-                else if (prev.length < wordCount) {
+                if (!prev.includes(index) && prev.length < wordCount) {
                     const newSelection = [...prev, index];
                     const isCorrect = correctCells.includes(index);
                     const isBlue = colors[index] === 'AlienBlue-500';
@@ -81,15 +75,13 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                         setFeedback('Incorrect - BOMB');
                         setScore(0);
                         setIsGameOver(true);
-                        return prev;
                     }
                     else {
                         setFeedback('Incorrect; citizen card');
                         setIsGameOver(true);
-                        return prev;
                     }
-                    console.log('cell clicked', index);
-                    console.log('updated cells', newSelection);
+                    //console.log('cell clicked', index);
+                    //console.log('updated cells', newSelection);
                     return newSelection;
                 }
                 
@@ -97,19 +89,19 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
         });
         };
 
-        console.log("correctCells", correctCells);
+        //console.log("correctCells", correctCells);
 
         async function onFinishTurn() {
-            console.log('Finishing turn...');
+            //console.log('Finishing turn...');
             postdata.addGuess({
                 postId: postId, 
                 username: props.username, 
                 score: score
             });
             
-            console.log('score', score);
-            console.log('postId', postId);
-            console.log('userId', props.username);
+            //console.log('score', score);
+            //console.log('postId', postId);
+            //console.log('userId', props.username);
             context.ui.showToast("Score saved!");
             setCurrentPage('ScorePage');
         };
@@ -134,7 +126,7 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                             <vstack>
                             <text>{feedback}</text>
                             <text>Clue: {clue}</text>
-                            <text>Word Count: {wordCount}</text>
+                            <text>Guesses remaining: {wordCount - selectedCells.length}</text>
                             </vstack>
                             <spacer width="10px"/>
                             <vstack>

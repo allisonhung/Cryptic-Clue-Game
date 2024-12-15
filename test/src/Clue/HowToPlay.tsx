@@ -2,6 +2,7 @@ import {Devvit, } from '@devvit/public-api'
 
 type PageProps = {
     setPage: (page: string) => void;
+    username: string;
   };
 
 const HowToPlay = ({ setPage }: PageProps) => (

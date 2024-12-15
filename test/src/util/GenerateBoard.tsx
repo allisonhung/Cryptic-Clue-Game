@@ -42,11 +42,15 @@ export const Board = ({
 
     const rows: JSX.Element[] = [];
     let wordIndex=0;
-    //console.log("board selectedCells:", selectedCells);
     for (let row = 0; row < 5; ++row) {
         const cells: JSX.Element[] = [];
         for (let col = 0; col < 5; ++col) {
             const currentIndex = wordIndex;
+            const backgroundColor = isGuessMode 
+                ? selectedCells.includes(currentIndex) 
+                    ? colors[currentIndex] 
+                    : "white"
+                : colors[currentIndex];
             cells.push(
                 <vstack
                     key={`${row}-${col}`} 
@@ -56,7 +60,7 @@ export const Board = ({
                     cornerRadius={"small"}
                     width="80px"
                     height="30px"
-                    backgroundColor={isGuessMode ? "white" : colors[wordIndex]}
+                    backgroundColor={backgroundColor}
                     onPress={() => handleCellClick(currentIndex)}
                 >
                     <text 

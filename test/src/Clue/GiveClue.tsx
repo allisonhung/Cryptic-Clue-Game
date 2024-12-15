@@ -34,7 +34,7 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
         if (colors[index] !== "AlienBlue-500") {
             return;
         }
-        console.log("Cell clicked:", index);
+        //console.log("Cell clicked:", index);
         setCorrectCells(prev => 
             prev.includes(index) 
             ? prev.filter(i => i !== index) 
@@ -63,7 +63,7 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
 
     // Clue giving
     const [clue, setClue] = useState<string>("");
-    const [wordCount, setWordCount] = useState<number>(0);
+    //const [wordCount, setWordCount] = useState<number>(0);
     const clueForm = useForm(
         {
             fields: [
@@ -72,16 +72,10 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
                     label: "Enter your clue",
                     type: "string",
                 },
-                {
-                    name: "wordCount",
-                    label: "Number of words",
-                    type: "number",
-                },
             ],
         },
         (values) => {
             setClue(values.clue as string);
-            setWordCount(values.wordCount as number);
         }
     );
 
@@ -105,14 +99,14 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
 
             <hstack width="95%" alignment="center middle">
                 <vstack maxWidth="20%">
-                    <text>{clue ? `${clue}: ${wordCount} words` : "No clue given yet"}</text>
+                    <text>{clue ? `Clue: ${clue}` : "Clue: "}</text>
+                    <text>{correctCells.length} words</text>
                     <button maxWidth="150px" onPress={() => context.ui.showForm(clueForm)}>Give Clue</button>
-                    <text size = "xsmall" wrap>Give a clue and set a number corresponding to any of blue cards.</text>
-                    <text size = "xsmall" wrap>Select the blue cards you had in mind and hit submit!</text>
-                    <text wrap>Cards selected: {correctCells.length}</text>
+                    <text size = "xsmall" wrap>Give a clue.</text>
+                    <text size = "xsmall" wrap>Select the corresponding blue cards and submit!</text>
+                    <text size = "xsmall" wrap>Grey = bomb</text>
+                    <text size = "xsmall" wrap>White = citizen</text>
                 </vstack>
-                //console.log("Words:", words);
-                //console.log("Colors state:", colors);
                 <spacer width = "10px"/>
                 <vstack>
                 {words.length === 25 && colors.length === 25 ? (
@@ -134,12 +128,10 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
                 <spacer width="10px"/>
                 <button 
                     onPress={() => {
-                    //console.log("words:", words);
-                    //console.log("colors:", colors);
-                    console.log("Correct cells:", correctCells);
-                    props.onNext(clue, wordCount, words, colors, correctCells);
+                    //setWordCount(correctCells.length);
+                    props.onNext(clue, correctCells.length, words, colors, correctCells);
                     }}
-                    disabled={!clue || wordCount===0}
+                    disabled={!clue || correctCells.length===0}
                     >Submit</button>
             </hstack>
         </vstack>
