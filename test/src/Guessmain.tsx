@@ -2,6 +2,7 @@ import { Devvit, useAsync, useState} from "@devvit/public-api";
 import type { Context } from "@devvit/public-api";
 import {PostData} from './util/PostData.js';
 import { Board } from "./util/GenerateBoard.js";
+import {ScorePage} from './Guess/ScorePage.js';
 
 interface GuessmainProps {
 
@@ -45,6 +46,7 @@ export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
         const [feedback, setFeedback] = useState<string>('');
         const [isGameOver, setIsGameOver] = useState<boolean>(false);
         const [score, setScore] = useState<number>(0);
+        const [currentPage, setCurrentPage] = useState<string>('Guessmain');
         
         const handleCellClick = (index: number) => {
             if (isGameOver) {
@@ -90,25 +92,13 @@ export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
         };
 
         console.log("correctCells", correctCells);
-        const onGuessHandler = (): void => {
-            // Sort both arrays for comparison
-            const sortedSelected = [...selectedCells].sort();
-            const sortedBlue = [...correctCells].sort();
-            console.log("sortedSelected", sortedSelected);
-            console.log("sortedBlue", sortedBlue);
-            
-            // Compare lengths first
-            if (sortedSelected.length !== sortedBlue.length) {
-                console.log('Incorrect guess');
-                return;
-            }
-            
-            // Compare each index
-            if (sortedSelected.every((value, index) => value === sortedBlue[index])){
-                console.log('Correct guess');
-                return;
-            }
+        const onFinishTurn = (): void => {
+            setCurrentPage('ScorePage');
         };
+        if(currentPage==='ScorePage'){
+            return <ScorePage score={score} setPage={setCurrentPage}/>;
+        }
+        
         return (
             <blocks>
                 <zstack height="100%" width="100%" alignment="center middle">
@@ -130,7 +120,7 @@ export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
                             <spacer width="10px"/>
                             <vstack>
                                 <text>Score: {score}</text>
-                                <button onPress={onGuessHandler}>Finish turn</button>
+                                <button onPress={onFinishTurn}>Finish turn</button>
                             </vstack>
                         </hstack>
                         <Board 

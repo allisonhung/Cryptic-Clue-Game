@@ -1,6 +1,6 @@
 import { Devvit, useState, } from '@devvit/public-api';
-import {CluePages} from './components/CluePages.js';
-import HowToPlay from './components/HowToPlay.js';
+import {CluePages} from './Clue/CluePages.js';
+import HowToPlay from './Clue/HowToPlay.js';
 import type { Context } from '@devvit/public-api';
 
 Devvit.configure({
