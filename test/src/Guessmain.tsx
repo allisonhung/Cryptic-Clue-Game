@@ -43,8 +43,13 @@ export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
     if (data) {
         const [clue, wordCount, postId, words, colors, correctCells] = data;
         const [feedback, setFeedback] = useState<string>('');
-
+        const [isGameOver, setIsGameOver] = useState<boolean>(false);
+        const [score, setScore] = useState<number>(0);
+        
         const handleCellClick = (index: number) => {
+            if (isGameOver) {
+                return;
+            }
             setSelectedCells(prev => {
                 if (prev.includes(index)) {
                     const newSelection = prev.filter(i => i !== index);
@@ -55,7 +60,26 @@ export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
                 else if (prev.length < wordCount) {
                     const newSelection = [...prev, index];
                     const isCorrect = correctCells.includes(index);
-                    setFeedback(isCorrect ? 'Correct!' : 'Incorrect');
+                    const isBlue = colors[index] === 'AlienBlue-500';
+                    const isGray = colors[index] === 'PureGray-500';
+                    if (isCorrect){
+                        setFeedback('Correct!');
+                        setScore(prevScore => prevScore + 1);
+                    }
+                    else if (isBlue){
+                        setFeedback('Incorrect - but keep guessing!');
+                    }
+                    else if (isGray){
+                        setFeedback('Incorrect - BOMB');
+                        setScore(0);
+                        setIsGameOver(true);
+                        return prev;
+                    }
+                    else {
+                        setFeedback('Incorrect; citizen card');
+                        setIsGameOver(true);
+                        return prev;
+                    }
                     console.log('cell clicked', index);
                     console.log('updated cells', newSelection);
                     return newSelection;
@@ -103,9 +127,10 @@ export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
                             <text>Clue: {clue}</text>
                             <text>Word Count: {wordCount}</text>
                             </vstack>
+                            <spacer width="10px"/>
                             <vstack>
-                                <text>Words selected: {selectedCells.length}</text>
-                                <button onPress={onGuessHandler}>Submit</button>
+                                <text>Score: {score}</text>
+                                <button onPress={onGuessHandler}>Finish turn</button>
                             </vstack>
                         </hstack>
                         <Board 
