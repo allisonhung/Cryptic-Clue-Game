@@ -6,6 +6,7 @@ import {GiveClue} from './GiveClue.js';
 
 interface CluePagesProps {
     setPage: (page: string) => void;
+    username: string;
 }
 
 export const CluePages = (props: CluePagesProps): JSX.Element => {

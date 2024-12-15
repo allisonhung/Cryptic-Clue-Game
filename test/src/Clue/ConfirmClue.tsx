@@ -1,6 +1,6 @@
 import { Devvit } from "@devvit/public-api";
 import type { Context } from "@devvit/public-api";
-import {PostData} from '../util/PostData.js';
+import {DataStorage} from '../util/DataStorage.js';
 
 interface ConfirmClueProps {
     clue: string;
@@ -9,10 +9,11 @@ interface ConfirmClueProps {
     colors: string[];
     setPage: (page: string) => void;
     correctCells: number[];
+    username: string;
   }
 
-export const ConfirmClue = ({clue, wordcount, words, colors, setPage, correctCells}: ConfirmClueProps, context: Context): JSX.Element => {
-    const postdata = new PostData(context);
+export const ConfirmClue = ({clue, wordcount, words, colors, setPage, correctCells, username}: ConfirmClueProps, context: Context): JSX.Element => {
+    const postdata = new DataStorage(context);
     //console.log("words:", words);
     //console.log("colors:", colors);
     console.log("correctCells", correctCells);
@@ -42,10 +43,12 @@ export const ConfirmClue = ({clue, wordcount, words, colors, setPage, correctCel
             words: words,
             colors: colors,
             correctCells: correctCells,
+            authorId: username,
         })
 
         //console.log("words:", words);
         //console.log("colors:", colors);
+        console.log("username from ConfirmClue", username);
         context.ui.showToast("Clue posted!");
         context.ui.navigateTo(post);
     }

@@ -23,7 +23,7 @@ export const Board = ({
 
     const handleCellClick = (index: number) => {
         const now = Date.now();
-        console.log(wordCount)
+        //console.log(wordCount)
         if (now - lastClickTime >= DEBOUNCE_TIME) {
             // If cell is already selected, allow deselection
             if (selectedCells.includes(index)) {
@@ -42,7 +42,7 @@ export const Board = ({
 
     const rows: JSX.Element[] = [];
     let wordIndex=0;
-    console.log("board selectedCells:", selectedCells);
+    //console.log("board selectedCells:", selectedCells);
     for (let row = 0; row < 5; ++row) {
         const cells: JSX.Element[] = [];
         for (let col = 0; col < 5; ++col) {

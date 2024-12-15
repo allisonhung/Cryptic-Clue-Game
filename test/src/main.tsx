@@ -3,6 +3,8 @@ import {Cluemain} from './Cluemain.js';
 import { Guessmain } from "./Guessmain.js";
 import type { Context } from "@devvit/public-api";
 import { installGame } from "./installGame.js";
+import { DataStorage } from "./util/DataStorage.js";
+import { UserData } from "./util/DataStorage.js";
 
 Devvit.configure({
   redditAPI: true,
@@ -10,6 +12,8 @@ Devvit.configure({
   media: true,
 });
 
+//router checks if the post type is pinned, and will direct to either Cluemain or Guessmain
+//also checks if the user is logged in
 async function checkIfPostIsPinned(postId: string, context: Context) {
   const post = await context.reddit.getPostById(postId);
   //console.log("post", post);
@@ -31,6 +35,35 @@ const Router: Devvit.CustomPostComponent = (context: Context) => {
     return await checkIfPostIsPinned(context.postId, context);
   });
 
+  const getUsername = async () => {
+    if (!context.userId) return null; // Return early if no userId
+    const cacheKey = 'cache:userId-username';
+    const cache = await context.redis.hGet(cacheKey, context.userId);
+    if (cache) {
+      return cache;
+    } else {
+      const user = await context.reddit.getUserById(context.userId);
+      if (user) {
+        await context.redis.hSet(cacheKey, {
+          [context.userId]: user.username,
+        });
+        return user.username;
+      }
+    }
+    return null;
+  };
+
+
+  const [data] = useState<{
+    username: string | null;
+    postId: string;
+  }>(async () => {
+    const [username, postId] = await Promise.all([getUsername(), context.postId as string]);
+    return { username, postId };
+  });
+
+
+
   if (loading) {
     return <text>Loading...</text>;
   }
@@ -38,7 +71,8 @@ const Router: Devvit.CustomPostComponent = (context: Context) => {
   if (error) {
     return <text>Error: {error.message}</text>;
   }
-  return isPinned ? <Cluemain {...context} /> : <Guessmain {...context}/>;
+  const safeUsername = data.username ?? 'anon';
+  return isPinned ? <Cluemain username = {safeUsername} {...context} /> : <Guessmain username = {safeUsername} {...context}/>;
 }
 
 

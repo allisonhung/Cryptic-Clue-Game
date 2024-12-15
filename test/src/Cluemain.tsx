@@ -9,24 +9,30 @@ Devvit.configure({
 
 type PageProps = {
   setPage: (page: string) => void;
+  username: string;
 }
 
-export const Cluemain: Devvit.CustomPostComponent = (context: Context) => {
+type CluemainProps = {
+  username: string;
+}
+
+export const Cluemain = (props: CluemainProps, context: Context): JSX.Element => {
+    //console.log("username", props.username);
     const [page, setPage] = useState('Home');    
     let currentPage;
     
     switch (page) {
       case 'Home':
-        currentPage = <Home setPage={setPage} />;
+        currentPage = <Home setPage={setPage} username={props.username}/>;
         break;
       case 'CluePages':
-        currentPage = <CluePages setPage={setPage} />;
+        currentPage = <CluePages setPage={setPage} username={props.username}/>;
         break;
       case 'HowToPlay':
-        currentPage = <HowToPlay setPage={setPage} />;
+        currentPage = <HowToPlay setPage={setPage} username={props.username}/>;
         break;
       default:
-        currentPage = <Home setPage={setPage} />;
+        currentPage = <Home setPage={setPage} username = {props.username}/>;
     }
     return (
       <blocks>

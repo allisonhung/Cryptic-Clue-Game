@@ -1,15 +1,19 @@
 import { Devvit, useAsync, useState} from "@devvit/public-api";
 import type { Context } from "@devvit/public-api";
-import {PostData} from './util/PostData.js';
+import {DataStorage} from './util/DataStorage.js';
 import { Board } from "./util/GenerateBoard.js";
 import {ScorePage} from './Guess/ScorePage.js';
 
-interface GuessmainProps {
-
+Devvit.configure({
+    redditAPI: true,
+});
+type GuessmainProps = {
+    username: string;
 }
 
-export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
-    const postdata = new PostData(context);
+export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element => {
+    const postdata = new DataStorage(context);
+    console.log('username', props.username);
     const { data, loading, error } = useAsync(async () => {
         if (!context.postId) {
             throw new Error('Post ID is missing');
@@ -42,11 +46,13 @@ export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
     
 
     if (data) {
-        const [clue, wordCount, postId, words, colors, correctCells] = data;
+        const [clue, wordCount, postId, words, colors, correctCells, authorId] = data;
         const [feedback, setFeedback] = useState<string>('');
         const [isGameOver, setIsGameOver] = useState<boolean>(false);
         const [score, setScore] = useState<number>(0);
         const [currentPage, setCurrentPage] = useState<string>('Guessmain');
+        console.log('authorId', authorId);
+        console.log('postId', postId);
         
         const handleCellClick = (index: number) => {
             if (isGameOver) {
@@ -92,11 +98,24 @@ export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
         };
 
         console.log("correctCells", correctCells);
-        const onFinishTurn = (): void => {
+
+        async function onFinishTurn() {
+            console.log('Finishing turn...');
+            postdata.addGuess({
+                postId: postId, 
+                username: props.username, 
+                score: score
+            });
+            
+            console.log('score', score);
+            console.log('postId', postId);
+            console.log('userId', props.username);
+            context.ui.showToast("Score saved!");
             setCurrentPage('ScorePage');
         };
+
         if(currentPage==='ScorePage'){
-            return <ScorePage score={score} setPage={setCurrentPage}/>;
+            return <ScorePage score={score} setPage={setCurrentPage} postId={postId} username={props.username}/>;
         }
         
         return (
@@ -135,12 +154,6 @@ export const Guessmain: Devvit.CustomPostComponent = (context: Context) => {
             </blocks>
         );
     }
-
-    //add onGuessHandler function that compares selectedCells to correct cells
-    //if correct, navigate to next page and give user one point
-    // SOMETHING LIKE THIS:
-    
-    
     
 
     return (
