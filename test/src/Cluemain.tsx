@@ -57,17 +57,17 @@ const Home = ({setPage}: PageProps) => (
       width="100%"
       resizeMode="cover" />
     <vstack alignment="center middle" gap="medium">
-      <text size='xxlarge' outline="thin" weight='bold'>
+      <text color ="YellowOrange-100" size='xxlarge' weight='bold'>
       Cryptic Clue Game </text>
-      <button onPress={() => {
+      <button appearance="media" onPress={() => {
         setPage('CluePages');
       }}>
         Give a Clue
       </button>
-      <button onPress={() => setPage('HowToPlay')}>
+      <button appearance="media" onPress={() => setPage('HowToPlay')}>
         How to Play
       </button>
-      <button onPress={() => setPage('Leaderboard')}>
+      <button appearance="media" onPress={() => setPage('Leaderboard')}>
         See your posts / leaderboard
       </button>
     </vstack>

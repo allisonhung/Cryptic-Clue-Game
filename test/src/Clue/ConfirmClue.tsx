@@ -20,7 +20,7 @@ export const ConfirmClue = ({clue, wordcount, words, colors, setPage, correctCel
     async function postClue() {
         const post = await context.reddit.submitPost({
             title: 'Guess the words!',
-            subredditName: 'crypticcluegame',
+            subredditName: 'CryticGame',
             preview: (
               <zstack height="100%" width="100%" alignment="center middle">
                 <image
@@ -55,11 +55,11 @@ export const ConfirmClue = ({clue, wordcount, words, colors, setPage, correctCel
 
     return (
         <vstack width="100%" height="100%">
-            <text>Confirm Clue</text>
-            <text>Clue: {clue}</text>
-            <text>Wordcount: {wordcount}</text>
-            <button onPress={postClue}>Post Clue</button>
-            <button onPress={() => setPage('Home')}>Cancel</button>
+            <text size='xlarge'>Confirm Clue</text>
+            <text size='large' color = "YellowOrange-100">Clue: {clue}</text>
+            <text size='large' color = "YellowOrange-100">Wordcount: {wordcount}</text>
+            <button appearance="media" onPress={postClue}>Post Clue</button>
+            <button appearance="media" onPress={() => setPage('Home')}>Cancel</button>
         </vstack>
     );
 };

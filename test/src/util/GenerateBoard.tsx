@@ -55,7 +55,7 @@ export const Board = ({
                 <vstack
                     key={`${row}-${col}`} 
                     border="thick"
-                    borderColor = {selectedCells.includes(currentIndex) ? "red" : "neutral-border-weak"}
+                    borderColor = {selectedCells.includes(currentIndex) ? "Yellow-200" : "neutral-border-weak"}
                     alignment={"middle center"}
                     cornerRadius={"small"}
                     width="80px"

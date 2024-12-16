@@ -95,17 +95,18 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
             gap="small"
             >
 
-            <text size="xlarge">Give a clue</text>
+            <text outline="none" color ="YellowOrange-100" size="xxlarge">Give a clue</text>
 
             <hstack width="95%" alignment="center middle">
                 <vstack maxWidth="20%">
-                    <text>{clue ? `Clue: ${clue}` : "Clue: "}</text>
-                    <text>{correctCells.length} words</text>
-                    <button maxWidth="150px" onPress={() => context.ui.showForm(clueForm)}>Give Clue</button>
-                    <text size = "xsmall" wrap>Give a clue.</text>
-                    <text size = "xsmall" wrap>Select the corresponding blue cards and submit!</text>
-                    <text size = "xsmall" wrap>Grey = bomb</text>
-                    <text size = "xsmall" wrap>White = citizen</text>
+                    <text size="medium" color = "YellowOrange-100">{clue ? `CLUE: ${clue}` : "NO CLUE"}</text>
+                    <text size="medium" color = "YellowOrange-100">WORDS: {correctCells.length}</text>
+                    <spacer height="20px"/>
+                    <button appearance="media" maxWidth="150px" onPress={() => context.ui.showForm(clueForm)}>Give Clue</button>
+                    <spacer height="20px"/>
+                    <text color = "YellowOrange-100" size = "small" wrap>Blue = Clue Cards!</text>
+                    <text color = "YellowOrange-100" size = "small" wrap>Grey = Bomb</text>
+                    <text color = "YellowOrange-100" size = "small" wrap>White = Citizen</text>
                 </vstack>
                 <spacer width = "10px"/>
                 <vstack>
@@ -121,7 +122,7 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
                 </vstack>
             </hstack>
             <hstack>
-                <button onPress={() => {
+                <button appearance="media" onPress={() => {
                     props.setPage('Home');
                     setDataFetched(false);
                 }}>Back to menu</button>

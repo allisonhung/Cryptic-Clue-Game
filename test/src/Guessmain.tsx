@@ -125,13 +125,13 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                         <hstack>
                             <vstack>
                             <text>{feedback}</text>
-                            <text>Clue: {clue}</text>
-                            <text>Guesses remaining: {wordCount - selectedCells.length}</text>
+                            <text size='xlarge' color = "YellowOrange-100">Clue: {clue}</text>
+                            <text size='xlarge' color = "YellowOrange-100">Guesses remaining: {wordCount - selectedCells.length}</text>
                             </vstack>
                             <spacer width="10px"/>
                             <vstack>
-                                <text>Score: {score}</text>
-                                <button onPress={onFinishTurn}>Finish turn</button>
+                                <text size='large' color = "YellowOrange-100">Score: {score}</text>
+                                <button appearance="media" onPress={onFinishTurn}>Finish turn</button>
                             </vstack>
                         </hstack>
                         <Board 
