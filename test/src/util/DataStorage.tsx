@@ -21,6 +21,7 @@ export class DataStorage {
         userData: (userId: string) => `user-data:${userId}`,
         postScores: (postId: string) => `post-scores:${postId}`,
         postGuesses: (postId: string) => `post-guesses:${postId}`,
+        clueAuthors: () => 'clue-authors',
     }
 
   async submitClue(data: {
@@ -55,7 +56,11 @@ export class DataStorage {
                 member: data.authorId,
                 score: 0,
             }),
-        ]);
+            this.redis.zAdd(this.keys.clueAuthors(), {
+                member: data.authorId,
+                score: Date.now(), 
+    }),
+]);
         console.log('Clue submitted:', data);
     }
     async getClue(postId: string): Promise<[string, number, string, string[], string[], number[], string]> {
@@ -105,6 +110,16 @@ export class DataStorage {
             console.error('Failed to add guess:', error);
             throw error;
     }}
+
+    async getAllUsers(): Promise<string[]> {
+        try {
+            const authors = await this.redis.zRange(this.keys.clueAuthors(), 0, -1);
+            return authors.map(author => author.member);
+        } catch (error) {
+            console.error('Failed to get all users:', error);
+            throw error;
+        }
+    }
 
     async getScores(postId: string): Promise<{username: string, score: number}[]> {
         try {

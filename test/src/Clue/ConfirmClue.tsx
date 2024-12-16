@@ -2,6 +2,10 @@ import { Devvit } from "@devvit/public-api";
 import type { Context } from "@devvit/public-api";
 import {DataStorage} from '../util/DataStorage.js';
 
+Devvit.configure({
+    redditAPI: true,
+});
+
 interface ConfirmClueProps {
     clue: string;
     wordcount: number;
@@ -16,11 +20,12 @@ export const ConfirmClue = ({clue, wordcount, words, colors, setPage, correctCel
     const postdata = new DataStorage(context);
     //console.log("words:", words);
     //console.log("colors:", colors);
+
     console.log("correctCells", correctCells);
     async function postClue() {
         const post = await context.reddit.submitPost({
             title: 'Guess the words!',
-            subredditName: 'CryticGame',
+            subredditName: 'crypticcluegame',
             preview: (
               <zstack height="100%" width="100%" alignment="center middle">
                 <image

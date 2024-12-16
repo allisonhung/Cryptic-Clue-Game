@@ -3,6 +3,7 @@ import type { Context } from "@devvit/public-api";
 import {DataStorage} from './util/DataStorage.js';
 import { Board } from "./util/GenerateBoard.js";
 import {ScorePage} from './Guess/ScorePage.js';
+import { GuessLeaderBoard } from "./Guess/GuessLeaderBoard.js";
 
 Devvit.configure({
     redditAPI: true,
@@ -110,6 +111,11 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
             return <ScorePage score={score} setPage={setCurrentPage} postId={postId} username={props.username}/>;
         }
         
+
+        if (currentPage === 'GuessLeaderBoard') {
+            return <GuessLeaderBoard setPage={setCurrentPage} username={props.username}  />;
+        }
+
         return (
             <blocks>
                 <zstack height="100%" width="100%" alignment="center middle">
