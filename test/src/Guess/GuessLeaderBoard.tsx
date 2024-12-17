@@ -63,7 +63,7 @@ export const GuessLeaderBoard = ({setPage, postId, username}: GuessLeaderBoardPr
                 </hstack>
             ))} <vstack alignment="bottom">
                 <spacer height="40px" />
-                <button appearance="media" onPress={() => setPage('Home')}>Go back</button>
+                <button icon="back" onPress={() => setPage('Home')} appearance='media'/>
                 </vstack>
             </vstack>
         </zstack>

@@ -122,10 +122,10 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
                 </vstack>
             </hstack>
             <hstack>
-                <button appearance="media" onPress={() => {
+                <button appearance="media" icon="home" onPress={() => {
                     props.setPage('Home');
                     setDataFetched(false);
-                }}>Back to menu</button>
+                }}/>
                 <spacer width="10px"/>
                 <button 
                     onPress={() => {

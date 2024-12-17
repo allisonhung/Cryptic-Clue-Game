@@ -150,7 +150,7 @@ export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Cont
                     </hstack>
                 ))}
                 <spacer height="40px" />
-                <button appearance="media" onPress={() => setPage('Home')}>Return home</button>
+                <button icon="home" onPress={() => setPage('Home')} appearance='media'/>
             </vstack>
         </zstack>
     );

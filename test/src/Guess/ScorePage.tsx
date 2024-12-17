@@ -42,7 +42,7 @@ export const ScorePage = ({score, setPage, postId, username}: ScorePageProps, co
             <spacer size="small" />
             <text size="xxlarge" color='YellowOrange-200'>Your Score: {score}</text>
             <spacer size="large" />
-            <button appearance="media" onPress={() => setPage('Home')}>Go back</button>
+            <button icon="back" onPress={() => setPage('Home')} appearance='media'/>
             <spacer size="small" />
            
             <button appearance="media" onPress={() => setPage('GuessLeaderBoard')}>Leaderboard</button>

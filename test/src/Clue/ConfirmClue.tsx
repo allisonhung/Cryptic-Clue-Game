@@ -61,15 +61,16 @@ export const ConfirmClue = ({clue, wordcount, words, colors, setPage, correctCel
     }
 
     return (
-        <vstack width="100%" height="100%">
-            <text size='xlarge'>Confirm Clue</text>
-            <text size='xxlarge' color = "YellowOrange-100">Clue: {clue}</text>
+        <vstack alignment="center" width="100%" height="100%">
+          <spacer size="medium" />
+            <text color = "YellowOrange-100" size='xxlarge'>Confirm Clue</text>
+            <text size='xlarge' color = "YellowOrange-100">Clue: {clue}</text>
             <spacer size="xsmall" />
-            <text size='xxlarge' color = "YellowOrange-100">Wordcount: {wordcount}</text>
-            <spacer size="xsmall" />
+            <text size='xlarge' color = "YellowOrange-100">Wordcount: {wordcount}</text>
+            <spacer size="medium" />
             <button size="medium" appearance="media" onPress={postClue}>Post Clue</button>
             <spacer size="small" />
-            <button size="medium" appearance="media" onPress={() => setPage('Home')}>Cancel</button>
+            <button icon="home" onPress={() => setPage('Home')} appearance='media'/>
         </vstack>
     );
 };

@@ -26,17 +26,17 @@ const HowToPlay = ({ setPage }: PageProps) => (
             <text size='xxlarge' color="YellowOrange-200">How to Play!</text>
             <vstack> 
                 <spacer size="small" /> 
-                <text color="YellowOrange-200"> The clue-giver provides a hint along with the number of cards it applies to. </text>
+                <text color="white"> The clue-giver provides a hint along with the number of cards it applies to. </text>
                 <spacer size ="xsmall" />
-                <text color="YellowOrange-200">The guesser then tries to identify which cards are linked to the given clue.</text>
+                <text color="white">The guesser then tries to identify which cards are linked to the given clue.</text>
                 <spacer size="xsmall" />
-                <text color="YellowOrange-200">Example: Clue: "Beach" -2  </text>
+                <text color="white">Example: Clue: "Beach" -2  </text>
                 <spacer size="xsmall" />
-                <text color="YellowOrange-200">Cards: "Sand," "Ocean," "Star," "Robot," "Whale" </text>
+                <text color="white">Cards: "Sand," "Ocean," "Star," "Robot," "Whale" </text>
                 <spacer size="xsmall" />
-                <text color="YellowOrange-200">Guesses: "Sand" and "Ocean"</text>
+                <text color="white">Guesses: "Sand" and "Ocean"</text>
             </vstack>
-            <button appearance="media" onPress={() => setPage('Home')}>Back to menu</button>
+            <button icon="home" onPress={() => setPage('Home')} appearance='media'/>
         </vstack> 
     </zstack>
 );
