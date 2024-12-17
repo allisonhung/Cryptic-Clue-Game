@@ -73,7 +73,11 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                         setScore(prevScore => prevScore + 1);
                     }
                     else if (isBlue){
-                        setFeedback('Incorrect - but keep guessing!');
+                        if(selectedCells.length === wordCount-1){
+                            setFeedback('Out of guesses!');
+                        }
+
+                       else setFeedback('Incorrect - but keep guessing!');
                     }
                     else if (isGray){
                         setFeedback('Incorrect - BOMB');
@@ -133,10 +137,10 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                     <vstack height="100%" width="100%" alignment="center middle">
                         <hstack>
                             <vstack>
-                            <text size="xxlarge" color="white">{feedback}</text>
-                            <text size='xlarge' color = "YellowOrange-100">Clue: {clue}</text>
-                            <text size='xlarge' color = "YellowOrange-100">Guesses remaining: {wordCount - selectedCells.length}</text>
-                            <text size='large' color = "YellowOrange-100">Score: {score}</text>
+                            <text weight="bold" size="xxlarge" color="white">{feedback}</text>
+                            <text weight="bold" size='xlarge' color = "YellowOrange-100">Clue: {clue}</text>
+                            <text weight="bold" size='xlarge' color = "YellowOrange-100">Guesses remaining: {wordCount - selectedCells.length}</text>
+                            <text weight="bold" size='large' color = "YellowOrange-100">Score: {score}</text>
                             </vstack>
                             <spacer width="10px"/>
                             <vstack>

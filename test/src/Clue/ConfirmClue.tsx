@@ -62,8 +62,8 @@ export const ConfirmClue = ({clue, wordcount, words, colors, setPage, correctCel
 
     return (
         <vstack alignment="center" width="100%" height="100%">
-          <spacer size="medium" />
-            <text color = "YellowOrange-100" size='xxlarge'>Confirm Clue</text>
+          <spacer size="large" />
+            <text weight="bold" color = "YellowOrange-100" size='xxlarge'>Confirm Clue</text>
             <text size='xlarge' color = "YellowOrange-100">Clue: {clue}</text>
             <spacer size="xsmall" />
             <text size='xlarge' color = "YellowOrange-100">Wordcount: {wordcount}</text>

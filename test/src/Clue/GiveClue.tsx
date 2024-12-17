@@ -95,18 +95,18 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
             gap="small"
             >
 
-            <text outline="none" color ="YellowOrange-100" size="xxlarge">Give a clue</text>
+            <text weight="bold" outline="none" color ="YellowOrange-100" size="xxlarge">Give a clue</text>
 
             <hstack width="95%" alignment="center middle">
                 <vstack maxWidth="20%">
-                    <text size="medium" color = "YellowOrange-100">{clue ? `CLUE: ${clue}` : "NO CLUE"}</text>
-                    <text size="medium" color = "YellowOrange-100">WORDS: {correctCells.length}</text>
+                    <text weight="bold" size="medium" color = "YellowOrange-100">{clue ? `CLUE: ${clue}` : "NO CLUE"}</text>
+                    <text weight="bold" size="medium" color = "YellowOrange-100">WORDS: {correctCells.length}</text>
                     <spacer height="20px"/>
                     <button appearance="media" maxWidth="150px" onPress={() => context.ui.showForm(clueForm)}>Give Clue</button>
                     <spacer height="20px"/>
-                    <text color = "YellowOrange-100" size = "small" wrap>Blue = Clue Cards!</text>
-                    <text color = "YellowOrange-100" size = "small" wrap>Grey = Bomb</text>
-                    <text color = "YellowOrange-100" size = "small" wrap>White = Citizen</text>
+                    <text weight="bold" color = "YellowOrange-100" size = "small" wrap>Blue = Clue Cards!</text>
+                    <text weight="bold" color = "YellowOrange-100" size = "small" wrap>Grey = Bomb</text>
+                    <text weight="bold" color = "YellowOrange-100" size = "small" wrap>White = Citizen</text>
                 </vstack>
                 <spacer width = "10px"/>
                 <vstack>

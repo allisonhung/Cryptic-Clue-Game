@@ -121,22 +121,22 @@ export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Cont
                 resizeMode="cover"
             />
             <vstack alignment="center" width="100%">
-                <text size="xxlarge" color='YellowOrange-200' weight="bold">
+                <text weight="bold" size="xxlarge" color='YellowOrange-200'>
                     Leaderboard
                 </text>
                 <spacer height="20px" />
                 <hstack width="100%" alignment="center">
                 <spacer height="20px" />
-                    <text size="large" color='YellowOrange-200' weight="bold" width="20%">
+                    <text weight="bold" size="large" color='YellowOrange-200' width="20%">
                         Rank
                     </text>
-                    <text size="large" color='YellowOrange-200' weight="bold" width="30%">
+                    <text weight="bold" size="large" color='YellowOrange-200' width="30%">
                         Username
                     </text>
-                    <text size="large" color='YellowOrange-200' weight="bold" width="25%">
+                    <text weight="bold" size="large" color='YellowOrange-200' width="25%">
                         Clues
                     </text>
-                    <text size="large"color='YellowOrange-200' weight="bold" width="25%">
+                    <text weight="bold" size="large"color='YellowOrange-200' width="25%">
                         Avg Score
                     </text>
                 </hstack>

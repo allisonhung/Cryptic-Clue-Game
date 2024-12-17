@@ -22,6 +22,9 @@ export const GuessLeaderBoard = ({setPage, postId, username}: GuessLeaderBoardPr
     if (loading) {
         return <text>Loading...</text>;
     }
+    if (!scores) {
+        return <text>No scores found</text>;}
+
     const topUser = [...scores]
     .sort((a, b) => b.score - a.score)
     .slice(0, 5);
@@ -38,20 +41,20 @@ export const GuessLeaderBoard = ({setPage, postId, username}: GuessLeaderBoardPr
                     resizeMode="cover" 
                     /> 
       <vstack width="100%" alignment="center">
-            <text size="xxlarge" color="YellowOrange-200" weight="bold">
-                Guess Leaderboard
+            <text weight="bold" size="xxlarge" color="YellowOrange-200">
+                Hintensity Level: Clue Bombs or Duds?
             </text>
 
             <spacer height="20px" />
             <hstack width="100%" alignment="center">
                 <spacer width="20%" />
-                <text size="xlarge" color="YellowOrange-200" weight="bold" width="20%">
+                <text weight="bold" size="xlarge" color="YellowOrange-200"  width="20%">
                     Rank
                 </text>
-                <text size="xlarge" color="YellowOrange-200" weight="bold" width="40%">
+                <text weight="bold" size="xlarge" color="YellowOrange-200" width="40%">
                     Username
                 </text>
-                <text size="xlarge" color="YellowOrange-200" weight="bold" width="40%">
+                <text weight="bold" size="xlarge" color="YellowOrange-200" width="40%">
                     Score
                 </text>
             </hstack>
