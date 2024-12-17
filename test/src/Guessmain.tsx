@@ -5,6 +5,9 @@ import { Board } from "./util/GenerateBoard.js";
 import {ScorePage} from './Guess/ScorePage.js';
 import { GuessLeaderBoard } from "./Guess/GuessLeaderBoard.js";
 
+// note - need to add something so user can't submit multiple guess attempts. 
+// immediately direct to leaderboard?
+
 Devvit.configure({
     redditAPI: true,
 });
@@ -113,7 +116,7 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
         
 
         if (currentPage === 'GuessLeaderBoard') {
-            return <GuessLeaderBoard setPage={setCurrentPage} username={props.username}  />;
+            return <GuessLeaderBoard setPage={setCurrentPage} postId={postId} username={props.username}  />;
         }
 
         return (

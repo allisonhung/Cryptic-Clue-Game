@@ -18,44 +18,46 @@ interface ConfirmClueProps {
 
 export const ConfirmClue = ({clue, wordcount, words, colors, setPage, correctCells, username}: ConfirmClueProps, context: Context): JSX.Element => {
     const postdata = new DataStorage(context);
+    
     //console.log("words:", words);
     //console.log("colors:", colors);
 
     console.log("correctCells", correctCells);
     async function postClue() {
-        const post = await context.reddit.submitPost({
-            title: 'Guess the words!',
-            subredditName: 'crypticcluegame',
-            preview: (
-              <zstack height="100%" width="100%" alignment="center middle">
-                <image
-                  url="wood_background.jpg"
-                  description="wooden background"
-                  imageHeight={1024}
-                  imageWidth={2048}
-                  height="100%"
-                  width="100%"
-                  resizeMode="cover" />
-                <text>Loading...</text>
-              </zstack>
-            ),
-        });
+      const community = await context.reddit.getCurrentSubreddit();
+      const post = await context.reddit.submitPost({
+          title: 'Guess the words!',
+          subredditName: community.name,
+          preview: (
+            <zstack height="100%" width="100%" alignment="center middle">
+              <image
+                url="wood_background.jpg"
+                description="wooden background"
+                imageHeight={1024}
+                imageWidth={2048}
+                height="100%"
+                width="100%"
+                resizeMode="cover" />
+              <text>Loading...</text>
+            </zstack>
+          ),
+      });
         
-        postdata.submitClue({
-            postId: post.id,
-            clue: clue,
-            wordCount: wordcount,
-            words: words,
-            colors: colors,
-            correctCells: correctCells,
-            authorId: username,
-        })
+      postdata.submitClue({
+          postId: post.id,
+          clue: clue,
+          wordCount: wordcount,
+          words: words,
+          colors: colors,
+          correctCells: correctCells,
+          authorId: username,
+      })
 
-        //console.log("words:", words);
-        //console.log("colors:", colors);
-        console.log("username from ConfirmClue", username);
-        context.ui.showToast("Clue posted!");
-        context.ui.navigateTo(post);
+      //console.log("words:", words);
+      //console.log("colors:", colors);
+      console.log("username from ConfirmClue", username);
+      context.ui.showToast("Clue posted!");
+      context.ui.navigateTo(post);
     }
 
     return (

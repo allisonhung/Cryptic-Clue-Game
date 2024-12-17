@@ -64,7 +64,7 @@ export const Board = ({
                     onPress={() => handleCellClick(currentIndex)}
                 >
                     <text 
-                    color="white" 
+                    color="black" 
                     outline="thin"
                     weight = "bold"
                     >
