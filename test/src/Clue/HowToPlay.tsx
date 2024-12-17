@@ -23,20 +23,20 @@ const HowToPlay = ({ setPage }: PageProps) => (
             alignment="middle center"
             gap="medium"
         >
-            <text size='xxlarge' color="white" outline="thick">How to Play!</text>
+            <text size='xxlarge' color="YellowOrange-200">How to Play!</text>
             <vstack> 
                 <spacer size="small" /> 
-                <text color="white" outline="thin"> The clue-giver provides a hint along with the number of cards it applies to. </text>
+                <text color="YellowOrange-200"> The clue-giver provides a hint along with the number of cards it applies to. </text>
                 <spacer size ="xsmall" />
-                <text color="white" outline="thin">The guesser then tries to identify which cards are linked to the given clue.</text>
+                <text color="YellowOrange-200">The guesser then tries to identify which cards are linked to the given clue.</text>
                 <spacer size="xsmall" />
-                <text color="white" outline="thin">Example: Clue: "Beach" -2  </text>
+                <text color="YellowOrange-200">Example: Clue: "Beach" -2  </text>
                 <spacer size="xsmall" />
-                <text color="white" outline="thin">Cards: "Sand," "Ocean," "Star," "Robot," "Whale" </text>
+                <text color="YellowOrange-200">Cards: "Sand," "Ocean," "Star," "Robot," "Whale" </text>
                 <spacer size="xsmall" />
-                <text color="white" outline="thin">Guesses: "Sand" and "Ocean"</text>
+                <text color="YellowOrange-200">Guesses: "Sand" and "Ocean"</text>
             </vstack>
-            <button onPress={() => setPage('Home')}>Back to menu</button>
+            <button appearance="media" onPress={() => setPage('Home')}>Back to menu</button>
         </vstack> 
     </zstack>
 );

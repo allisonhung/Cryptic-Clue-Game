@@ -27,14 +27,26 @@ export const ScorePage = ({score, setPage, postId, username}: ScorePageProps, co
     console.log("scores", scores);
 
     return(
-        <vstack height="100%" width="100%">
-            <text size="xxlarge">Your username: {username}</text>
-            <text size="xxlarge">Your Score: {score}</text>
-            <button onPress={() => setPage('Home')}>Go back</button>
-            <button onPress={() => setPage('GuessLeaderBoard')}>Leaderboard</button>
-            {scores && scores.map((scoreEntry: {username: string, score: number}) => (
-                <text key={scoreEntry.username}>{scoreEntry.username}: {scoreEntry.score}</text>
-            ))}
+        <zstack height="100%" width="100%" alignment="center">
+            <image
+                url="wood_background.jpg"
+                description="wooden background"
+                imageHeight={1024}
+                imageWidth={2048}
+                height="100%"
+                width="100%"
+                resizeMode="cover"
+            />
+             <vstack alignment="center" width="100%">
+            <text size="xxlarge" color='YellowOrange-200'>Your username: {username}</text>
+            <spacer size="small" />
+            <text size="xxlarge" color='YellowOrange-200'>Your Score: {score}</text>
+            <spacer size="large" />
+            <button appearance="media" onPress={() => setPage('Home')}>Go back</button>
+            <spacer size="small" />
+           
+            <button appearance="media" onPress={() => setPage('GuessLeaderBoard')}>Leaderboard</button>
         </vstack>
+        </zstack>
     );
 };

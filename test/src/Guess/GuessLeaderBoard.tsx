@@ -24,31 +24,48 @@ export const GuessLeaderBoard = ({setPage, postId, username}: GuessLeaderBoardPr
     }
     
     return(
-        <vstack>
-            <text>Leaderboard under construction</text>
-            <text size="xxlarge" outline="thin" weight="bold">
+             <zstack height="100%" width="100%" alignment="center">
+                <image
+                    url="wood_background.jpg"
+                    description="wooden background"
+                    imageHeight={1024}
+                    imageWidth={2048}
+                    height="100%"
+                    width="100%"
+                    resizeMode="cover" 
+                    /> 
+      <vstack width="100%" alignment="center">
+            <text size="xxlarge" color="YellowOrange-200" weight="bold">
                 Guess Leaderboard
             </text>
+
             <spacer height="20px" />
             <hstack width="100%" alignment="center">
-                <text size="large" outline="thin" weight="bold" width="20%">
+                <spacer width="20%" />
+                <text size="xlarge" color="YellowOrange-200" weight="bold" width="20%">
                     Rank
                 </text>
-                <text size="large" outline="thin" weight="bold" width="40%">
+                <text size="xlarge" color="YellowOrange-200" weight="bold" width="40%">
                     Username
                 </text>
-                <text size="large" outline="thin" weight="bold" width="40%">
+                <text size="xlarge" color="YellowOrange-200" weight="bold" width="40%">
                     Score
                 </text>
             </hstack>
+            
             {scores && scores.map(({ username, score }, index) => (
+
                 <hstack key={username} width="100%" alignment="center">
-                    <text width="20%">{index + 1}</text>
-                    <text width="40%">{username}</text>
-                    <text width="40%">{score}</text>
+                    <spacer width="20%" />
+                    <text color="white" width="20%">{index + 1}</text>
+                    <text color="white" width="40%">{username}</text>
+                    <text color="white" width="40%">{score}</text>
                 </hstack>
-            ))}
-            <button onPress={() => setPage('Home')}>Go back</button>
-        </vstack>
+            ))} <vstack alignment="bottom">
+                <spacer height="40px" />
+                <button appearance="media" onPress={() => setPage('Home')}>Go back</button>
+                </vstack>
+            </vstack>
+        </zstack>
     )
 }

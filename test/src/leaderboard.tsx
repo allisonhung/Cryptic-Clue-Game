@@ -121,33 +121,36 @@ export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Cont
                 resizeMode="cover"
             />
             <vstack alignment="center" width="100%">
-                <text size="xxlarge" outline="thin" weight="bold">
+                <text size="xxlarge" color='YellowOrange-200' weight="bold">
                     Leaderboard
                 </text>
                 <spacer height="20px" />
                 <hstack width="100%" alignment="center">
-                    <text size="large" outline="thin" weight="bold" width="20%">
+                <spacer height="20px" />
+                    <text size="large" color='YellowOrange-200' weight="bold" width="20%">
                         Rank
                     </text>
-                    <text size="large" outline="thin" weight="bold" width="30%">
+                    <text size="large" color='YellowOrange-200' weight="bold" width="30%">
                         Username
                     </text>
-                    <text size="large" outline="thin" weight="bold" width="25%">
+                    <text size="large" color='YellowOrange-200' weight="bold" width="25%">
                         Clues
                     </text>
-                    <text size="large" outline="thin" weight="bold" width="25%">
+                    <text size="large"color='YellowOrange-200' weight="bold" width="25%">
                         Avg Score
                     </text>
                 </hstack>
                 {topUsers.map(({ username, postCount, totalAverageScore }, index) => (
                     <hstack key={username} width="100%" alignment="center">
-                        <text width="20%">{index + 1}</text>
-                        <text width="30%">{username}</text>
-                        <text width="25%">{postCount}</text>
-                        <text width="25%">{totalAverageScore.toFixed(2)}</text>
+                        <spacer height="20px" />
+                        <text color='white' width="20%">{index + 1}</text>
+                        <text color='white' width="30%">{username}</text>
+                        <text color='white' width="25%">{postCount}</text>
+                        <text color='white' width="25%">{totalAverageScore.toFixed(2)}</text>
                     </hstack>
                 ))}
-                <button onPress={() => setPage('Home')}>Return home</button>
+                <spacer height="40px" />
+                <button appearance="media" onPress={() => setPage('Home')}>Return home</button>
             </vstack>
         </zstack>
     );
