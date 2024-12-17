@@ -22,6 +22,9 @@ export const GuessLeaderBoard = ({setPage, postId, username}: GuessLeaderBoardPr
     if (loading) {
         return <text>Loading...</text>;
     }
+    const topUser = [...scores]
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5);
     
     return(
              <zstack height="100%" width="100%" alignment="center">
@@ -53,7 +56,7 @@ export const GuessLeaderBoard = ({setPage, postId, username}: GuessLeaderBoardPr
                 </text>
             </hstack>
             
-            {scores && scores.map(({ username, score }, index) => (
+            {topUser && topUser.map(({ username, score }, index) => (
 
                 <hstack key={username} width="100%" alignment="center">
                     <spacer width="20%" />
