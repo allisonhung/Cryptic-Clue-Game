@@ -42,7 +42,7 @@ export const GuessLeaderBoard = ({setPage, postId, username}: GuessLeaderBoardPr
                     /> 
       <vstack width="100%" alignment="center">
             <text weight="bold" size="xxlarge" color="YellowOrange-200">
-                Hintensity Level: Clue Bombs or Duds?
+                Code Breakers: Top Score
             </text>
 
             <spacer height="20px" />

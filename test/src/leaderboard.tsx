@@ -122,7 +122,7 @@ export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Cont
             />
             <vstack alignment="center" width="100%">
                 <text weight="bold" size="xxlarge" color='YellowOrange-200'>
-                    Leaderboard
+                Hintensity Level: Clue Bombs or Duds?
                 </text>
                 <spacer height="20px" />
                 <hstack width="100%" alignment="center">
