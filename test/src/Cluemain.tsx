@@ -60,7 +60,10 @@ const Home = ({setPage}: PageProps) => (
         How to Play
       </button>
       <button appearance="media" onPress={() => setPage('Leaderboard')}>
-        See your posts / leaderboard
+        Clue setter leaderboard
+      </button>
+      <button appearance="media">
+        Clue solver leaderboard
       </button>
     </vstack>
   </zstack>

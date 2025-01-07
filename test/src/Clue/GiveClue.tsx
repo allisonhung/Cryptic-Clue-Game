@@ -11,21 +11,19 @@ Devvit.configure({
 // For page navigation
 interface GiveClueProps{
     setPage: (page: string) => void;
-    onNext: (clue: string, 
-        wordcount: number, 
-        words: string[], 
-        colors: string[],
-        correctCells: number[]) => void;
+    onNext: (
+        clue: string, 
+        solution: string, 
+        explanation: string,
+    ) => void;
 }
 
 // Main function
 export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element => {
-    // Generate and display board
-    const [dataFetched, setDataFetched] = useState(false);
-    
     // Clue giving
     const [clue, setClue] = useState<string>("");
-    //const [wordCount, setWordCount] = useState<number>(0);
+    const [explanation, setExplanation] = useState<string>("");
+    const [solution, setSolution] = useState<string>("");
     const clueForm = useForm(
         {
             fields: [
@@ -34,10 +32,22 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
                     label: "Enter your clue",
                     type: "string",
                 },
+                {
+                    name: "solution",
+                    label: "Enter the solution",
+                    type: "string",
+                },
+                {
+                    name: "explanation",
+                    label: "Enter your explanation",
+                    type: "string",
+                },
             ],
         },
         (values) => {
             setClue(values.clue as string);
+            setSolution(values.solution as string);
+            setExplanation(values.explanation as string);
         }
     );
 
@@ -57,18 +67,21 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
             gap="small"
             >
 
-            <text weight="bold" outline="none" color ="YellowOrange-100" size="xxlarge">Give a clue</text>
+            <text 
+                weight="bold" 
+                outline="none" 
+                color ="YellowOrange-100" 
+                size="xxlarge">Give a clue</text>
 
             <hstack width="95%" alignment="center middle">
                 <vstack maxWidth="20%">
                     <text weight="bold" size="medium" color = "YellowOrange-100">{clue ? `CLUE: ${clue}` : "NO CLUE"}</text>
-                    <text weight="bold" size="medium" color = "YellowOrange-100">WORD: </text>
+                    <text weight="bold" size="medium" color = "YellowOrange-100">{solution ? `SOLUTION: ${solution}` : "NO SOLUTION"}  </text>
+                    <text weight="bold" size="medium" color = "YellowOrange-100">{explanation ? `EXPLANATION: ${explanation}` : "NO EXPLANATION"}  </text>
                     <spacer height="20px"/>
                     <button appearance="media" maxWidth="150px" onPress={() => context.ui.showForm(clueForm)}>Give Clue</button>
                     <spacer height="20px"/>
                     <text weight="bold" color = "YellowOrange-100" size = "small" wrap>[Rules for cryptic crosswords go here]</text>
-                    <text weight="bold" color = "YellowOrange-100" size = "small" wrap>Grey = Bomb</text>
-                    <text weight="bold" color = "YellowOrange-100" size = "small" wrap>White = Citizen</text>
                 </vstack>
                 <spacer width = "10px"/>
                 <vstack>
@@ -78,12 +91,11 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
             <hstack>
                 <button appearance="media" icon="home" onPress={() => {
                     props.setPage('Home');
-                    setDataFetched(false);
                 }}/>
                 <spacer width="10px"/>
                 <button 
                     onPress={() => {
-                    props.onNext(clue, 0, [], [], []);
+                    props.onNext(clue, solution,explanation);
                     }}
                     disabled={!clue}
                     >Submit</button>

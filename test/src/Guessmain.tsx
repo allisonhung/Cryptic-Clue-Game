@@ -50,59 +50,24 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
     
 
     if (data) {
-        const [clue, wordCount, postId, words, colors, correctCells, authorId] = data;
+        const [clue, solution, explanation, authorId] = data;
         const [feedback, setFeedback] = useState<string>('');
         const [isGameOver, setIsGameOver] = useState<boolean>(false);
         const [score, setScore] = useState<number>(0);
         const [currentPage, setCurrentPage] = useState<string>('Guessmain');
-        //console.log('authorId', authorId);
+        console.log('authorId', authorId);
         //console.log('postId', postId);
         
-        const handleCellClick = (index: number) => {
-            if (isGameOver) {
-                return;
-            }
-            setSelectedCells(prev => {
-                if (!prev.includes(index) && prev.length < wordCount) {
-                    const newSelection = [...prev, index];
-                    const isCorrect = correctCells.includes(index);
-                    const isBlue = colors[index] === 'AlienBlue-500';
-                    const isGray = colors[index] === 'PureGray-500';
-                    if (isCorrect){
-                        setFeedback('Correct!');
-                        setScore(prevScore => prevScore + 1);
-                    }
-                    else if (isBlue){
-                        if(selectedCells.length === wordCount-1){
-                            setFeedback('Out of guesses!');
-                        }
-
-                       else setFeedback('Incorrect - but keep guessing!');
-                    }
-                    else if (isGray){
-                        setFeedback('Incorrect - BOMB');
-                        setScore(0);
-                        setIsGameOver(true);
-                    }
-                    else {
-                        setFeedback('Incorrect - citizen card');
-                        setIsGameOver(true);
-                    }
-                    //console.log('cell clicked', index);
-                    //console.log('updated cells', newSelection);
-                    return newSelection;
-                }
-                
-                return prev;
-        });
-        };
-
+        
         //console.log("correctCells", correctCells);
 
         async function onFinishTurn() {
             //console.log('Finishing turn...');
+            if (!context.postId) {
+                throw new Error('Post ID is missing');
+            }
             postdata.addGuess({
-                postId: postId, 
+                postId: context.postId, 
                 username: props.username, 
                 score: score
             });
@@ -115,12 +80,18 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
         };
 
         if(currentPage==='ScorePage'){
-            return <ScorePage score={score} setPage={setCurrentPage} postId={postId} username={props.username}/>;
+            if (!context.postId) {
+                throw new Error('Post ID is missing');
+            }
+            return <ScorePage score={score} setPage={setCurrentPage} postId={context.postId} username={props.username}/>;
         }
         
 
         if (currentPage === 'GuessLeaderBoard') {
-            return <GuessLeaderBoard setPage={setCurrentPage} postId={postId} username={props.username}  />;
+            if (!context.postId) {
+                throw new Error('Post ID is missing');
+            }
+            return <GuessLeaderBoard setPage={setCurrentPage} postId={context.postId} username={props.username}  />;
         }
 
         return (
@@ -132,7 +103,6 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                             <vstack>
                             <text weight="bold" size="xxlarge" color="white">{feedback}</text>
                             <text weight="bold" size='xlarge' color = "YellowOrange-100">Clue: {clue}</text>
-                            <text weight="bold" size='xlarge' color = "YellowOrange-100">Guesses remaining: {wordCount - selectedCells.length}</text>
                             <text weight="bold" size='large' color = "YellowOrange-100">Score: {score}</text>
                             </vstack>
                             <spacer width="10px"/>
@@ -141,13 +111,7 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                                 <button appearance="media" onPress={onFinishTurn}>Finish turn</button>
                             </vstack>
                         </hstack>
-                        <Board 
-                            words={words} 
-                            colors={colors}
-                            isGuessMode={true}
-                            onCellClick={handleCellClick}
-                            selectedCells={selectedCells}
-                            wordCount={wordCount} />
+                        
                     </vstack>
                 </zstack>
             </blocks>

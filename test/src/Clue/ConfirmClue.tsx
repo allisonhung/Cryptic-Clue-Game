@@ -8,21 +8,20 @@ Devvit.configure({
 
 interface ConfirmClueProps {
     clue: string;
-    wordcount: number;
-    words: string[];
-    colors: string[];
+    solution: string;
+    explanation: string;
     setPage: (page: string) => void;
-    correctCells: number[];
     username: string;
   }
 
-export const ConfirmClue = ({clue, wordcount, words, colors, setPage, correctCells, username}: ConfirmClueProps, context: Context): JSX.Element => {
+export const ConfirmClue = ({clue, solution, explanation, setPage, username}: ConfirmClueProps, context: Context): JSX.Element => {
     const postdata = new DataStorage(context);
-    
-    //console.log("words:", words);
-    //console.log("colors:", colors);
+  
 
-    console.log("correctCells", correctCells);
+    console.log("Clue", clue);
+    console.log("Solution", solution);
+    console.log("Explanation", explanation);
+
     async function postClue() {
       const community = await context.reddit.getCurrentSubreddit();
       const post = await context.reddit.submitPost({
@@ -46,10 +45,8 @@ export const ConfirmClue = ({clue, wordcount, words, colors, setPage, correctCel
       postdata.submitClue({
           postId: post.id,
           clue: clue,
-          wordCount: wordcount,
-          words: words,
-          colors: colors,
-          correctCells: correctCells,
+          solution: solution,
+          explanation: explanation,
           authorId: username,
       })
 
@@ -66,7 +63,7 @@ export const ConfirmClue = ({clue, wordcount, words, colors, setPage, correctCel
             <text weight="bold" color = "YellowOrange-100" size='xxlarge'>Confirm Clue</text>
             <text size='xlarge' color = "YellowOrange-100">Clue: {clue}</text>
             <spacer size="xsmall" />
-            <text size='xlarge' color = "YellowOrange-100">Wordcount: {wordcount}</text>
+            <text size='xlarge' color = "YellowOrange-100">Solution: {solution}</text>
             <spacer size="medium" />
             <button size="medium" appearance="media" onPress={postClue}>Post Clue</button>
             <spacer size="small" />

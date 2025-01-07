@@ -13,17 +13,13 @@ interface CluePagesProps {
 export const CluePages = (props: CluePagesProps): JSX.Element => {
     const [currentStep, setCurrentStep] = useState<string>("GiveClue");
     const [clue, setClue] = useState<string>("");
-    const [wordcount, setWordcount] = useState<number>(0);
-    const [words, setWords] = useState<string[]>([]);
-    const [colors, setColors] = useState<string[]>([]);
-    const [correctCells, setCorrectCells] = useState<number[]>([]);
+    const [solution, setSolution] = useState<string>("");
+    const [explanation, setExplanation] = useState<string>("");
 
-    const handleNext = (clue: string, wordcount: number, words: string[], colors: string[], correctCells: number[]) => {
+    const handleNext = (clue: string, solution: string, explanation: string) => {
         setClue(clue);
-        setWordcount(wordcount);
-        setWords(words);
-        setColors(colors);
-        setCorrectCells(correctCells); // Ensure correctCells is updated
+        setSolution(solution);
+        setExplanation(explanation);
         setCurrentStep("ConfirmClue"); // Navigate to the next step after updating state
     };
 
@@ -34,10 +30,8 @@ export const CluePages = (props: CluePagesProps): JSX.Element => {
         ConfirmClue: <ConfirmClue 
             {...props}
             clue={clue} 
-            wordcount={wordcount} 
-            words = {words} 
-            colors = {colors}
-            correctCells = {correctCells}
+            solution={solution}
+            explanation={explanation}
         />};
 
     return (

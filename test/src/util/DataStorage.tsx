@@ -27,10 +27,8 @@ export class DataStorage {
   async submitClue(data: {
         postId: string;
         clue: string;
-        wordCount: number;
-        words: string[];
-        colors: string[];
-        correctCells: number[];
+        solution: string;
+        explanation: string;
         authorId: string;
     }): Promise<void> {
         if (!this.scheduler || !this.reddit) {
@@ -42,10 +40,8 @@ export class DataStorage {
             this.redis.hSet(key, {
                 postId: data.postId,
                 clue: data.clue,
-                wordCount: data.wordCount.toString(),
-                words: data.words.join(','),
-                colors: data.colors.join(','),
-                correctCells: JSON.stringify(data.correctCells),
+                solution: data.solution,
+                explanation: data.explanation,
                 authorId: data.authorId,
             }),
             this.redis.zAdd(this.keys.userPosts(data.authorId),{
@@ -63,7 +59,7 @@ export class DataStorage {
 ]);
         console.log('Clue submitted:', data);
     }
-    async getClue(postId: string): Promise<[string, number, string, string[], string[], number[], string]> {
+    async getClue(postId: string): Promise<[string, string, string, string]> {
         try {
             const key = this.keys.postData(postId);
             const data = await this.redis.hGetAll(key);
@@ -74,11 +70,8 @@ export class DataStorage {
     
             return [
                 data.clue,
-                parseInt(data.wordCount, 10),
-                data.postId,
-                data.words.split(','),
-                data.colors.split(','),
-                JSON.parse(data.correctCells),
+                data.solution,
+                data.explanation,
                 data.authorId,
             ];
         } catch (error) {
