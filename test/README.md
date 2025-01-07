@@ -1,16 +1,12 @@
-# Hintensity - A Cryptic Word Challenge
+# Cryptic Clue Game
 
 ## Overview
-Hintensity is an engaging puzzle game where players decode cryptic clues to locate safe zones while avoiding dangerous traps. Built using Devvit, the game combines word puzzles with strategic thinking and risk assessment.
+Do you think you could make good cryptic crossword clues, but don't want to make a whole grid of them? 
 
 ## Game Mechanics
-- **Objective**: Decode clues to find safe zones while avoiding bombs
+- **Objective**: 
 - **Gameplay**: 
-  - Players receive a cryptic word clue
-  - Grid contains safe zones (blue), neutral areas (white), and bombs (gray)
-  - Players must identify correct safe zones within limited attempts
-  - Score points for each correct identification
-  - Game ends if a bomb is triggered or neutral area is selected
+
 
 ## Scoring System
 - +1 point for each correct Blue zone identified
@@ -32,4 +28,4 @@ Hintensity is an engaging puzzle game where players decode cryptic clues to loca
 - Custom Data Storage System
 
 ## Credits
-Created by Allison Hung && Tess Hutchinson for the Reddit App Innovation Challenge
+Created by Allison Hung && Tess Hutchinson 

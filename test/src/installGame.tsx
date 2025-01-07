@@ -1,6 +1,8 @@
 import type { MenuItem } from '@devvit/public-api';
 import { Devvit } from '@devvit/public-api';
+import { BACKGROUND_COLOR } from './data/config.js';
 
+//installing the game will create a pinned post. This is where users will be able to create a new clue.
 export const installGame: MenuItem = {
   label: 'Install cryptic clue game',
   location: 'subreddit',
@@ -14,16 +16,8 @@ export const installGame: MenuItem = {
       title: 'Pinned post',
       subredditName: community.name,
       preview: 
-      <zstack height="100%" width="100%" alignment="center middle">
+      <zstack height="100%" width="100%" alignment="center middle" backgroundColor={BACKGROUND_COLOR}>
     //background
-    <image
-      url="wood_background.jpg"
-      description="wooden background"
-      imageHeight={1024}
-      imageWidth={2048}
-      height="100%"
-      width="100%"
-      resizeMode="cover" /> 
       </zstack>
     });
 

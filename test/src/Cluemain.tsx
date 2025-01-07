@@ -2,7 +2,7 @@ import { Devvit, useState, } from '@devvit/public-api';
 import {CluePages} from './Clue/CluePages.js';
 import HowToPlay from './Clue/HowToPlay.js';
 import type { Context } from '@devvit/public-api';
-import {Leaderboard} from './Leaderboard.js';
+import {Leaderboard} from './leaderboard.js';
 
 Devvit.configure({
   redditAPI: true,
@@ -46,16 +46,8 @@ export const Cluemain = (props: CluemainProps, context: Context): JSX.Element =>
   };
 
 const Home = ({setPage}: PageProps) => (
-  <zstack height="100%" width="100%" alignment="center middle">
-    //background
-    <image
-      url="wood_background.jpg"
-      description="wooden background"
-      imageHeight={1024}
-      imageWidth={2048}
-      height="100%"
-      width="100%"
-      resizeMode="cover" />
+  <zstack height="100%" width="100%" alignment="center middle" backgroundColor="#c0c9cc">
+    
     <vstack alignment="center middle" gap="medium">
       <text color ="YellowOrange-200" size='xxlarge' weight='bold'>
       Cryptic Clue Game </text>

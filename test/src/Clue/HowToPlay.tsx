@@ -1,4 +1,5 @@
 import {Devvit, } from '@devvit/public-api'
+import { BACKGROUND_COLOR } from '../data/config.js';
 
 type PageProps = {
     setPage: (page: string) => void;
@@ -7,16 +8,7 @@ type PageProps = {
 
 const HowToPlay = ({ setPage }: PageProps) => (
      <zstack 
-       height="100%" width="100%" alignment="center middle">
-    //background
-       <image
-      url="wood_background.jpg"
-      description="wooden background"
-      imageHeight={1024}
-      imageWidth={2048}
-      height="100%"
-      width="100%"
-      resizeMode="cover" />
+       height="100%" width="100%" alignment="center middle" backgroundColor={BACKGROUND_COLOR}>
        <vstack
             width="100%"
             height="100%"

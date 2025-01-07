@@ -3,6 +3,7 @@ import type { Context } from '@devvit/public-api';
 
 import {ConfirmClue} from './ConfirmClue.js';
 import {GiveClue} from './GiveClue.js';
+import { BACKGROUND_COLOR } from '../data/config.js';
 
 interface CluePagesProps {
     setPage: (page: string) => void;
@@ -40,8 +41,7 @@ export const CluePages = (props: CluePagesProps): JSX.Element => {
         />};
 
     return (
-        <zstack width="100%" height="100%">
-            <image url="wood_background.jpg" description="wooden background" imageHeight={1024} imageWidth={2048} height="100%" width="100%" resizeMode="cover" />
+        <zstack width="100%" height="100%" backgroundColor={BACKGROUND_COLOR}>
             {steps[currentStep] || <text>Error: Step not found</text>}
         </zstack>
     );

@@ -3,8 +3,6 @@
 // Need useInterval to force re-render
 import type { Context } from '@devvit/public-api';
 import { Devvit, useState, useInterval, useForm} from "@devvit/public-api";
-import {loadWords, getRandomWords, assignColors} from "../util/loadWords.js";
-import { Board } from '../util/GenerateBoard.js';
 
 Devvit.configure({
     redditAPI: true,
@@ -20,47 +18,11 @@ interface GiveClueProps{
         correctCells: number[]) => void;
 }
 
-
-
 // Main function
 export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element => {
     // Generate and display board
-    const [words, setWords] = useState<string[]>([]);
-    const [colors, setColors] = useState<string[]>([]);
     const [dataFetched, setDataFetched] = useState(false);
-    const [correctCells, setCorrectCells] = useState<number[]>([]);
-
-    const handleCellClick = (index: number) => {
-        if (colors[index] !== "AlienBlue-500") {
-            return;
-        }
-        //console.log("Cell clicked:", index);
-        setCorrectCells(prev => 
-            prev.includes(index) 
-            ? prev.filter(i => i !== index) 
-            : [...prev, index]
-        );
-    };
-
-    const fetchWordsAndColors = async () => {
-        //console.log("Fetching words...");
-        const allWords = await loadWords();
-
-        const randomWords = getRandomWords(allWords, 25);
-        const assignedColors = assignColors(25);
-        setWords(randomWords);
-        setColors(assignedColors);
-
-        //console.log("Random words:", randomWords);
-        //console.log("Assigned colors:", assignedColors);
-
-        setDataFetched(true);
-    };
-    if (!dataFetched) {
-        //console.log("Triggering fetchWordsAndColors on re-entry.");
-        fetchWordsAndColors();
-    };
-
+    
     // Clue giving
     const [clue, setClue] = useState<string>("");
     //const [wordCount, setWordCount] = useState<number>(0);
@@ -100,25 +62,17 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
             <hstack width="95%" alignment="center middle">
                 <vstack maxWidth="20%">
                     <text weight="bold" size="medium" color = "YellowOrange-100">{clue ? `CLUE: ${clue}` : "NO CLUE"}</text>
-                    <text weight="bold" size="medium" color = "YellowOrange-100">WORDS: {correctCells.length}</text>
+                    <text weight="bold" size="medium" color = "YellowOrange-100">WORD: </text>
                     <spacer height="20px"/>
                     <button appearance="media" maxWidth="150px" onPress={() => context.ui.showForm(clueForm)}>Give Clue</button>
                     <spacer height="20px"/>
-                    <text weight="bold" color = "YellowOrange-100" size = "small" wrap>Blue = Clue Cards!</text>
+                    <text weight="bold" color = "YellowOrange-100" size = "small" wrap>[Rules for cryptic crosswords go here]</text>
                     <text weight="bold" color = "YellowOrange-100" size = "small" wrap>Grey = Bomb</text>
                     <text weight="bold" color = "YellowOrange-100" size = "small" wrap>White = Citizen</text>
                 </vstack>
                 <spacer width = "10px"/>
                 <vstack>
-                {words.length === 25 && colors.length === 25 ? (
-                    //console.log("Rendering board..."),
-                    <Board words={words} 
-                    colors={colors}
-                    onCellClick={handleCellClick}
-                    selectedCells={correctCells} />
-                ) : (
-                    <text>Loading...</text>
-                )}
+                
                 </vstack>
             </hstack>
             <hstack>
@@ -129,10 +83,9 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
                 <spacer width="10px"/>
                 <button 
                     onPress={() => {
-                    //setWordCount(correctCells.length);
-                    props.onNext(clue, correctCells.length, words, colors, correctCells);
+                    props.onNext(clue, 0, [], [], []);
                     }}
-                    disabled={!clue || correctCells.length===0}
+                    disabled={!clue}
                     >Submit</button>
             </hstack>
         </vstack>

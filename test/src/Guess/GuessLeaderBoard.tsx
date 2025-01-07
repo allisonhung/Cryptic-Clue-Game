@@ -1,6 +1,7 @@
 import { Devvit, useAsync} from "@devvit/public-api";
 import type { Context } from "@devvit/public-api";
 import { DataStorage } from "../util/DataStorage.js";
+import { BACKGROUND_COLOR } from "../data/config.js";
 
 Devvit.configure({
     redditAPI: true,
@@ -30,16 +31,8 @@ export const GuessLeaderBoard = ({setPage, postId, username}: GuessLeaderBoardPr
     .slice(0, 5);
     
     return(
-             <zstack height="100%" width="100%" alignment="center">
-                <image
-                    url="wood_background.jpg"
-                    description="wooden background"
-                    imageHeight={1024}
-                    imageWidth={2048}
-                    height="100%"
-                    width="100%"
-                    resizeMode="cover" 
-                    /> 
+             <zstack height="100%" width="100%" alignment="center" backgroundColor={BACKGROUND_COLOR}>
+                
       <vstack width="100%" alignment="center">
             <text weight="bold" size="xxlarge" color="YellowOrange-200">
                 Code Breakers: Top Score

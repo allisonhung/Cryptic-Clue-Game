@@ -1,6 +1,7 @@
 import {Devvit, PostType, useAsync} from '@devvit/public-api'
 import { DataStorage } from './util/DataStorage.js';
 import type { Context } from '@devvit/public-api';
+import { BACKGROUND_COLOR } from './data/config.js';
 
 Devvit.configure({
     redditAPI: true,
@@ -110,16 +111,8 @@ export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Cont
     
     
     return (
-        <zstack height="100%" width="100%" alignment="center">
-            <image
-                url="wood_background.jpg"
-                description="wooden background"
-                imageHeight={1024}
-                imageWidth={2048}
-                height="100%"
-                width="100%"
-                resizeMode="cover"
-            />
+        <zstack height="100%" width="100%" alignment="center" backgroundColor={BACKGROUND_COLOR}>
+            
             <vstack alignment="center" width="100%">
                 <text weight="bold" size="xxlarge" color='YellowOrange-200'>
                 Hintensity Level: Clue Bombs or Duds?

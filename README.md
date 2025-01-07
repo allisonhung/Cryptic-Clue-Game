@@ -1,2 +1,2 @@
 # Cryptic-Clue-Game
-Gameplay inspired by Codenames; code structure inspired by Pixelary
+For creating and guessing cryptic crossword clues; code structure inspired by Pixelary

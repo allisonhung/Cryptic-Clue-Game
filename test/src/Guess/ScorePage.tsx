@@ -2,6 +2,7 @@ import { Devvit, useAsync} from "@devvit/public-api";
 import type { Context } from "@devvit/public-api";
 import { DataStorage } from "../util/DataStorage.js";
 import {GuessLeaderBoard} from './GuessLeaderBoard.js';
+import { BACKGROUND_COLOR } from "../data/config.js";
 
 Devvit.configure({
     redditAPI: true,
@@ -27,16 +28,8 @@ export const ScorePage = ({score, setPage, postId, username}: ScorePageProps, co
     console.log("scores", scores);
 
     return(
-        <zstack height="100%" width="100%" alignment="center">
-            <image
-                url="wood_background.jpg"
-                description="wooden background"
-                imageHeight={1024}
-                imageWidth={2048}
-                height="100%"
-                width="100%"
-                resizeMode="cover"
-            />
+        <zstack height="100%" width="100%" alignment="center" backgroundColor={BACKGROUND_COLOR}>
+            
              <vstack alignment="center" width="100%">
             <text size="xxlarge" color='YellowOrange-200'>Your username: {username}</text>
             <spacer size="small" />

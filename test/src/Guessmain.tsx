@@ -125,15 +125,8 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
 
         return (
             <blocks>
-                <zstack height="100%" width="100%" alignment="center middle">
-                    <image
-                    url="wood_background.jpg"
-                    description="wooden background"
-                    imageHeight={1024}
-                    imageWidth={2048}
-                    height="100%"
-                    width="100%"
-                    resizeMode="cover" />
+                <zstack height="100%" width="100%" alignment="center middle" backgroundColor="#c0c9cc">
+                    
                     <vstack height="100%" width="100%" alignment="center middle">
                         <hstack>
                             <vstack>
