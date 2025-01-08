@@ -3,6 +3,8 @@ import {CluePages} from './Clue/CluePages.js';
 import HowToPlay from './Clue/HowToPlay.js';
 import type { Context } from '@devvit/public-api';
 import {Leaderboard} from './leaderboard.js';
+import { StyledButton } from './data/styledButton.js';
+import { StyledSolution } from './data/styledSolution.js';
 
 Devvit.configure({
   redditAPI: true,
@@ -49,22 +51,34 @@ const Home = ({setPage}: PageProps) => (
   <zstack height="100%" width="100%" alignment="center middle" backgroundColor="#c0c9cc">
     
     <vstack alignment="center middle" gap="medium">
-      <text color ="YellowOrange-200" size='xxlarge' weight='bold'>
-      Cryptic Clue Game </text>
-      <button appearance="media" onPress={() => {
-        setPage('CluePages');
-      }}>
-        Give a Clue
-      </button>
-      <button appearance="media" onPress={() => setPage('HowToPlay')}>
-        How to Play
-      </button>
-      <button appearance="media" onPress={() => setPage('Leaderboard')}>
-        Clue setter leaderboard
-      </button>
-      <button appearance="media">
-        Clue solver leaderboard
-      </button>
+      <StyledSolution
+        label="Cryptic"/>
+      
+      <StyledButton 
+        width="200px"
+        height="50px"
+        onPress={() => setPage('CluePages')}
+        label="Give a Clue" />
+      
+      <StyledButton 
+        width="200px"
+        height="50px"
+        onPress={() => setPage('HowToPlay')}
+        label="How to play" />
+      
+      <StyledButton 
+        width="200px"
+        height="50px"
+        onPress={() => setPage('Leaderboard')}
+        label="Setter Leaderboard" />
+      
+      <StyledButton 
+        width="200px"
+        height="50px"
+        onPress={() => setPage('Leaderboard')}
+        label="Solver Leaderboard" />
+      
+      
     </vstack>
   </zstack>
 )

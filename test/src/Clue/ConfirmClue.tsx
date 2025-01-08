@@ -2,6 +2,7 @@ import { Devvit } from "@devvit/public-api";
 import type { Context } from "@devvit/public-api";
 import {DataStorage} from '../util/DataStorage.js';
 import { BACKGROUND_COLOR } from "../data/config.js";
+import { StyledSolution } from "../data/styledSolution.js";
 
 Devvit.configure({
     redditAPI: true,
@@ -54,11 +55,12 @@ export const ConfirmClue = ({clue, solution, explanation, setPage, username}: Co
     return (
         <vstack alignment="center" width="100%" height="100%">
           <spacer size="large" />
-            <text weight="bold" color = "YellowOrange-100" size='xxlarge'>Confirm Clue</text>
-            <text size='xlarge' color = "YellowOrange-100">Clue: {clue}</text>
+            <text weight="bold" color = "Black" size='xxlarge'>Confirm Clue</text>
+            <text size='xlarge' color = "Black">Clue: {clue}</text>
             <spacer size="xsmall" />
-            <text size='xlarge' color = "YellowOrange-100">Solution: {solution}</text>
+            <StyledSolution label={solution} />
             <spacer size="medium" />
+            <text size='xlarge' color = "Black">Explanation: {explanation}</text>
             <button size="medium" appearance="media" onPress={postClue}>Post Clue</button>
             <spacer size="small" />
             <button icon="home" onPress={() => setPage('Home')} appearance='media'/>

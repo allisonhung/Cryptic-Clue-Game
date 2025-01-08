@@ -3,6 +3,7 @@
 // Need useInterval to force re-render
 import type { Context } from '@devvit/public-api';
 import { Devvit, useState, useInterval, useForm} from "@devvit/public-api";
+import { StyledButton } from '../data/styledButton.js';
 
 Devvit.configure({
     redditAPI: true,
@@ -29,7 +30,7 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
             fields: [
                 {
                     name: "clue",
-                    label: "Enter your clue",
+                    label: "Enter your clue. Make sure it includes the letter parsing at the end, i.e. Trim a tree (6)",
                     type: "string",
                 },
                 {
@@ -39,7 +40,7 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
                 },
                 {
                     name: "explanation",
-                    label: "Enter your explanation",
+                    label: "Enter your explanation. Be detailed! This is your chance to show off your cryptic skills.",
                     type: "string",
                 },
             ],
@@ -70,18 +71,28 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
             <text 
                 weight="bold" 
                 outline="none" 
-                color ="YellowOrange-100" 
+                color ="Black" 
                 size="xxlarge">Give a clue</text>
 
             <hstack width="95%" alignment="center middle">
-                <vstack maxWidth="20%">
-                    <text weight="bold" size="medium" color = "YellowOrange-100">{clue ? `CLUE: ${clue}` : "NO CLUE"}</text>
-                    <text weight="bold" size="medium" color = "YellowOrange-100">{solution ? `SOLUTION: ${solution}` : "NO SOLUTION"}  </text>
-                    <text weight="bold" size="medium" color = "YellowOrange-100">{explanation ? `EXPLANATION: ${explanation}` : "NO EXPLANATION"}  </text>
+                <vstack maxWidth="50%">
+                    <text weight="bold" size="medium" color = "Black">{clue ? `CLUE: ${clue}` : "No clue given yet"}</text>
+                    <text weight="bold" size="medium" color = "Black">{solution ? `SOLUTION: ${solution}` : ""}  </text>
+                    <text weight="bold" size="medium" color = "Black">{explanation ? `EXPLANATION: ${explanation}` : ""}  </text>
                     <spacer height="20px"/>
-                    <button appearance="media" maxWidth="150px" onPress={() => context.ui.showForm(clueForm)}>Give Clue</button>
+                    <StyledButton 
+                        width="200px"
+                        height="40px"
+                        onPress={() => context.ui.showForm(clueForm)}                        
+                        label="Enter Clue" />
                     <spacer height="20px"/>
-                    <text weight="bold" color = "YellowOrange-100" size = "small" wrap>[Rules for cryptic crosswords go here]</text>
+                    <StyledButton 
+                        width="200px"
+                        height="40px"
+                        onPress={() => context.ui.navigateTo('https://s.wsj.net/blogs/html/wsjcrypticguide.pdf')}
+                        label="Confused about cryptic crosswords? Click here" />
+                    
+   
                 </vstack>
                 <spacer width = "10px"/>
                 <vstack>
