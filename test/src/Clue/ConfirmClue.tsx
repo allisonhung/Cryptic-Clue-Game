@@ -1,6 +1,7 @@
 import { Devvit } from "@devvit/public-api";
 import type { Context } from "@devvit/public-api";
 import {DataStorage} from '../util/DataStorage.js';
+import { BACKGROUND_COLOR } from "../data/config.js";
 
 Devvit.configure({
     redditAPI: true,
@@ -28,15 +29,8 @@ export const ConfirmClue = ({clue, solution, explanation, setPage, username}: Co
           title: 'Guess the words!',
           subredditName: community.name,
           preview: (
-            <zstack height="100%" width="100%" alignment="center middle">
-              <image
-                url="wood_background.jpg"
-                description="wooden background"
-                imageHeight={1024}
-                imageWidth={2048}
-                height="100%"
-                width="100%"
-                resizeMode="cover" />
+            <zstack height="100%" width="100%" alignment="center middle" backgroundColor={BACKGROUND_COLOR}>
+              
               <text>Loading...</text>
             </zstack>
           ),

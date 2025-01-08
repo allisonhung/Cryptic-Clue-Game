@@ -1,7 +1,6 @@
-import { Devvit, useAsync, useState} from "@devvit/public-api";
+import { Devvit, useAsync, useState, useForm} from "@devvit/public-api";
 import type { Context } from "@devvit/public-api";
 import {DataStorage} from './util/DataStorage.js';
-import { Board } from "./util/GenerateBoard.js";
 import {ScorePage} from './Guess/ScorePage.js';
 import { GuessLeaderBoard } from "./Guess/GuessLeaderBoard.js";
 
@@ -11,20 +10,22 @@ import { GuessLeaderBoard } from "./Guess/GuessLeaderBoard.js";
 Devvit.configure({
     redditAPI: true,
 });
+
 type GuessmainProps = {
     username: string;
 }
 
 export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element => {
+
+    //get post data based on post ID. 
+    //this should include clue, solution, explanation, and authorID
     const postdata = new DataStorage(context);
-    //console.log('username', props.username);
     const { data, loading, error } = useAsync(async () => {
         if (!context.postId) {
             throw new Error('Post ID is missing');
         }
         return await postdata.getClue(context.postId);
     });
-
     if (loading) {
         return (
             <blocks>
@@ -34,7 +35,6 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
             </blocks>
         );
     }
-
     if (error) {
         return (
             <blocks>
@@ -44,22 +44,53 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
             </blocks>
         );
     }
-
-    const [selectedCells, setSelectedCells] = useState<number[]>([]);
     
-    
-
     if (data) {
         const [clue, solution, explanation, authorId] = data;
         const [feedback, setFeedback] = useState<string>('');
         const [isGameOver, setIsGameOver] = useState<boolean>(false);
         const [score, setScore] = useState<number>(0);
         const [currentPage, setCurrentPage] = useState<string>('Guessmain');
-        console.log('authorId', authorId);
-        //console.log('postId', postId);
+        const [guess, setGuess] = useState<string>('');
+        const [hasRevealed, setHasRevealed] = useState<boolean>(false);
+
+        const guessForm = useForm(
+            {
+                fields: [
+                    {
+                        name: "guess",
+                        label: "Enter your solution",
+                        type: "string",
+                    },
+                ],
+            },
+            (values) => {
+                setGuess(values.guess as string);
+            }
+        );
+
+        const handleGuessSubmit = () => {
+            if (guess.toLowerCase() === solution.toLowerCase()) {
+                setFeedback('Correct!');
+                setScore(1);
+                setIsGameOver(true);
+            } else {
+                setFeedback('Incorrect. Try again!');
+            }
+        };
+
+        if (hasRevealed){
+            return(
+                <blocks>
+                <vstack height="100%" width="100%" alignment="center middle">
+                    <text>You have already revealed the solution.</text>
+                    <button onPress={() => setCurrentPage('GuessLeaderBoard')}>View Leaderboard</button>
+                </vstack>
+            </blocks>
+            )
+        }
+
         
-        
-        //console.log("correctCells", correctCells);
 
         async function onFinishTurn() {
             //console.log('Finishing turn...');
@@ -72,10 +103,7 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                 score: score
             });
             
-            //console.log('score', score);
-            //console.log('postId', postId);
-            //console.log('userId', props.username);
-            context.ui.showToast("Score saved!");
+            context.ui.showToast("Guess saved!");
             setCurrentPage('ScorePage');
         };
 
@@ -102,8 +130,14 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                         <hstack>
                             <vstack>
                             <text weight="bold" size="xxlarge" color="white">{feedback}</text>
+
+                            <button appearance="media" maxWidth="150px" onPress={() => context.ui.showForm(guessForm)}>Enter your solution</button>
+                            <text weight="bold" size="medium" color = "YellowOrange-100">{guess ? `Guess: ${guess}` : "NO GUESS YET"}</text>
+
+                            <button onPress={handleGuessSubmit}>Check answer</button>
+                            <button>Give up, reveal solution</button>
                             <text weight="bold" size='xlarge' color = "YellowOrange-100">Clue: {clue}</text>
-                            <text weight="bold" size='large' color = "YellowOrange-100">Score: {score}</text>
+
                             </vstack>
                             <spacer width="10px"/>
                             <vstack>

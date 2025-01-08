@@ -3,6 +3,8 @@ import type { Context } from "@devvit/public-api";
 import { DataStorage } from "../util/DataStorage.js";
 import { BACKGROUND_COLOR } from "../data/config.js";
 
+//idk what this leaderboard would be for! Maybe least number of guesses
+
 Devvit.configure({
     redditAPI: true,
   });

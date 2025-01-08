@@ -156,10 +156,8 @@ export class DataStorage {
 export type PostData = {
     postId: string;
     clue: string;
-    wordCount: number;
-    words: string[];
-    colors: string[];
-    correctCells: number[];
+    solution: string;
+    explanation: string;
 }
 
 export type UserData = {

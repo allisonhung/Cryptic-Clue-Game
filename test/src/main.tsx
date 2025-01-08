@@ -16,12 +16,10 @@ Devvit.configure({
 //also checks if the user is logged in
 async function checkIfPostIsPinned(postId: string, context: Context) {
   const post = await context.reddit.getPostById(postId);
-  //console.log("post", post);
   return post.isStickied();
 }
 
 const Router: Devvit.CustomPostComponent = (context: Context) => {
-  //console.log("Router context", context);
   // Add null check for postId
   if (!context.postId) {
     return <text>Error: No post ID found</text>;

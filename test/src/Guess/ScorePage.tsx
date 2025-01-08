@@ -37,6 +37,8 @@ export const ScorePage = ({score, setPage, postId, username}: ScorePageProps, co
             <spacer size="large" />
             <button icon="back" onPress={() => setPage('Home')} appearance='media'/>
             <spacer size="small" />
+            <text>Full explanation of the clue should go here</text>
+            <text>Also include an option to rate clue out of 5</text>
            
             <button appearance="media" onPress={() => setPage('GuessLeaderBoard')}>Leaderboard</button>
         </vstack>
