@@ -115,7 +115,7 @@ export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Cont
             
             <vstack alignment="center" width="100%">
                 <text weight="bold" size="xxlarge" color='YellowOrange-200'>
-                Hintensity Level: Clue Bombs or Duds?
+                    Highest rated setters
                 </text>
                 <spacer height="20px" />
                 <hstack width="100%" alignment="center">
@@ -127,10 +127,10 @@ export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Cont
                         Username
                     </text>
                     <text weight="bold" size="large" color='YellowOrange-200' width="25%">
-                        Clues
+                        Number of Clues
                     </text>
                     <text weight="bold" size="large"color='YellowOrange-200' width="25%">
-                        Avg Score
+                        Avg Rating
                     </text>
                 </hstack>
                 {topUsers.map(({ username, postCount, totalAverageScore }, index) => (

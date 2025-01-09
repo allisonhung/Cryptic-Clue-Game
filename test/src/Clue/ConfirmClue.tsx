@@ -3,6 +3,7 @@ import type { Context } from "@devvit/public-api";
 import {DataStorage} from '../util/DataStorage.js';
 import { BACKGROUND_COLOR } from "../data/config.js";
 import { StyledSolution } from "../data/styledSolution.js";
+import { StyledButton } from "../data/styledButton.js";
 
 Devvit.configure({
     redditAPI: true,
@@ -53,17 +54,24 @@ export const ConfirmClue = ({clue, solution, explanation, setPage, username}: Co
     }
 
     return (
-        <vstack alignment="center" width="100%" height="100%">
-          <spacer size="large" />
-            <text weight="bold" color = "Black" size='xxlarge'>Confirm Clue</text>
-            <text size='xlarge' color = "Black">Clue: {clue}</text>
+        <vstack alignment="center middle" width="100%" height="100%">
+          <text weight="bold" color = "Black" size='xxlarge'>confirm submission</text>
+          <spacer size="xsmall" />
+          <text size='xlarge' color = "Black">Clue: {clue}</text>
+          <spacer size="xsmall" />
+          <StyledSolution label={solution} />
+          <spacer size="medium" />
+          <text size='xlarge' color = "Black">Explanation: {explanation}</text>
+          <hstack alignment="center middle">
+            <StyledButton
+              width = "200px"
+              height = "40px"
+              onPress={postClue}
+              label="Post Clue"
+            />
             <spacer size="xsmall" />
-            <StyledSolution label={solution} />
-            <spacer size="medium" />
-            <text size='xlarge' color = "Black">Explanation: {explanation}</text>
-            <button size="medium" appearance="media" onPress={postClue}>Post Clue</button>
-            <spacer size="small" />
             <button icon="home" onPress={() => setPage('Home')} appearance='media'/>
+          </hstack>
         </vstack>
     );
 };

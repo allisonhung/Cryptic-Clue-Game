@@ -6,6 +6,7 @@ interface StyledButtonProps {
     label?: string;
     width?: Devvit.Blocks.SizeString;
     height?: Devvit.Blocks.SizeString;
+    backgroundColor?: string;
 }
 
 export const StyledButton = (props: StyledButtonProps): JSX.Element => {
@@ -14,6 +15,7 @@ export const StyledButton = (props: StyledButtonProps): JSX.Element => {
       label,
       width = '100px',
       height = '40px',
+      backgroundColor = BACKGROUND_COLOR
     } = props;
   
     return (
@@ -21,7 +23,7 @@ export const StyledButton = (props: StyledButtonProps): JSX.Element => {
           height={height}
           width={width}
           onPress={onPress}
-          backgroundColor= {BACKGROUND_COLOR}
+          backgroundColor= {backgroundColor}
           padding="xsmall"
           border="thick"
           borderColor="Black"
@@ -31,7 +33,7 @@ export const StyledButton = (props: StyledButtonProps): JSX.Element => {
             width="100%"
             gap="small"
             alignment="middle center"
-            backgroundColor= {BACKGROUND_COLOR}
+            backgroundColor= {backgroundColor}
           >
             <text color="Black" size="medium">{label}</text>
           </hstack>

@@ -36,21 +36,20 @@ export const GuessLeaderBoard = ({setPage, postId, username}: GuessLeaderBoardPr
              <zstack height="100%" width="100%" alignment="center" backgroundColor={BACKGROUND_COLOR}>
                 
       <vstack width="100%" alignment="center">
-            <text weight="bold" size="xxlarge" color="YellowOrange-200">
-                Code Breakers: Top Score
+            <text weight="bold" size="xxlarge" color="Black">
+                Leaderboard
             </text>
 
             <spacer height="20px" />
             <hstack width="100%" alignment="center">
-                <spacer width="20%" />
-                <text weight="bold" size="xlarge" color="YellowOrange-200"  width="20%">
+                <text weight="bold" size="xlarge" color="Red"  width="20%">
                     Rank
                 </text>
-                <text weight="bold" size="xlarge" color="YellowOrange-200" width="40%">
+                <text weight="bold" size="xlarge" color="Red" width="40%">
                     Username
                 </text>
-                <text weight="bold" size="xlarge" color="YellowOrange-200" width="40%">
-                    Score
+                <text weight="bold" size="xlarge" color="Red" width="40%">
+                    Number of clues solved
                 </text>
             </hstack>
             

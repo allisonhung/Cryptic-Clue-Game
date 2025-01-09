@@ -32,3 +32,30 @@ export const StyledSolution = (props: StyledSolutionProps): JSX.Element => {
         </hstack>
     );
   };
+
+interface EmptySolutionProps {
+    length?: number;
+}
+export const EmptySolution = (props: EmptySolutionProps): JSX.Element => {
+    const {
+        length = 5,
+    } = props;
+
+    return (
+        <hstack gap="small">
+            {Array.from({ length }, (_, index) => (
+                <hstack
+                    key={index.toString()}
+                    height="40px"
+                    width="40px"
+                    alignment="middle center"
+                    backgroundColor="white"
+                    border="thick"
+                    borderColor="black"
+                >
+                    <text color="black" size="medium"></text>
+                </hstack>
+            ))}
+        </hstack>
+    );
+}

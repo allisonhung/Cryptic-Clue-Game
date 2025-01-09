@@ -3,6 +3,8 @@ import type { Context } from "@devvit/public-api";
 import {DataStorage} from './util/DataStorage.js';
 import {ScorePage} from './Guess/ScorePage.js';
 import { GuessLeaderBoard } from "./Guess/GuessLeaderBoard.js";
+import { StyledButton } from "./data/styledButton.js";
+import { StyledSolution, EmptySolution } from "./data/styledSolution.js";
 
 // note - need to add something so user can't submit multiple guess attempts. 
 // immediately direct to leaderboard?
@@ -78,17 +80,12 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                 setFeedback('Incorrect. Try again!');
             }
         };
-
-        if (hasRevealed){
-            return(
-                <blocks>
-                <vstack height="100%" width="100%" alignment="center middle">
-                    <text>You have already revealed the solution.</text>
-                    <button onPress={() => setCurrentPage('GuessLeaderBoard')}>View Leaderboard</button>
-                </vstack>
-            </blocks>
-            )
-        }
+        const handleReveal = () => {
+            setFeedback(`The solution was: ${solution}`);
+            setScore(0);
+            setIsGameOver(true);
+            setHasRevealed(true);
+        };
 
         
 
@@ -125,28 +122,79 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
         return (
             <blocks>
                 <zstack height="100%" width="100%" alignment="center middle" backgroundColor="#c0c9cc">
-                    
+
                     <vstack height="100%" width="100%" alignment="center middle">
-                        <hstack>
-                            <vstack>
-                            <text weight="bold" size="xxlarge" color="white">{feedback}</text>
-
-                            <button appearance="media" maxWidth="150px" onPress={() => context.ui.showForm(guessForm)}>Enter your solution</button>
-                            <text weight="bold" size="medium" color = "YellowOrange-100">{guess ? `Guess: ${guess}` : "NO GUESS YET"}</text>
-
-                            <button onPress={handleGuessSubmit}>Check answer</button>
-                            <button>Give up, reveal solution</button>
-                            <text weight="bold" size='xlarge' color = "YellowOrange-100">Clue: {clue}</text>
-
-                            </vstack>
-                            <spacer width="10px"/>
-                            <vstack>
-                            
-                                <button appearance="media" onPress={onFinishTurn}>Finish turn</button>
-                            </vstack>
+                        <text weight="bold" size='xlarge' color = "Black">Clue: {clue}</text>
+                        <StyledButton
+                            width="200px"
+                            height="25px"
+                            onPress={() => context.ui.showForm(guessForm)}
+                            label="Enter your solution"
+                        />
+                        <spacer size="xsmall" />
+                        {guess? (
+                            <StyledSolution label={guess} />
+                        ): (
+                            <EmptySolution length={solution.length} />
+                        )}
+                        <spacer size="xsmall" />
+                        <hstack alignment="center middle">
+                            <StyledButton
+                                width="200px"
+                                height="50px"
+                                onPress={handleGuessSubmit}
+                                label="Check answer"
+                            />
+                            <spacer size="xsmall" />
+                            <StyledButton
+                                width="200px"
+                                height="50px"
+                                onPress={handleReveal}
+                                label="Give up, reveal solution"
+                            />
                         </hstack>
+                        <text weight="bold" size="xxlarge" color="Red">{feedback}</text>
+                        <spacer size="xsmall" />
+
+                        
+                        <StyledButton
+                            width="200px"
+                            height="50px"
+                            onPress={onFinishTurn}
+                            label="Finish Turn"
+                        />
                         
                     </vstack>
+                    {hasRevealed && (
+                        <vstack 
+                            backgroundColor="white" 
+                            border="thick" 
+                            borderColor="black" 
+                            padding="medium"
+                            alignment='middle center'
+                            height="80%"
+                        >                            
+                            <text color="Red">Solution: </text>
+                            <StyledSolution label={solution} />
+                            <spacer size="xsmall" />
+                            <text color="Black">Clue setter: {authorId}</text>
+                            <spacer size="xsmall" />
+                            <text color="Black">Explanation: {explanation}</text>
+                            <spacer size="xsmall" />
+                            <StyledButton
+                                width="200px"
+                                height="40px"
+                                onPress={() => setCurrentPage('GuessLeaderBoard')}
+                                label="View Leaderboard"
+                            />
+                            <spacer size="xsmall" />
+                            <StyledButton
+                                width="200px"
+                                height="40px"
+                                label="Rate this clue"
+                            />
+                        </vstack>
+                    )}
                 </zstack>
             </blocks>
         );

@@ -25,6 +25,7 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
     const [clue, setClue] = useState<string>("");
     const [explanation, setExplanation] = useState<string>("");
     const [solution, setSolution] = useState<string>("");
+    const [showPopup, setShowPopup] = useState<boolean>(false);
     const clueForm = useForm(
         {
             fields: [
@@ -59,59 +60,84 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
     }, 1000);  
     updateInterval.start();
 
+    const popupInterval = useInterval(() => {
+        setShowPopup(false);
+      }, 2000);
+  
+    const handleButtonPress = () => {
+        if (!clue || !solution || !explanation) {
+            setShowPopup(true);
+            popupInterval.start();
+        }
+        else{
+            props.onNext(clue, solution, explanation);
+        }
+        
+    };
+
     // main return function
     return (
-        <vstack
-            width="100%"
-            minHeight="100%"
-            alignment="middle center"
-            gap="small"
-            >
+        <zstack alignment='middle center' width="100%" height="100%">
+            <vstack
+                width="100%"
+                minHeight="100%"
+                alignment="middle center"
+                gap="small"
+                >
 
-            <text 
-                weight="bold" 
-                outline="none" 
-                color ="Black" 
-                size="xxlarge">Give a clue</text>
+                <text 
+                    weight="bold" 
+                    outline="none" 
+                    color ="Black" 
+                    size="xxlarge">Give a clue</text>
 
-            <hstack width="95%" alignment="center middle">
-                <vstack maxWidth="50%">
-                    <text weight="bold" size="medium" color = "Black">{clue ? `CLUE: ${clue}` : "No clue given yet"}</text>
-                    <text weight="bold" size="medium" color = "Black">{solution ? `SOLUTION: ${solution}` : ""}  </text>
-                    <text weight="bold" size="medium" color = "Black">{explanation ? `EXPLANATION: ${explanation}` : ""}  </text>
-                    <spacer height="20px"/>
-                    <StyledButton 
-                        width="200px"
-                        height="40px"
-                        onPress={() => context.ui.showForm(clueForm)}                        
-                        label="Enter Clue" />
-                    <spacer height="20px"/>
-                    <StyledButton 
-                        width="200px"
-                        height="40px"
-                        onPress={() => context.ui.navigateTo('https://s.wsj.net/blogs/html/wsjcrypticguide.pdf')}
-                        label="Confused about cryptic crosswords? Click here" />
+                <hstack width="95%" alignment="middle center">
+                    <vstack maxWidth="70%" alignment="middle center">
+                        <text weight="bold" size="medium" color = "Black">{clue ? `CLUE: ${clue}` : "No clue given yet"}</text>
+                        <text weight="bold" size="medium" color = "Black">{solution ? `SOLUTION: ${solution}` : ""}  </text>
+                        <text weight="bold" size="medium" color = "Black">{explanation ? `EXPLANATION: ${explanation}` : ""}  </text>
+                        <spacer height="5%"/>
+                        <StyledButton 
+                            width="200px"
+                            height="20px"
+                            backgroundColor="White"
+                            onPress={() => context.ui.showForm(clueForm)}                        
+                            label="Enter Clue" />
+                        <spacer height="5%"/>
+                        
+                        <text onPress={() => context.ui.navigateTo('https://s.wsj.net/blogs/html/wsjcrypticguide.pdf')} color="Blue"> 
+                            Confused about cryptic crosswords? Click here
+                        </text>
+                        
+                    </vstack>
                     
-   
-                </vstack>
-                <spacer width = "10px"/>
-                <vstack>
+                </hstack>
+                <hstack>
+                    <button appearance="media" icon="home" onPress={() => {
+                        props.setPage('Home');
+                    }}/>
+                    <spacer width="10px"/>
+                    <StyledButton 
+                            width="200px"
+                            height="40px"
+                            onPress={handleButtonPress}                        
+                            label="Submit" />
+                    
+                </hstack>
                 
-                </vstack>
-            </hstack>
-            <hstack>
-                <button appearance="media" icon="home" onPress={() => {
-                    props.setPage('Home');
-                }}/>
-                <spacer width="10px"/>
-                <button 
-                    onPress={() => {
-                    props.onNext(clue, solution,explanation);
-                    }}
-                    disabled={!clue}
-                    >Submit</button>
-            </hstack>
-        </vstack>
+            </vstack>
+            {showPopup && (
+                    <hstack 
+                        backgroundColor="white" 
+                        border="thick" 
+                        borderColor="black" 
+                        padding="medium"
+                        alignment='middle center'
+                    >
+                        <text color="Red">Finish writing your clue!</text>
+                    </hstack>
+                    )}
+        </zstack>
     );
 };
 
