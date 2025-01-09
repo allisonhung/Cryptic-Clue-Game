@@ -15,18 +15,16 @@ const HowToPlay = ({ setPage }: PageProps) => (
             alignment="middle center"
             gap="medium"
         >
-            <text weight="bold" size='xxlarge' color="YellowOrange-200">How to Play!</text>
+            <text weight="bold" size='xxlarge' color="Black">How to Play</text>
             <vstack> 
                 <spacer size="small" /> 
-                <text size="large" color="white"> The clue-giver provides a hint along with the number of cards it applies to. </text>
+                <text size="large" color="Black">Think you have what it takes to write cryptic clues?</text>
                 <spacer size ="xsmall" />
-                <text size="large" color="white">The guesser then tries to identify which cards are linked to the given clue.</text>
+                <text size="large" color="Black">Want to solve some cryptic crossword answers but not a whole grid?</text>
                 <spacer size="xsmall" />
-                <text size="large" color="white">Example: Clue: "Beach" -2  </text>
+                <text size="large" color="Black">This game is for people who want to write or solve cryptic crossword clues, </text>
                 <spacer size="xsmall" />
-                <text size="large" color="white">Cards: "Sand," "Ocean," "Star," "Robot," "Whale" </text>
-                <spacer size="xsmall" />
-                <text size="large" color="white">Guesses: "Sand" and "Ocean"</text>
+                <text size="large" color="Black">but don't want to do an entire puzzle.</text>
             </vstack>
             <button icon="home" onPress={() => setPage('Home')} appearance='media'/>
         </vstack> 

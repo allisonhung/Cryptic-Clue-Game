@@ -19,16 +19,11 @@ interface ConfirmClueProps {
 
 export const ConfirmClue = ({clue, solution, explanation, setPage, username}: ConfirmClueProps, context: Context): JSX.Element => {
     const postdata = new DataStorage(context);
-  
-
-    console.log("Clue", clue);
-    console.log("Solution", solution);
-    console.log("Explanation", explanation);
 
     async function postClue() {
       const community = await context.reddit.getCurrentSubreddit();
       const post = await context.reddit.submitPost({
-          title: 'Guess the words!',
+          title: 'Clue by ' + username,
           subredditName: community.name,
           preview: (
             <zstack height="100%" width="100%" alignment="center middle" backgroundColor={BACKGROUND_COLOR}>
@@ -38,6 +33,7 @@ export const ConfirmClue = ({clue, solution, explanation, setPage, username}: Co
           ),
       });
         
+      //store clue data, including postID, clue, solution, explanation, and authorID
       postdata.submitClue({
           postId: post.id,
           clue: clue,
@@ -46,9 +42,9 @@ export const ConfirmClue = ({clue, solution, explanation, setPage, username}: Co
           authorId: username,
       })
 
-      //console.log("words:", words);
-      //console.log("colors:", colors);
-      console.log("username from ConfirmClue", username);
+      //store postID in user's data
+
+      //navigate to post
       context.ui.showToast("Clue posted!");
       context.ui.navigateTo(post);
     }
@@ -60,8 +56,9 @@ export const ConfirmClue = ({clue, solution, explanation, setPage, username}: Co
           <text size='xlarge' color = "Black">Clue: {clue}</text>
           <spacer size="xsmall" />
           <StyledSolution label={solution} />
-          <spacer size="medium" />
+          <spacer size="xsmall" />
           <text size='xlarge' color = "Black">Explanation: {explanation}</text>
+          <spacer size="xsmall" />
           <hstack alignment="center middle">
             <StyledButton
               width = "200px"

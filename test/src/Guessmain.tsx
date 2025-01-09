@@ -50,11 +50,11 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
     if (data) {
         const [clue, solution, explanation, authorId] = data;
         const [feedback, setFeedback] = useState<string>('');
-        const [isGameOver, setIsGameOver] = useState<boolean>(false);
         const [score, setScore] = useState<number>(0);
         const [currentPage, setCurrentPage] = useState<string>('Guessmain');
         const [guess, setGuess] = useState<string>('');
         const [hasRevealed, setHasRevealed] = useState<boolean>(false);
+        const [guesses, setGuesses] = useState<number>(0);
 
         const guessForm = useForm(
             {
@@ -75,15 +75,17 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
             if (guess.toLowerCase() === solution.toLowerCase()) {
                 setFeedback('Correct!');
                 setScore(1);
-                setIsGameOver(true);
+                onFinishTurn();
+                setHasRevealed(true);
             } else {
+                setGuesses(guesses + 1);
                 setFeedback('Incorrect. Try again!');
             }
         };
         const handleReveal = () => {
             setFeedback(`The solution was: ${solution}`);
             setScore(0);
-            setIsGameOver(true);
+            onFinishTurn();
             setHasRevealed(true);
         };
 
@@ -100,8 +102,7 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                 score: score
             });
             
-            context.ui.showToast("Guess saved!");
-            setCurrentPage('ScorePage');
+            context.ui.showToast("Score stored in user info");
         };
 
         if(currentPage==='ScorePage'){
@@ -157,12 +158,7 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                         <spacer size="xsmall" />
 
                         
-                        <StyledButton
-                            width="200px"
-                            height="50px"
-                            onPress={onFinishTurn}
-                            label="Finish Turn"
-                        />
+                        <text color="Black">Number of guesses: {guesses}</text>
                         
                     </vstack>
                     {hasRevealed && (
@@ -174,7 +170,7 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                             alignment='middle center'
                             height="80%"
                         >                            
-                            <text color="Red">Solution: </text>
+                            <text color="Red">{feedback}</text>
                             <StyledSolution label={solution} />
                             <spacer size="xsmall" />
                             <text color="Black">Clue setter: {authorId}</text>

@@ -15,7 +15,7 @@ export const StyledSolution = (props: StyledSolutionProps): JSX.Element => {
     const characters = label.toUpperCase().split('');
 
     return (
-        <hstack gap="small">
+        <hstack>
             {characters.map((char, index) => (
                 <hstack
                     key={index.toString()}
@@ -42,7 +42,7 @@ export const EmptySolution = (props: EmptySolutionProps): JSX.Element => {
     } = props;
 
     return (
-        <hstack gap="small">
+        <hstack>
             {Array.from({ length }, (_, index) => (
                 <hstack
                     key={index.toString()}

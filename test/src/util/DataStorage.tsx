@@ -16,15 +16,31 @@ export class DataStorage {
     }
 
     readonly keys = {
+        //stores post data (clue, solution, explanation, authorId)
         postData: (postId: string) => `post:${postId}`,
-        userPosts: (userId: string) => `user-posts:${userId}`,
+
+        //stores user data (username, authoredPosts, guessedPosts)
         userData: (userId: string) => `user-data:${userId}`,
+
+        //stores scores for each post (1 if solved, 0 if gave up)
         postScores: (postId: string) => `post-scores:${postId}`,
-        postGuesses: (postId: string) => `post-guesses:${postId}`,
+
+        //stores scores for each user (1 if solved, 0 if gave up)
+        userScores: (postId: string) => `post-guesses:${postId}`,
+
+        //stores all existing authors of clues
         clueAuthors: () => 'clue-authors',
+        //stores all existing solvers of clues
+        clueSolvers: () => 'clue-solvers',
     }
 
-  async submitClue(data: {
+// when a clue is submitted, 
+// hset the post data (postID, clue, solution, explanation, authorId), 
+// zadd the post id to the user's posts, 
+// zadd the user to the post scores, 
+// zadd the user to the clue authors
+
+async submitClue(data: {
         postId: string;
         clue: string;
         solution: string;
@@ -36,7 +52,16 @@ export class DataStorage {
             return;
         }
         const key = this.keys.postData(data.postId);
+        const userKey = this.keys.userData(data.authorId);
+
+        //either get the user's authored posts or create an empty array
+        const userData = await this.redis.hGet(data.authorId, 'authoredPosts');
+        const authoredPosts = userData ? JSON.parse(userData) : [];
+        //add the post to the user's authored posts
+        authoredPosts.push(data.postId);
+
         await Promise.all([
+            //store the post data
             this.redis.hSet(key, {
                 postId: data.postId,
                 clue: data.clue,
@@ -44,14 +69,13 @@ export class DataStorage {
                 explanation: data.explanation,
                 authorId: data.authorId,
             }),
-            this.redis.zAdd(this.keys.userPosts(data.authorId),{
-                member: data.postId,
-                score: Date.now(),
+            //add this post to the user's authored posts
+            this.redis.hSet(userKey, {
+                username: data.authorId,
+                authoredPosts: JSON.stringify(authoredPosts),
             }),
-            this.redis.zAdd(this.keys.postScores(data.postId),{
-                member: data.authorId,
-                score: 0,
-            }),
+
+            //add the user to the list of all clue authors
             this.redis.zAdd(this.keys.clueAuthors(), {
                 member: data.authorId,
                 score: Date.now(), 
@@ -59,6 +83,8 @@ export class DataStorage {
 ]);
         console.log('Clue submitted:', data);
     }
+
+    //retrieve post data by post id
     async getClue(postId: string): Promise<[string, string, string, string]> {
         try {
             const key = this.keys.postData(postId);
@@ -79,6 +105,8 @@ export class DataStorage {
             throw error;
         }
     }
+
+    //submitting a guess
     async addGuess(data: {
         postId: string, 
         username: string, 
@@ -89,14 +117,27 @@ export class DataStorage {
             return;
         }
         try {
-            const key = this.keys.postScores(data.postId);
-            await this.redis.zAdd(key, {
-                member: data.username, 
-                score: data.score,
-            });
-            await this.redis.zAdd(this.keys.postGuesses(data.postId), {
+            const key = this.keys.userData(data.username)
+
+            const userData = await this.redis.hGet(key, 'solvedPosts');
+            const solvedPosts = userData ? JSON.parse(userData) : [];
+            solvedPosts.push(data.postId);
+
+            //add the user's userId and their score to the post's scores
+            await this.redis.zAdd(this.keys.userScores(data.postId), {
                 member: data.username,
                 score: data.score,
+            });
+
+            //add the post to the user's solved posts
+            await this.redis.hSet(key, {
+                solvedPosts: JSON.stringify(solvedPosts),
+            });
+
+            //add the user to the list of all clue solvers
+            await this.redis.zAdd(this.keys.clueSolvers(), {
+                member: data.username,
+                score: Date.now(),
             });
             //console.log('post score added:', data);
         } catch (error) {
@@ -104,6 +145,7 @@ export class DataStorage {
             throw error;
     }}
 
+    //get all users who have submitted a clue
     async getAllUsers(): Promise<string[]> {
         try {
             const authors = await this.redis.zRange(this.keys.clueAuthors(), 0, -1);
@@ -114,6 +156,18 @@ export class DataStorage {
         }
     }
 
+    //get all users who have solved a clue
+    async getAllSolvers(): Promise<string[]> {
+        try {
+            const solvers = await this.redis.zRange(this.keys.clueSolvers(), 0, -1);
+            return solvers.map(solver => solver.member);
+        } catch (error) {
+            console.error('Failed to get all solvers:', error);
+            throw error;
+        }
+    }
+
+    //get all the scores for a given post
     async getScores(postId: string): Promise<{username: string, score: number}[]> {
         try {
             const key = this.keys.postScores(postId);
@@ -127,22 +181,11 @@ export class DataStorage {
             throw error;
         }
     }
-    async getGuesses(postId: string): Promise<{username: string, score: number}[]> {
-        try {
-            const key = this.keys.postGuesses(postId);
-            const guesses = await this.redis.zRange(key, 0, -1);
-            return guesses.map(guess => ({
-                username: guess.member,
-                score: guess.score,
-            }));
-        } catch (error) {
-            console.error('Failed to get guesses:', error);
-            throw error;
-        }
-    }
+    
+    //for each username, get all the posts they have made
     async getUserPosts(username: string): Promise<string[]> {
         try{
-            const key = this.keys.userPosts(username);
+            const key = this.keys.userData(username);
             const postIds = await this.redis.zRange(key, 0, -1);
             return postIds.map(post => post.member);
         } catch (error) {

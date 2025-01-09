@@ -26,6 +26,7 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
     const [explanation, setExplanation] = useState<string>("");
     const [solution, setSolution] = useState<string>("");
     const [showPopup, setShowPopup] = useState<boolean>(false);
+    const [label, setLabel] = useState<string>("Finish writing your clue!");
     const clueForm = useForm(
         {
             fields: [
@@ -34,11 +35,29 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
                     label: "Enter your clue. Make sure it includes the letter parsing at the end, i.e. Trim a tree (6)",
                     type: "string",
                 },
+            ],
+        },
+        (values) => {
+            setClue(values.clue as string);
+        }
+    );
+    const solutionForm = useForm(
+        {
+            fields: [
                 {
                     name: "solution",
                     label: "Enter the solution",
                     type: "string",
                 },
+            ],
+        },
+        (values) => {
+            setSolution(values.solution as string);
+        }
+    );
+    const explanationForm = useForm(
+        {
+            fields: [
                 {
                     name: "explanation",
                     label: "Enter your explanation. Be detailed! This is your chance to show off your cryptic skills.",
@@ -47,8 +66,6 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
             ],
         },
         (values) => {
-            setClue(values.clue as string);
-            setSolution(values.solution as string);
             setExplanation(values.explanation as string);
         }
     );
@@ -67,8 +84,22 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
     const handleButtonPress = () => {
         if (!clue || !solution || !explanation) {
             setShowPopup(true);
+            setLabel("Please fill out all fields.")
             popupInterval.start();
         }
+        //check if clue contains the letter parsing
+        else if(!clue.includes("(") || !clue.includes(")")){
+            setShowPopup(true);
+            setLabel("clue does not contain proper letter parsing.")
+            popupInterval.start();
+        }
+        //check if explanation is detailed enough
+        else if(explanation.length < 50){
+            setShowPopup(true);
+            setLabel("explanation is not detailed enough.")
+            popupInterval.start();
+        }
+        
         else{
             props.onNext(clue, solution, explanation);
         }
@@ -93,16 +124,27 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
 
                 <hstack width="95%" alignment="middle center">
                     <vstack maxWidth="70%" alignment="middle center">
-                        <text weight="bold" size="medium" color = "Black">{clue ? `CLUE: ${clue}` : "No clue given yet"}</text>
-                        <text weight="bold" size="medium" color = "Black">{solution ? `SOLUTION: ${solution}` : ""}  </text>
-                        <text weight="bold" size="medium" color = "Black">{explanation ? `EXPLANATION: ${explanation}` : ""}  </text>
                         <spacer height="5%"/>
                         <StyledButton 
                             width="200px"
-                            height="20px"
+                            height="30px"
                             backgroundColor="White"
                             onPress={() => context.ui.showForm(clueForm)}                        
-                            label="Enter Clue" />
+                            label={clue ? `${clue}` : "Enter Clue"} />
+                        <spacer height="5%"/>
+                        <StyledButton 
+                            width="200px"
+                            height="30px"
+                            backgroundColor="White"
+                            onPress={() => context.ui.showForm(solutionForm)}                        
+                            label={solution ? `${solution}` : "Enter Solution"} />
+                        <spacer height="5%"/>
+                        <StyledButton 
+                            width="200px"
+                            height="30px"
+                            backgroundColor="White"
+                            onPress={() => context.ui.showForm(explanationForm)}                        
+                            label={explanation ? `${explanation}` : "Enter Explanation"} />
                         <spacer height="5%"/>
                         
                         <text onPress={() => context.ui.navigateTo('https://s.wsj.net/blogs/html/wsjcrypticguide.pdf')} color="Blue"> 
@@ -127,16 +169,16 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
                 
             </vstack>
             {showPopup && (
-                    <hstack 
-                        backgroundColor="white" 
-                        border="thick" 
-                        borderColor="black" 
-                        padding="medium"
-                        alignment='middle center'
-                    >
-                        <text color="Red">Finish writing your clue!</text>
-                    </hstack>
-                    )}
+                <hstack 
+                    backgroundColor="white" 
+                    border="thick" 
+                    borderColor="black" 
+                    padding="medium"
+                    alignment='middle center'
+                >
+                    <text color="Red">{label}</text>
+                </hstack>
+            )}
         </zstack>
     );
 };
