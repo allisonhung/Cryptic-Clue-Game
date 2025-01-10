@@ -1,7 +1,7 @@
 import {Devvit, PostType, useAsync} from '@devvit/public-api'
 import { DataStorage } from './util/DataStorage.js';
 import type { Context } from '@devvit/public-api';
-import { BACKGROUND_COLOR } from './data/config.js';
+import { BACKGROUND_COLOR, TEXT_COLOR } from './data/config.js';
 
 Devvit.configure({
     redditAPI: true,
@@ -15,47 +15,14 @@ type LeaderboardProps = {
 export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Context): JSX.Element => {
     const dataStorage = new DataStorage(context);
 
-    // Fetch all posts by the user
-    const {data: postIds, loading, error} = useAsync(async () => {
-        try {
-            const posts = await dataStorage.getUserPosts(username);
-            return posts;
-        } catch (err) {
-            console.error("Error fetching posts:", err);
-            throw err;
-        }
-    }, {depends: [username]});
-
-    const {data: postScores, loading: loadingScores, error: errorScores} = useAsync(async () => {
-        if (!postIds) return [];
-        const scores = await Promise.all(postIds.map(async (postId) => {
-            const scores = await dataStorage.getScores(postId);
-            const averageScore = scores.reduce((acc, score) => acc + score.score, 0) / scores.length;
-            return {postId, averageScore};
-        }));
-        return scores;
-    }, {depends: [postIds]});
-
-    const {data: rating, loading: loadingRating, error: errorRating} = useAsync(async () => {
-        if (!postIds) return [];
-        const ratings = await Promise.all(postIds.map(async (postId) => {
-            const ratings = await dataStorage.getRating(postId);
-            return ratings;
-        }));
-        return ratings;
-    }, {depends: [postIds]});
 
     const {data: allUsers, loading: loadingUsers, error: errorUsers} = useAsync(async () => {
         return await dataStorage.getAllUsers();
     });
 
-    if (loading || loadingScores || loadingUsers || loadingRating) {
-        return <text>Loading...</text>;
-    }
-
-    if (!postIds || !postScores) {
-        return <text>No posts or postscores found</text>;
-    }
+    const {data: topScorer, loading: loadingTopScorer, error: errorTopScorer} = useAsync(async () => {
+        return await dataStorage.getTopScorer();
+    });
 
     async function getAverageRatings(allUsers: string[]): Promise<{ username: string; postCount: number; totalAverageRating: number }[]> {
         return await Promise.all(
@@ -83,19 +50,24 @@ export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Cont
         );
     }
     
+
     const { data: userRating, loading: loadingUserRating, error: errorUserRating} = useAsync(async () => {
         if (!allUsers || allUsers.length === 0) return [];
         const scores = await getAverageRatings(allUsers);
         return scores;
     }, { depends: [allUsers] });
 
-    if (loadingUserRating) {
-        return <text>Loading user scores...</text>;
-    }
+    if (loadingUserRating || loadingUsers || loadingTopScorer) {
+        return <text>Loading...</text>;
+    } 
 
     if (!userRating){
         return <text>No user scores found</text>;
     }
+    if (!topScorer){
+        return <text>No top scorer found</text>;
+    }
+
     const topUsers = userRating
     .sort((a, b) => b.totalAverageRating - a.totalAverageRating)
     .slice(0, 5);
@@ -105,6 +77,12 @@ export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Cont
         <zstack height="100%" width="100%" alignment="center" backgroundColor={BACKGROUND_COLOR}>
             
             <vstack alignment="center" width="100%">
+                <text weight="bold" size="xxlarge" color='Black'>
+                    Most clues solved: 
+                </text>
+                <spacer height="20px" />
+                <text color={TEXT_COLOR}>{topScorer.scorer} with {topScorer.score} solves</text>
+                <spacer height="20px" />
                 <text weight="bold" size="xxlarge" color='Black'>
                     Highest rated setters
                 </text>

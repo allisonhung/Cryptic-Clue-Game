@@ -52,7 +52,7 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
             ],
         },
         (values) => {
-            setSolution(values.solution as string);
+            setSolution((values.solution as string).replace(/\s+/g, '').toUpperCase());
         }
     );
     const explanationForm = useForm(
@@ -124,7 +124,6 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
 
                 <hstack width="95%" alignment="middle center">
                     <vstack maxWidth="70%" alignment="middle center">
-                        <spacer height="5%"/>
                         <StyledButton 
                             width="200px"
                             height="30px"

@@ -292,6 +292,22 @@ async submitClue(data: {
         }
     }
 
+    async getTopScorer(): Promise<{scorer:string, score:number}> {
+        try{
+            const guessers = await this.redis.zRange(this.keys.clueSolvers(), 0, -1);
+            const guesserPoints = await Promise.all(guessers.map(async guesser => {
+                const key = this.keys.userData(guesser.member);
+                const data = await this.redis.hGet(key, 'points');
+                return data ? JSON.parse(data).reduce((acc: number, score: number) => acc + score, 0) : 0;
+            }));
+            const topScorerIndex = guesserPoints.indexOf(Math.max(...guesserPoints));
+            return {scorer: guessers[topScorerIndex].member, score: guesserPoints[topScorerIndex]};
+        } catch (error) {
+            console.error('Failed to get top scorer:', error);
+            throw error;
+        }
+    }
+
     //get posts completed by user
     async hasSolved(data: {username: string, postId: string}): Promise<boolean> {
         try {

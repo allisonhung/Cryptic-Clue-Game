@@ -73,7 +73,7 @@ const Home = ({setPage}: PageProps) => (
         width="200px"
         height="50px"
         onPress={() => setPage('Leaderboard')}
-        label="Setter Leaderboard" />
+        label="Leaderboards" />
       
       <StyledButton 
         width="200px"

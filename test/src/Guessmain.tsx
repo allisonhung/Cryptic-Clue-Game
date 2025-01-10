@@ -79,7 +79,7 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                 ],
             },
             (values) => {
-                setGuess(values.guess as string);
+                setGuess((values.guess as string).replace(/\s+/g, ''));
             }
         );
 
@@ -184,7 +184,7 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                             height="50%"
                             width="50%"
                         >
-                            <text color="Red">Are you sure you want to reveal the solution?</text>
+                            <text wrap color="Red">Are you sure you want to reveal the solution?</text>
                             <spacer size="xsmall" />
                             <hstack alignment="center middle">
                                 <StyledButton

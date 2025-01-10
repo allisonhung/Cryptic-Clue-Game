@@ -18,13 +18,11 @@ const HowToPlay = ({ setPage }: PageProps) => (
             <text weight="bold" size='xxlarge' color="Black">How to Play</text>
             <vstack> 
                 <spacer size="small" /> 
-                <text size="large" color="Black">Think you have what it takes to write cryptic clues?</text>
+                <text wrap size="large" color="Black">Think you have what it takes to write cryptic clues?</text>
                 <spacer size ="xsmall" />
-                <text size="large" color="Black">Want to solve some cryptic crossword answers but not a whole grid?</text>
+                <text wrap size="large" color="Black">Want to solve some cryptic crossword answers but not a whole grid?</text>
                 <spacer size="xsmall" />
-                <text size="large" color="Black">This game is for people who want to write or solve cryptic crossword clues, </text>
-                <spacer size="xsmall" />
-                <text size="large" color="Black">but don't want to do an entire puzzle.</text>
+                <text wrap size="large" color="Black">This game is for people who want to write or solve cryptic crossword clues, but don't want to do an entire puzzle.</text>
             </vstack>
             <button icon="home" onPress={() => setPage('Home')} appearance='media'/>
         </vstack> 
