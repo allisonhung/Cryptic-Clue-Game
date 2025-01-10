@@ -5,6 +5,7 @@ import type { Context } from '@devvit/public-api';
 import {Leaderboard} from './leaderboard.js';
 import { StyledButton } from './data/styledButton.js';
 import { StyledSolution } from './data/styledSolution.js';
+import { UserStats } from './UserStats.js';
 
 Devvit.configure({
   redditAPI: true,
@@ -36,6 +37,9 @@ export const Cluemain = (props: CluemainProps, context: Context): JSX.Element =>
         break;
       case 'Leaderboard':
         currentPage = <Leaderboard setPage={setPage} username={props.username}/>;
+        break;
+      case 'UserStats':
+        currentPage = <UserStats setPage={setPage} username={props.username}/>;
         break;
       default:
         currentPage = <Home setPage={setPage} username = {props.username}/>;
@@ -75,9 +79,8 @@ const Home = ({setPage}: PageProps) => (
       <StyledButton 
         width="200px"
         height="50px"
-        onPress={() => setPage('Leaderboard')}
-        label="Solver Leaderboard" />
-      
+        onPress={() => setPage('UserStats')}
+        label="See my stats" />
       
     </vstack>
   </zstack>

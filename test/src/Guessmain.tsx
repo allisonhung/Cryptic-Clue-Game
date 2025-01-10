@@ -6,9 +6,6 @@ import { GuessLeaderBoard } from "./Guess/GuessLeaderBoard.js";
 import { StyledButton } from "./data/styledButton.js";
 import { StyledSolution, EmptySolution } from "./data/styledSolution.js";
 
-// note - need to add something so user can't submit multiple guess attempts. 
-// immediately direct to leaderboard?
-
 Devvit.configure({
     redditAPI: true,
 });
@@ -28,7 +25,16 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
         }
         return await postdata.getClue(context.postId);
     });
-    if (loading) {
+
+    const { data: solved, loading: loadingSolved, error: errorSolved } = useAsync(async () => {
+        if (!context.postId) {
+            throw new Error('Post ID is missing');
+        }
+
+        return await postdata.hasSolved({postId: context.postId, username: props.username});
+    });
+
+    if (loading || loadingSolved) {
         return (
             <blocks>
                 <vstack height="100%" width="100%" alignment="center middle">
@@ -46,15 +52,23 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
             </blocks>
         );
     }
+
+    
     
     if (data) {
         const [clue, solution, explanation, authorId] = data;
         const [feedback, setFeedback] = useState<string>('');
-        const [score, setScore] = useState<number>(0);
         const [currentPage, setCurrentPage] = useState<string>('Guessmain');
         const [guess, setGuess] = useState<string>('');
         const [hasRevealed, setHasRevealed] = useState<boolean>(false);
         const [guesses, setGuesses] = useState<number>(0);
+        console.log("hasRevealed: ", hasRevealed);
+        //check if postid exists in user's solvedposts. If it does, set hasRevealed to true
+        console.log("Solved: ", solved);
+        if (solved) {
+            setFeedback(`You have already solved this clue`);
+        }
+        console.log("hasRevealed: ", hasRevealed);
 
         const guessForm = useForm(
             {
@@ -74,8 +88,7 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
         const handleGuessSubmit = () => {
             if (guess.toLowerCase() === solution.toLowerCase()) {
                 setFeedback('Correct!');
-                setScore(1);
-                onFinishTurn();
+                onFinishTurn(1);
                 setHasRevealed(true);
             } else {
                 setGuesses(guesses + 1);
@@ -84,18 +97,18 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
         };
         const handleReveal = () => {
             setFeedback(`The solution was: ${solution}`);
-            setScore(0);
-            onFinishTurn();
+            onFinishTurn(0);
             setHasRevealed(true);
         };
 
         
 
-        async function onFinishTurn() {
+        async function onFinishTurn(score: number) {
             //console.log('Finishing turn...');
             if (!context.postId) {
                 throw new Error('Post ID is missing');
             }
+
             postdata.addGuess({
                 postId: context.postId, 
                 username: props.username, 
@@ -109,7 +122,7 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
             if (!context.postId) {
                 throw new Error('Post ID is missing');
             }
-            return <ScorePage score={score} setPage={setCurrentPage} postId={context.postId} username={props.username}/>;
+            return <ScorePage setPage={setCurrentPage} postId={context.postId} username={props.username}/>;
         }
         
 
@@ -141,14 +154,14 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                         <spacer size="xsmall" />
                         <hstack alignment="center middle">
                             <StyledButton
-                                width="200px"
+                                width="30%"
                                 height="50px"
                                 onPress={handleGuessSubmit}
                                 label="Check answer"
                             />
                             <spacer size="xsmall" />
                             <StyledButton
-                                width="200px"
+                                width="30%"
                                 height="50px"
                                 onPress={handleReveal}
                                 label="Give up, reveal solution"
@@ -161,7 +174,7 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                         <text color="Black">Number of guesses: {guesses}</text>
                         
                     </vstack>
-                    {hasRevealed && (
+                    {(hasRevealed || solved) && (
                         <vstack 
                             backgroundColor="white" 
                             border="thick" 
@@ -169,13 +182,14 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                             padding="medium"
                             alignment='middle center'
                             height="80%"
+                            width="90%"
                         >                            
-                            <text color="Red">{feedback}</text>
+                            <text color="Red">{solved ? "You have already solved this clue": feedback}</text>
                             <StyledSolution label={solution} />
                             <spacer size="xsmall" />
                             <text color="Black">Clue setter: {authorId}</text>
                             <spacer size="xsmall" />
-                            <text color="Black">Explanation: {explanation}</text>
+                            <text color="Black" maxHeight="60px" wrap overflow="ellipsis">Explanation: {explanation}</text>
                             <spacer size="xsmall" />
                             <StyledButton
                                 width="200px"
@@ -187,6 +201,7 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                             <StyledButton
                                 width="200px"
                                 height="40px"
+                                onPress={() => setCurrentPage('ScorePage')}
                                 label="Rate this clue"
                             />
                         </vstack>

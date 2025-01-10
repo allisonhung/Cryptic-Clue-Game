@@ -3,7 +3,7 @@ import type { Context } from "@devvit/public-api";
 import { DataStorage } from "../util/DataStorage.js";
 import { BACKGROUND_COLOR } from "../data/config.js";
 
-//idk what this leaderboard would be for! Maybe least number of guesses
+//leaderboard should show first 5 people to guess correctly
 
 Devvit.configure({
     redditAPI: true,
@@ -22,44 +22,62 @@ export const GuessLeaderBoard = ({setPage, postId, username}: GuessLeaderBoardPr
         return await dataStorage.getScores(postId);
     },{depends: [postId]});
 
-    if (loading) {
+    const {data: rating, loading: loadingRating, error: errorRating} = useAsync(async () => {
+        return await dataStorage.getRatings(postId);
+    } ,{depends: [postId]});
+
+    const {data: averageRating, loading: loadingAverageRating, error: errorAverageRating} = useAsync(async () => {
+        return await dataStorage.getRating(postId);
+    },{depends: [postId]});
+
+
+    if (loading || loadingRating || loadingAverageRating) {
         return <text>Loading...</text>;
     }
     if (!scores) {
         return <text>No scores found</text>;}
+    if (!rating) {
+        return <text>No ratings found</text>;}
 
-    const topUser = [...scores]
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 5);
+
+    //get the first 5 users who have a score of 1 and save them as firstSolvers
+    const firstSolvers = scores.filter((score) => score.score === 1).slice(0, 5);
+
+
+    //sum up all the scores
+    const totalScore = scores.reduce((acc, curr) => acc + curr.score, 0);
     
     return(
              <zstack height="100%" width="100%" alignment="center" backgroundColor={BACKGROUND_COLOR}>
                 
       <vstack width="100%" alignment="center">
             <text weight="bold" size="xxlarge" color="Black">
-                Leaderboard
+                First 5 Solvers
             </text>
+            <text color="Black">Number of successful solves: {totalScore}</text>
+            <text color="Black">People who gave up: {scores.length - totalScore}</text>
+            <text color="Black">Average rating of this clue: {averageRating}</text>
+            <text color="Black">Out of {rating.length} ratings</text>
+            
+
 
             <spacer height="20px" />
             <hstack width="100%" alignment="center">
-                <text weight="bold" size="xlarge" color="Red"  width="20%">
+                <text weight="bold" size="xlarge" color="Red"  width="40%">
                     Rank
                 </text>
                 <text weight="bold" size="xlarge" color="Red" width="40%">
                     Username
                 </text>
-                <text weight="bold" size="xlarge" color="Red" width="40%">
-                    Number of clues solved
-                </text>
+                
             </hstack>
             
-            {topUser && topUser.map(({ username, score }, index) => (
+            {firstSolvers && firstSolvers.map(({ username, score }, index) => (
 
                 <hstack key={username} width="100%" alignment="center">
                     <spacer width="20%" />
-                    <text color="white" width="20%">{index + 1}</text>
-                    <text color="white" width="40%">{username}</text>
-                    <text color="white" width="40%">{score}</text>
+                    <text color="Black" width="40%">{index + 1}</text>
+                    <text color="Black" width="40%">{username}</text>
                 </hstack>
             ))} <vstack alignment="bottom">
                 <spacer height="40px" />

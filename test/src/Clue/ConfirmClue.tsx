@@ -57,7 +57,7 @@ export const ConfirmClue = ({clue, solution, explanation, setPage, username}: Co
           <spacer size="xsmall" />
           <StyledSolution label={solution} />
           <spacer size="xsmall" />
-          <text size='xlarge' color = "Black">Explanation: {explanation}</text>
+          <text wrap size='xlarge' color = "Black">Explanation: {explanation}</text>
           <spacer size="xsmall" />
           <hstack alignment="center middle">
             <StyledButton

@@ -10,20 +10,13 @@ type LeaderboardProps = {
     setPage: (page: string) => void;
     username: string;
 };
-interface Score {
-    username: string;
-    score: number;
-}
-interface PostScore{
-    postId: string;
-    averageScore: number;
-    [key: string]: string | number;
-}
+
 
 export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Context): JSX.Element => {
     console.log("Rendering Leaderboard component");
     const dataStorage = new DataStorage(context);
 
+    // Fetch all posts by the user
     const {data: postIds, loading, error} = useAsync(async () => {
         console.log("Fetching user posts");
         try {
@@ -46,100 +39,111 @@ export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Cont
         return scores;
     }, {depends: [postIds]});
 
+    const {data: rating, loading: loadingRating, error: errorRating} = useAsync(async () => {
+        if (!postIds) return [];
+        const ratings = await Promise.all(postIds.map(async (postId) => {
+            const ratings = await dataStorage.getRating(postId);
+            return ratings;
+        }));
+        console.log("ratings fetched: ", ratings);
+        return ratings;
+    }, {depends: [postIds]});
+
     const {data: allUsers, loading: loadingUsers, error: errorUsers} = useAsync(async () => {
         return await dataStorage.getAllUsers();
     });
 
-    if (loading || loadingScores || loadingUsers) {
+    if (loading || loadingScores || loadingUsers || loadingRating) {
         return <text>Loading...</text>;
     }
     console.log("postIds", postIds);
     console.log("postScores", postScores);
     console.log("allUsers", allUsers);
+    console.log("averageRating", rating);
 
     if (!postIds || !postScores) {
         return <text>No posts or postscores found</text>;
     }
 
-    const totalPosts = postIds.length;
-    const totalAverageScore = postScores.reduce((acc, { averageScore }) => acc + averageScore, 0) / postScores.length;
-
-    async function getTotalAverageScores(allUsers: string[]): Promise<{ username: string; postCount: number; totalAverageScore: number }[]> {
+    async function getAverageRatings(allUsers: string[]): Promise<{ username: string; postCount: number; totalAverageRating: number }[]> {
         return await Promise.all(
             allUsers.map(async (username) => {
                 const postIds = await dataStorage.getUserPosts(username);
                 if (!postIds || postIds.length === 0) {
-                    return { username, postCount: 0, totalAverageScore: 0 };
+                    return { username, postCount: 0, totalAverageRating: 0 };
                 }
-    
-                let totalScore = 0;
+
+                let totalRating = 0;
                 let postCount = 0;
-    
+
+                //for each postId, get the average rating of it. Then, take the average of all the ratings
                 for (const postId of postIds) {
-                    const scores = await dataStorage.getScores(postId);
-                    if (scores && scores.length > 0) {
-                        const averageScore =
-                            scores.reduce((acc, score) => acc + score.score, 0) / scores.length;
-                        totalScore += averageScore;
-                        postCount += 1;
+                    const rating = await dataStorage.getRating(postId);
+                    if (rating) {
+                        totalRating += rating;  
                     }
+                    postCount += 1;
+                    console.log("postCount", postCount)
+                    console.log("totalRating", totalRating)
                 }
-    
-                const totalAverageScore = postCount > 0 ? totalScore / postCount : 0;
-                return { username, postCount, totalAverageScore };
+
+                const totalAverageRating = postCount > 0 ? totalRating / postCount : 0;
+                return { username, postCount, totalAverageRating };
             })
         );
     }
     
-    const { data: userScores, loading: loadingUserScores, error: errorUserScores } = useAsync(async () => {
+    const { data: userRating, loading: loadingUserRating, error: errorUserRating} = useAsync(async () => {
         if (!allUsers || allUsers.length === 0) return [];
-        const scores = await getTotalAverageScores(allUsers);
+        const scores = await getAverageRatings(allUsers);
+        console.log("ratings", scores);
         return scores;
     }, { depends: [allUsers] });
 
-    if (loadingUserScores) {
+    if (loadingUserRating) {
         return <text>Loading user scores...</text>;
     }
 
-    if (!userScores){
+    if (!userRating){
         return <text>No user scores found</text>;
     }
-    const topUsers = userScores
-    .sort((a, b) => b.totalAverageScore - a.totalAverageScore)
+    const topUsers = userRating
+    .sort((a, b) => b.totalAverageRating - a.totalAverageRating)
     .slice(0, 5);
+    console.log("userRating", userRating);
+    console.log("topUsers", topUsers);
 
-    
     
     return (
         <zstack height="100%" width="100%" alignment="center" backgroundColor={BACKGROUND_COLOR}>
             
             <vstack alignment="center" width="100%">
-                <text weight="bold" size="xxlarge" color='YellowOrange-200'>
+                <text weight="bold" size="xxlarge" color='Black'>
                     Highest rated setters
                 </text>
                 <spacer height="20px" />
                 <hstack width="100%" alignment="center">
                 <spacer height="20px" />
-                    <text weight="bold" size="large" color='YellowOrange-200' width="20%">
+                    <text weight="bold" size="large" color='Red' width="20%">
                         Rank
                     </text>
-                    <text weight="bold" size="large" color='YellowOrange-200' width="30%">
+                    <text weight="bold" size="large" color='Red' width="30%">
                         Username
                     </text>
-                    <text weight="bold" size="large" color='YellowOrange-200' width="25%">
+                    <text weight="bold" size="large" color='Red' width="25%">
                         Number of Clues
                     </text>
-                    <text weight="bold" size="large"color='YellowOrange-200' width="25%">
+                    <text weight="bold" size="large"color='Red' width="25%">
                         Avg Rating
                     </text>
                 </hstack>
-                {topUsers.map(({ username, postCount, totalAverageScore }, index) => (
+                {topUsers.map(({ username, postCount, totalAverageRating }, index) => (
                     <hstack key={username} width="100%" alignment="center">
                         <spacer height="20px" />
-                        <text color='white' width="20%">{index + 1}</text>
-                        <text color='white' width="30%">{username}</text>
-                        <text color='white' width="25%">{postCount}</text>
-                        <text color='white' width="25%">{totalAverageScore.toFixed(2)}</text>
+                        <text color='Black' width="20%">{index + 1}</text>
+                        <text color='Black' width="30%">{username}</text>
+                        <text color='Black' width="25%">{postCount}</text>
+                        <text color='Black' width="25%">{totalAverageRating.toFixed(2)}</text>
                     </hstack>
                 ))}
                 <spacer height="40px" />
