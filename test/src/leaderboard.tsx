@@ -13,15 +13,12 @@ type LeaderboardProps = {
 
 
 export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Context): JSX.Element => {
-    console.log("Rendering Leaderboard component");
     const dataStorage = new DataStorage(context);
 
     // Fetch all posts by the user
     const {data: postIds, loading, error} = useAsync(async () => {
-        console.log("Fetching user posts");
         try {
             const posts = await dataStorage.getUserPosts(username);
-            console.log("Fetched posts:", posts);
             return posts;
         } catch (err) {
             console.error("Error fetching posts:", err);
@@ -45,7 +42,6 @@ export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Cont
             const ratings = await dataStorage.getRating(postId);
             return ratings;
         }));
-        console.log("ratings fetched: ", ratings);
         return ratings;
     }, {depends: [postIds]});
 
@@ -56,10 +52,6 @@ export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Cont
     if (loading || loadingScores || loadingUsers || loadingRating) {
         return <text>Loading...</text>;
     }
-    console.log("postIds", postIds);
-    console.log("postScores", postScores);
-    console.log("allUsers", allUsers);
-    console.log("averageRating", rating);
 
     if (!postIds || !postScores) {
         return <text>No posts or postscores found</text>;
@@ -83,8 +75,6 @@ export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Cont
                         totalRating += rating;  
                     }
                     postCount += 1;
-                    console.log("postCount", postCount)
-                    console.log("totalRating", totalRating)
                 }
 
                 const totalAverageRating = postCount > 0 ? totalRating / postCount : 0;
@@ -96,7 +86,6 @@ export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Cont
     const { data: userRating, loading: loadingUserRating, error: errorUserRating} = useAsync(async () => {
         if (!allUsers || allUsers.length === 0) return [];
         const scores = await getAverageRatings(allUsers);
-        console.log("ratings", scores);
         return scores;
     }, { depends: [allUsers] });
 
@@ -110,8 +99,6 @@ export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Cont
     const topUsers = userRating
     .sort((a, b) => b.totalAverageRating - a.totalAverageRating)
     .slice(0, 5);
-    console.log("userRating", userRating);
-    console.log("topUsers", topUsers);
 
     
     return (

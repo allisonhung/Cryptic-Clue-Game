@@ -56,12 +56,9 @@ async submitClue(data: {
 
         //either get the user's authored posts or create an empty array
         const userData = await this.redis.hGet(userKey, 'authoredPosts');
-        console.log("extracted user data: ", userData);
         const authoredPosts = userData ? JSON.parse(userData) : [];
         //add the post to the user's authored posts
-        console.log("authored posts before: ", authoredPosts);
         authoredPosts.push(data.postId);
-        console.log("new list of authored posts:", authoredPosts);
 
         await Promise.all([
             //store the post data
@@ -87,7 +84,6 @@ async submitClue(data: {
                 score: Date.now(), 
     }),
 ]);
-        console.log('Clue submitted:', data);
     }
 
     //retrieve post data by post id
@@ -168,7 +164,6 @@ async submitClue(data: {
                 member: data.username,
                 score: data.score,
             });
-            //console.log('post score added:', data);
         } catch (error) {
             console.error('Failed to add guess:', error);
             throw error;
@@ -213,10 +208,7 @@ async submitClue(data: {
             const key = this.keys.postData(postId);
             const post = await this.redis.hGet(key, 'ratings');
             const ratings = post ? JSON.parse(post) : [];
-            console.log("extracted ratings:", ratings);
             const sum = ratings.reduce((acc: number, rating: {rating: number}) => acc + rating.rating, 0);
-            console.log("sum of ratings:", sum);
-            console.log("number of ratings:", ratings.length);
             return sum / ratings.length;
         } catch (error) {
             console.error('Failed to get rating:', error);
@@ -306,7 +298,6 @@ async submitClue(data: {
             const key = this.keys.userData(data.username);
             const postlist = await this.redis.hGet(key, 'solvedPosts');
             const solvedPosts = postlist ? JSON.parse(postlist) : [];
-            console.log("extracted solved posts: ", solvedPosts);
             return solvedPosts.includes(data.postId);
         } catch (error) {
             console.error('Failed to get solved posts:', error);

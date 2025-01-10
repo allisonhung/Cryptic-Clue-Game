@@ -21,7 +21,6 @@ type CluemainProps = {
 }
 
 export const Cluemain = (props: CluemainProps, context: Context): JSX.Element => {
-    //console.log("username", props.username);
     const [page, setPage] = useState('Home');    
     let currentPage;
     

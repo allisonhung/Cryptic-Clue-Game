@@ -1,9 +1,9 @@
 import { Devvit, useAsync, useForm, useState} from "@devvit/public-api";
 import type { Context } from "@devvit/public-api";
 import { DataStorage } from "../util/DataStorage.js";
-import {GuessLeaderBoard} from './GuessLeaderBoard.js';
 import { BACKGROUND_COLOR } from "../data/config.js";
 import { StyledButton } from "../data/styledButton.js";
+import { StarRating } from "../data/stars.js";
 
 Devvit.configure({
     redditAPI: true,
@@ -27,27 +27,10 @@ export const ScorePage = ({setPage, postId, username}: ScorePageProps, context: 
 
     
     const [rating, setRating] = useState<number>(0);
-    const ratingForm = useForm(
-            {
-                fields: [
-                    {
-                        name: "Rating",
-                        label: "Enter a number out of 5.",
-                        type: "number",
-                    },
-                ],
-            },
-            (values) => {
-                setRating(values.Rating as number);
-            }
-        );
     
     
-
-    console.log("scores", scores);
-
+    
     async function addRating() {
-        //console.log('Finishing turn...');
         if (!postId) {
             throw new Error('Post ID is missing');
         }
@@ -57,7 +40,6 @@ export const ScorePage = ({setPage, postId, username}: ScorePageProps, context: 
         }
         
         await dataStorage.addRating({postId: postId, rating: rating, userRated: username});
-        console.log("rating added: ", {postId: postId, rating: rating, userRated: username});
         context.ui.showToast("Score stored in user info");
     };
 
@@ -66,12 +48,9 @@ export const ScorePage = ({setPage, postId, username}: ScorePageProps, context: 
             <vstack alignment="center middle" width="100%">
                 <text size="xxlarge" color='Black'>Rate this clue</text>
                 <spacer size="small" />
-                <StyledButton 
-                    width="200px"
-                    height="30px"
-                    backgroundColor="White"
-                    onPress={() => context.ui.showForm(ratingForm)}                        
-                    label={`Rating: ${rating}`} />
+                <StarRating rating={rating} onRatingSelected={setRating}/>
+                <spacer size="small" />
+                <text size="xlarge" color='Black'>Rating: {rating}</text>
                 <spacer height="5%"/>
                 <spacer size="large" />
                 <hstack alignment="center middle">

@@ -1,7 +1,7 @@
 import { Devvit } from "@devvit/public-api";
 import type { Context } from "@devvit/public-api";
 import {DataStorage} from '../util/DataStorage.js';
-import { BACKGROUND_COLOR } from "../data/config.js";
+import { BACKGROUND_COLOR, TEXT_COLOR} from "../data/config.js";
 import { StyledSolution } from "../data/styledSolution.js";
 import { StyledButton } from "../data/styledButton.js";
 
@@ -23,7 +23,7 @@ export const ConfirmClue = ({clue, solution, explanation, setPage, username}: Co
     async function postClue() {
       const community = await context.reddit.getCurrentSubreddit();
       const post = await context.reddit.submitPost({
-          title: 'Clue by ' + username,
+          title: clue,
           subredditName: community.name,
           preview: (
             <zstack height="100%" width="100%" alignment="center middle" backgroundColor={BACKGROUND_COLOR}>
@@ -50,25 +50,25 @@ export const ConfirmClue = ({clue, solution, explanation, setPage, username}: Co
     }
 
     return (
-        <vstack alignment="center middle" width="100%" height="100%">
-          <text weight="bold" color = "Black" size='xxlarge'>confirm submission</text>
+      <vstack alignment="center middle" width="100%" height="100%">
+        <text weight="bold" color = {TEXT_COLOR} size='xxlarge'>confirm submission</text>
+        <spacer size="xsmall" />
+        <text size='xlarge' color = {TEXT_COLOR}>Clue: {clue}</text>
+        <spacer size="xsmall" />
+        <StyledSolution label={solution} />
+        <spacer size="xsmall" />
+        <text wrap size='xlarge' color = {TEXT_COLOR} width = "70%">Explanation: {explanation}</text>
+        <spacer size="xsmall" />
+        <hstack alignment="center middle">
+          <StyledButton
+            width = "200px"
+            height = "40px"
+            onPress={postClue}
+            label="Post Clue"
+          />
           <spacer size="xsmall" />
-          <text size='xlarge' color = "Black">Clue: {clue}</text>
-          <spacer size="xsmall" />
-          <StyledSolution label={solution} />
-          <spacer size="xsmall" />
-          <text wrap size='xlarge' color = "Black">Explanation: {explanation}</text>
-          <spacer size="xsmall" />
-          <hstack alignment="center middle">
-            <StyledButton
-              width = "200px"
-              height = "40px"
-              onPress={postClue}
-              label="Post Clue"
-            />
-            <spacer size="xsmall" />
-            <button icon="home" onPress={() => setPage('Home')} appearance='media'/>
-          </hstack>
-        </vstack>
+          <button icon="home" onPress={() => setPage('Home')} appearance='media'/>
+        </hstack>
+      </vstack>
     );
 };

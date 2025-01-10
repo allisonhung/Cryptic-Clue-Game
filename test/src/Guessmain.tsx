@@ -62,13 +62,11 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
         const [guess, setGuess] = useState<string>('');
         const [hasRevealed, setHasRevealed] = useState<boolean>(false);
         const [guesses, setGuesses] = useState<number>(0);
-        console.log("hasRevealed: ", hasRevealed);
+        const [confirmation, setConfirmation] = useState<boolean>(false);
         //check if postid exists in user's solvedposts. If it does, set hasRevealed to true
-        console.log("Solved: ", solved);
         if (solved) {
             setFeedback(`You have already solved this clue`);
         }
-        console.log("hasRevealed: ", hasRevealed);
 
         const guessForm = useForm(
             {
@@ -100,11 +98,13 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
             onFinishTurn(0);
             setHasRevealed(true);
         };
+        const preReveal = () => {
+            setConfirmation(true);
+        };
 
         
 
         async function onFinishTurn(score: number) {
-            //console.log('Finishing turn...');
             if (!context.postId) {
                 throw new Error('Post ID is missing');
             }
@@ -138,7 +138,7 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                 <zstack height="100%" width="100%" alignment="center middle" backgroundColor="#c0c9cc">
 
                     <vstack height="100%" width="100%" alignment="center middle">
-                        <text weight="bold" size='xlarge' color = "Black">Clue: {clue}</text>
+                        <text wrap weight="bold" size='xlarge' color = "Black">Clue: {clue}</text>
                         <StyledButton
                             width="200px"
                             height="25px"
@@ -163,7 +163,7 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                             <StyledButton
                                 width="30%"
                                 height="50px"
-                                onPress={handleReveal}
+                                onPress={preReveal}
                                 label="Give up, reveal solution"
                             />
                         </hstack>
@@ -174,6 +174,35 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                         <text color="Black">Number of guesses: {guesses}</text>
                         
                     </vstack>
+                    {confirmation && (
+                        <vstack
+                            backgroundColor="white"
+                            border="thick"
+                            borderColor="black"
+                            padding="medium"
+                            alignment='middle center'
+                            height="50%"
+                            width="50%"
+                        >
+                            <text color="Red">Are you sure you want to reveal the solution?</text>
+                            <spacer size="xsmall" />
+                            <hstack alignment="center middle">
+                                <StyledButton
+                                    width="100%"
+                                    height="100%"
+                                    onPress={handleReveal}
+                                    label="Yes"
+                                />
+                                <spacer size="small" />
+                                <StyledButton
+                                    width="100%"
+                                    height="100%"
+                                    onPress={() => setConfirmation(false)}
+                                    label="No"
+                                />
+                            </hstack>
+                        </vstack>
+                    )}
                     {(hasRevealed || solved) && (
                         <vstack 
                             backgroundColor="white" 
@@ -206,6 +235,7 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                             />
                         </vstack>
                     )}
+                    
                 </zstack>
             </blocks>
         );

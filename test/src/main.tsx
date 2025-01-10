@@ -76,7 +76,8 @@ const Router: Devvit.CustomPostComponent = (context: Context) => {
 
 Devvit.addCustomPostType({
   name: 'Cryptic Clue Game',
-  description: 'based on Codenames',
+  description: 'inspired by Pixelary',
+  height: 'tall',
   render: Router,
 });
 
