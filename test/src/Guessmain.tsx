@@ -58,6 +58,7 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
     if (data) {
         const [clue, solution, explanation, authorId] = data;
         const [feedback, setFeedback] = useState<string>('');
+        const [color, setColor] = useState<string>('Red');
         const [currentPage, setCurrentPage] = useState<string>('Guessmain');
         const [guess, setGuess] = useState<string>('');
         const [hasRevealed, setHasRevealed] = useState<boolean>(false);
@@ -86,10 +87,12 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
         const handleGuessSubmit = () => {
             if (guess.toLowerCase() === solution.toLowerCase()) {
                 setFeedback('Correct!');
+                setColor('Green');
                 onFinishTurn(1);
                 setHasRevealed(true);
             } else {
                 setGuesses(guesses + 1);
+                setColor('Red');
                 setFeedback('Incorrect. Try again!');
             }
         };
@@ -147,9 +150,9 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                         />
                         <spacer size="xsmall" />
                         {guess? (
-                            <StyledSolution label={guess} />
+                            <StyledSolution onPress={() => context.ui.showForm(guessForm)} label={guess} />
                         ): (
-                            <EmptySolution length={solution.length} />
+                            <EmptySolution onPress={() => context.ui.showForm(guessForm)} length={solution.length} />
                         )}
                         <spacer size="xsmall" />
                         <hstack alignment="center middle">
@@ -167,7 +170,7 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                                 label="Give up, reveal solution"
                             />
                         </hstack>
-                        <text weight="bold" size="xxlarge" color="Red">{feedback}</text>
+                        <text weight="bold" size="xxlarge" color={color}>{feedback}</text>
                         <spacer size="xsmall" />
 
                         
@@ -213,7 +216,7 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                             height="80%"
                             width="90%"
                         >                            
-                            <text color="Red">{solved ? "You have already solved this clue": feedback}</text>
+                            <text color={color}>{solved ? "You have already solved this clue": feedback}</text>
                             <StyledSolution label={solution} />
                             <spacer size="xsmall" />
                             <text color="Black">Clue setter: {authorId}</text>

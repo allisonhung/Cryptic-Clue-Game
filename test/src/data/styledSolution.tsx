@@ -2,11 +2,13 @@ import { Devvit } from '@devvit/public-api';
 
 interface StyledSolutionProps {
     label?: string;
+    onPress?: () => void | Promise<void>;
 }
 
 export const StyledSolution = (props: StyledSolutionProps): JSX.Element => {
     const {
       label,
+      onPress,
     } = props;
 
     if (!label) {
@@ -15,7 +17,7 @@ export const StyledSolution = (props: StyledSolutionProps): JSX.Element => {
     const characters = label.toUpperCase().split('');
 
     return (
-        <hstack>
+        <hstack onPress={onPress}>
             {characters.map((char, index) => (
                 <hstack
                     key={index.toString()}
@@ -35,14 +37,16 @@ export const StyledSolution = (props: StyledSolutionProps): JSX.Element => {
 
 interface EmptySolutionProps {
     length?: number;
+    onPress?: () => void | Promise<void>;
 }
 export const EmptySolution = (props: EmptySolutionProps): JSX.Element => {
     const {
         length = 5,
+        onPress,
     } = props;
 
     return (
-        <hstack>
+        <hstack onPress={onPress}>
             {Array.from({ length }, (_, index) => (
                 <hstack
                     key={index.toString()}

@@ -36,7 +36,8 @@ export const UserStats = ({setPage, username}: UserStatsProps, context: Context)
         //remove NaN values
         ratings = ratings.filter(rating => !isNaN(rating));
         const totalRating = ratings.reduce((acc, rating) => acc + rating, 0);
-        return totalRating / ratings.length;
+        if (ratings.length === 0) return 0;
+        return (totalRating / ratings.length).toFixed(2);
      });
     
     if (loadingAverageRating) {

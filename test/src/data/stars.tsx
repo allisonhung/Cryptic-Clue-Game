@@ -25,3 +25,7 @@ export const StarRating = (props: StarRatingProps): JSX.Element => {
         </hstack>
     )
 };
+
+type StarDisplayProps = {
+    rating: number;
+}; 
