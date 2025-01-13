@@ -11,7 +11,6 @@ type LeaderboardProps = {
     username: string;
 };
 
-//testing will delete, chris is showing me how to create a new branch
 export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Context): JSX.Element => {
     const dataStorage = new DataStorage(context);
 

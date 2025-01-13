@@ -209,7 +209,7 @@ async submitClue(data: {
             const post = await this.redis.hGet(key, 'ratings');
             const ratings = post ? JSON.parse(post) : [];
             const sum = ratings.reduce((acc: number, rating: {rating: number}) => acc + rating.rating, 0);
-            return sum / ratings.length;
+            return (sum / ratings.length);
         } catch (error) {
             console.error('Failed to get rating:', error);
             throw error;

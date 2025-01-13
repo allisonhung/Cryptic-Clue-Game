@@ -16,7 +16,9 @@ interface GiveClueProps{
         clue: string, 
         solution: string, 
         explanation: string,
+        appWidth: number | undefined
     ) => void;
+    appWidth: number | undefined;
 }
 
 // Main function
@@ -101,7 +103,8 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
         }
         
         else{
-            props.onNext(clue, solution, explanation);
+            console.log("width: ", props.appWidth);
+            props.onNext(clue, solution, explanation, props.appWidth);
         }
         
     };

@@ -15,9 +15,10 @@ interface ConfirmClueProps {
     explanation: string;
     setPage: (page: string) => void;
     username: string;
+    appWidth: number | undefined;
   }
 
-export const ConfirmClue = ({clue, solution, explanation, setPage, username}: ConfirmClueProps, context: Context): JSX.Element => {
+export const ConfirmClue = ({clue, solution, explanation, setPage, username, appWidth}: ConfirmClueProps, context: Context): JSX.Element => {
     const postdata = new DataStorage(context);
 
     async function postClue() {
@@ -55,7 +56,7 @@ export const ConfirmClue = ({clue, solution, explanation, setPage, username}: Co
         <spacer size="xsmall" />
         <text size='xlarge' color = {TEXT_COLOR}>Clue: {clue}</text>
         <spacer size="xsmall" />
-        <StyledSolution label={solution} />
+        <StyledSolution label={solution} width = {appWidth}/>
         <spacer size="xsmall" />
         <text wrap size='xlarge' color = {TEXT_COLOR} width = "70%">Explanation: {explanation}</text>
         <spacer size="xsmall" />

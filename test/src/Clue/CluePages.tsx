@@ -8,6 +8,7 @@ import { BACKGROUND_COLOR } from '../data/config.js';
 interface CluePagesProps {
     setPage: (page: string) => void;
     username: string;
+    appWidth: number | undefined;
 }
 
 export const CluePages = (props: CluePagesProps): JSX.Element => {
@@ -15,6 +16,8 @@ export const CluePages = (props: CluePagesProps): JSX.Element => {
     const [clue, setClue] = useState<string>("");
     const [solution, setSolution] = useState<string>("");
     const [explanation, setExplanation] = useState<string>("");
+    //console.log("appWidth from cluePages: ", props.appWidth);
+
 
     const handleNext = (clue: string, solution: string, explanation: string) => {
         setClue(clue);

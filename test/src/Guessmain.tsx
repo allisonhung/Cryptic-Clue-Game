@@ -15,6 +15,9 @@ type GuessmainProps = {
 }
 
 export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element => {
+    //width is 732 or 700 on laptop. 
+    const appWidth = context.dimensions?.width ?? 700;
+    //console.log("appWidth", appWidth);
 
     //get post data based on post ID. 
     //this should include clue, solution, explanation, and authorID
@@ -65,9 +68,7 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
         const [guesses, setGuesses] = useState<number>(0);
         const [confirmation, setConfirmation] = useState<boolean>(false);
         //check if postid exists in user's solvedposts. If it does, set hasRevealed to true
-        if (solved) {
-            setFeedback(`You have already solved this clue`);
-        }
+        
 
         const guessForm = useForm(
             {
@@ -149,11 +150,13 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                             label="Enter your solution"
                         />
                         <spacer size="xsmall" />
+                        
                         {guess? (
-                            <StyledSolution onPress={() => context.ui.showForm(guessForm)} label={guess} />
+                            <StyledSolution onPress={() => context.ui.showForm(guessForm)} label={guess} width={appWidth}/>
                         ): (
-                            <EmptySolution onPress={() => context.ui.showForm(guessForm)} length={solution.length} />
+                            <EmptySolution onPress={() => context.ui.showForm(guessForm)} length={solution.length} width={appWidth}/>
                         )}
+
                         <spacer size="xsmall" />
                         <hstack alignment="center middle">
                             <StyledButton
@@ -217,11 +220,11 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                             width="90%"
                         >                            
                             <text color={color}>{solved ? "You have already solved this clue": feedback}</text>
-                            <StyledSolution label={solution} />
+                            <StyledSolution label={solution} width={appWidth * 0.8}/>
                             <spacer size="xsmall" />
                             <text color="Black">Clue setter: {authorId}</text>
                             <spacer size="xsmall" />
-                            <text color="Black" maxHeight="60px" wrap overflow="ellipsis">Explanation: {explanation}</text>
+                            <text color="Black" wrap overflow="ellipsis">Explanation: {explanation}</text>
                             <spacer size="xsmall" />
                             <StyledButton
                                 width="200px"
