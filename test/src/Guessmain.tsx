@@ -33,7 +33,10 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
         if (!context.postId) {
             throw new Error('Post ID is missing');
         }
-
+        //if the user is not logged in, return false
+        if (!props.username) {
+            return false;
+        }
         return await postdata.hasSolved({postId: context.postId, username: props.username});
     });
 
@@ -112,11 +115,13 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
             if (!context.postId) {
                 throw new Error('Post ID is missing');
             }
+            console.log("guess recorded, with number of guesses" + guesses);
 
             postdata.addGuess({
                 postId: context.postId, 
                 username: props.username, 
-                score: score
+                score: score,
+                numGuesses: guesses+1
             });
             
             context.ui.showToast("Score stored in user info");

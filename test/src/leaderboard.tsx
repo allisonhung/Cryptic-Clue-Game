@@ -19,8 +19,8 @@ export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Cont
         return await dataStorage.getAllUsers();
     });
 
-    const {data: topScorer, loading: loadingTopScorer, error: errorTopScorer} = useAsync(async () => {
-        return await dataStorage.getTopScorer();
+    const {data: topScores, loading: loadingTopScorer, error: errorTopScorer} = useAsync(async () => {
+        return await dataStorage.getTopScorers();
     });
 
     async function getAverageRatings(allUsers: string[]): Promise<{ username: string; postCount: number; totalAverageRating: number }[]> {
@@ -63,14 +63,13 @@ export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Cont
     if (!userRating){
         return <text>No user scores found</text>;
     }
-    if (!topScorer){
+    if (!topScores){
         return <text>No top scorer found</text>;
     }
 
     const topUsers = userRating
     .sort((a, b) => b.totalAverageRating - a.totalAverageRating)
     .slice(0, 5);
-
     
     return (
         <zstack height="100%" width="100%" alignment="center" backgroundColor={BACKGROUND_COLOR}>
@@ -79,15 +78,21 @@ export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Cont
                 <text weight="bold" size="xxlarge" color='Black'>
                     Most clues solved: 
                 </text>
-                <spacer height="20px" />
-                <text color={TEXT_COLOR}>{topScorer.scorer} with {topScorer.score} solves</text>
-                <spacer height="20px" />
+                <spacer height="10px" />
+                <text color={TEXT_COLOR}>&lt;{topScores.scorer[0]} with {topScores.score[0]} solves&gt;</text>
+                <text color={TEXT_COLOR}>&lt;{topScores.scorer[1]} with {topScores.score[1]} solves&gt;</text>
+                <text color={TEXT_COLOR}>&lt;{topScores.scorer[2]} with {topScores.score[2]} solves&gt;</text>
+                <text color={TEXT_COLOR}>&lt;{topScores.scorer[3]} with {topScores.score[3]} solves&gt;</text>
+                <text color={TEXT_COLOR}>&lt;{topScores.scorer[4]} with {topScores.score[4]} solves&gt;</text>
+
+
+                <spacer height="10px" />
                 <text weight="bold" size="xxlarge" color='Black'>
                     Highest rated setters
                 </text>
-                <spacer height="20px" />
+                <spacer height="10px" />
                 <hstack width="100%" alignment="center">
-                <spacer height="20px" />
+                <spacer height="10px" />
                     <text weight="bold" size="large" color='Red' width="20%">
                         Rank
                     </text>
@@ -110,7 +115,6 @@ export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Cont
                         <text color='Black' width="25%">{totalAverageRating.toFixed(2)}</text>
                     </hstack>
                 ))}
-                <spacer height="40px" />
                 <button icon="home" onPress={() => setPage('Home')} appearance='media'/>
             </vstack>
         </zstack>

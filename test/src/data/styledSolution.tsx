@@ -13,7 +13,6 @@ export const StyledSolution = (props: StyledSolutionProps): JSX.Element => {
       width
     } = props;
 
-    const [reduce, setReduce] = useState<boolean>(false);
 
     if (!label) {
       throw new Error('No label provided');

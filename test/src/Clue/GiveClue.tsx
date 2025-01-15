@@ -29,6 +29,7 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
     const [solution, setSolution] = useState<string>("");
     const [showPopup, setShowPopup] = useState<boolean>(false);
     const [label, setLabel] = useState<string>("Finish writing your clue!");
+    
     const clueForm = useForm(
         {
             fields: [
@@ -109,12 +110,13 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
         
     };
 
+    const dynamicButtonWidth = props.appWidth ? props.appWidth / 2 : 300;
+
     // main return function
     return (
         <zstack alignment='middle center' width="100%" height="100%">
             <vstack
                 width="100%"
-                minHeight="100%"
                 alignment="middle center"
                 gap="small"
                 >
@@ -126,32 +128,34 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
                     size="xxlarge">Give a clue</text>
 
                 <hstack width="95%" alignment="middle center">
-                    <vstack maxWidth="70%" alignment="middle center">
+                    <vstack alignment="middle center">
                         <StyledButton 
-                            width="200px"
+                            width= {`${dynamicButtonWidth}px`}
                             height="30px"
                             backgroundColor="White"
                             onPress={() => context.ui.showForm(clueForm)}                        
                             label={clue ? `${clue}` : "Enter Clue"} />
-                        <spacer height="5%"/>
+                        <spacer height="10px"/>
                         <StyledButton 
-                            width="200px"
+                            width={`${dynamicButtonWidth}px`}
                             height="30px"
                             backgroundColor="White"
                             onPress={() => context.ui.showForm(solutionForm)}                        
                             label={solution ? `${solution}` : "Enter Solution"} />
-                        <spacer height="5%"/>
+                        <spacer height="10px"/>
                         <StyledButton 
-                            width="200px"
+                            width={`${dynamicButtonWidth}px`}
                             height="30px"
                             backgroundColor="White"
                             onPress={() => context.ui.showForm(explanationForm)}                        
                             label={explanation ? `${explanation}` : "Enter Explanation"} />
-                        <spacer height="5%"/>
-                        
-                        <text onPress={() => context.ui.navigateTo('https://s.wsj.net/blogs/html/wsjcrypticguide.pdf')} color="Blue"> 
+                        <spacer height="10px"/>
+                        <hstack alignment="middle center" onPress={() => context.ui.navigateTo('https://s.wsj.net/blogs/html/wsjcrypticguide.pdf')}>
+                        <text wrap color="Blue"> 
                             Confused about cryptic crosswords? Click here
                         </text>
+                        </hstack>
+                        <spacer height="10px"/>
                         
                     </vstack>
                     

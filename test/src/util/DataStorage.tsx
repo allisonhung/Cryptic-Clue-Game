@@ -25,6 +25,9 @@ export class DataStorage {
         //stores scores for each post (1 if solved, 0 if gave up)
         postScores: (postId: string) => `post-scores:${postId}`,
 
+        //stores win history for each post (username, date solved)
+        winHistory: (postId: string) => `post:${postId}`,
+
         //stores scores for each user (1 if solved, 0 if gave up)
         userScores: (postId: string) => `post-guesses:${postId}`,
 
@@ -113,6 +116,7 @@ async submitClue(data: {
         postId: string, 
         username: string, 
         score: number
+        numGuesses: number
     }): Promise<void> {
         if (!this.scheduler || !this.reddit) {
             console.error('Scheduler or Reddit API not available');
@@ -122,6 +126,7 @@ async submitClue(data: {
             const key = this.keys.userData(data.username)
             const userData = await this.redis.hGet(key, 'solvedPosts');
             const postkey = this.keys.postData(data.postId);
+            const winKey = this.keys.winHistory(data.postId);
             const solvedPosts = userData ? JSON.parse(userData) : [];
 
             solvedPosts.push(data.postId);
@@ -136,6 +141,27 @@ async submitClue(data: {
             const post = await this.redis.hGet(postkey, 'scores');
             const scores = post ? JSON.parse(post) : [];
             scores.push(data.score);
+
+            //add the guess to the hset
+            const winData = await this.redis.hGet(winKey, 'loggedSolves');
+            //parse the winData array
+            const winDataPost = winData ? JSON.parse(winData) : [];
+            console.log('old win data', winDataPost);
+            
+            winDataPost.push({
+                username: data.username,
+                date: Date.now().toString(),
+                numGuesses: data.numGuesses.toString(),
+                score: data.score.toString(),
+            });
+            console.log('new win data array:', winDataPost);
+
+            //add winDataArray to hset
+            await this.redis.hSet(winKey,{
+                loggedSolves: JSON.stringify(winDataPost),
+            });
+
+
 
             //add the user's userId and their score to the post's scores
             await this.redis.zAdd(this.keys.userScores(data.postId), {
@@ -159,15 +185,22 @@ async submitClue(data: {
                 score: Date.now(),
             });
 
+            /*this is depreciated. Stop using this and use a hash 
             //add the post to post scores
             await this.redis.zAdd(this.keys.postScores(data.postId), {
                 member: data.username,
                 score: data.score,
             });
+            */
+            
+
+            
+            
         } catch (error) {
             console.error('Failed to add guess:', error);
             throw error;
     }}
+
 
     //submitting a rating
     async addRating(data: {
@@ -249,15 +282,54 @@ async submitClue(data: {
         }
     }
 
+    
     //get all the scores for a given post
-    async getScores(postId: string): Promise<{username: string, score: number}[]> {
+    async getScores(postId: string): Promise<WinData[]> {
         try {
-            const key = this.keys.postScores(postId);
-            const scores = await this.redis.zRange(key, 0, -1);
-            return scores.map(score => ({
-                username: score.member,
-                score: score.score,
-            }));
+            //const zRangeKey = this.keys.postScores(postId);
+            const hSetKey = this.keys.winHistory(postId);
+
+            //const oldScores = await this.redis.zRange(zRangeKey, 0, -1);
+            const newScores = await this.redis.hGet(hSetKey, 'loggedSolves');
+
+            //console.log('old scores:', oldScores);
+            console.log('new scores:', newScores);
+            //for each item in oldScores, create a new WinData object with member being saved as username and score being saved as score
+            /*const oldWinData = oldScores.map(score => {
+                return {
+                    username: score.member,
+                    date: Date.now().toString(),
+                    numGuesses: "1",
+                    score: score.score,
+                };
+            });
+            console.log('old win data:', oldWinData);*/
+            //for each item in oldWinData, push it onto newScores
+            const newWinData = newScores ? JSON.parse(newScores) : [];
+            console.log('new win data:', newWinData);
+            /*oldWinData.forEach(score => {
+                newWinData.push(score);
+            });
+            console.log('merged data:', newWinData);
+            //store newWinData in hSetKey
+            await this.redis.hSet(hSetKey, {
+                loggedSolves: JSON.stringify(newWinData),
+            });
+            console.log('saved merged data')*/
+            
+            //return newWinData
+            const result = newWinData.map((score: WinData) => {
+                return {
+                    username: score.username,
+                    date: score.date,
+                    numGuesses: score.numGuesses,
+                    score: score.score,
+                };
+            });
+            console.log('returning win data: ', result);
+
+            return result;
+
         } catch (error) {
             console.error('Failed to get scores:', error);
             throw error;
@@ -290,9 +362,10 @@ async submitClue(data: {
             console.error('Failed to get user data:', error);
             throw error;
         }
-    }
+    }    
+    
 
-    async getTopScorer(): Promise<{scorer:string, score:number}> {
+    async getTopScorers(): Promise<{scorer:string[], score:number[]}> {
         try{
             const guessers = await this.redis.zRange(this.keys.clueSolvers(), 0, -1);
             const guesserPoints = await Promise.all(guessers.map(async guesser => {
@@ -300,8 +373,15 @@ async submitClue(data: {
                 const data = await this.redis.hGet(key, 'points');
                 return data ? JSON.parse(data).reduce((acc: number, score: number) => acc + score, 0) : 0;
             }));
-            const topScorerIndex = guesserPoints.indexOf(Math.max(...guesserPoints));
-            return {scorer: guessers[topScorerIndex].member, score: guesserPoints[topScorerIndex]};
+            //return top 5 scorers and scores
+            const topScorers = guessers.map((guesser, index) => ({
+                scorer: guesser.member,
+                score: guesserPoints[index],
+            })).sort((a, b) => b.score - a.score).slice(0, 5);
+            return {
+                scorer: topScorers.map(topScorer => topScorer.scorer),
+                score: topScorers.map(topScorer => topScorer.score),
+            };
         } catch (error) {
             console.error('Failed to get top scorer:', error);
             throw error;
@@ -336,4 +416,11 @@ export type UserData = {
     authoredPosts: string[];
     solvedPosts: string[];
     points: number[];
+}
+
+export type WinData = {
+    username: string;
+    date: string;
+    numGuesses: number;
+    score: number;
 }

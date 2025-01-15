@@ -20,15 +20,12 @@ export const ScorePage = ({setPage, postId, username}: ScorePageProps, context: 
     const {data: scores, loading, error} = useAsync(async () => {
         return await dataStorage.getScores(postId);
     }, {depends: [postId]});
-    
+
     if (loading) {
         return <text>Loading...</text>;
     }
-
     
     const [rating, setRating] = useState<number>(0);
-    
-    
     
     async function addRating() {
         if (!postId) {
@@ -37,8 +34,7 @@ export const ScorePage = ({setPage, postId, username}: ScorePageProps, context: 
         if (rating < 1 || rating > 5) {
             context.ui.showToast("Rating must be between 1 and 5");
             return;
-        }
-        
+        } 
         await dataStorage.addRating({postId: postId, rating: rating, userRated: username});
         context.ui.showToast("Score stored in user info");
     };
@@ -58,7 +54,6 @@ export const ScorePage = ({setPage, postId, username}: ScorePageProps, context: 
                     <button onPress={addRating}>Submit rating</button>
                 </hstack>
                 <spacer size="small" />
-            
                 <button appearance="media" onPress={() => setPage('GuessLeaderBoard')}>Leaderboard</button>
             </vstack>
         </zstack>
