@@ -6,6 +6,7 @@ import {Leaderboard} from './leaderboard.js';
 import { StyledButton } from './data/styledButton.js';
 import { StyledSolution } from './data/styledSolution.js';
 import { UserStats } from './UserStats.js';
+import { BACKGROUND_COLOR } from './data/config.js';
 
 Devvit.configure({
   redditAPI: true,
@@ -56,7 +57,7 @@ export const Cluemain = (props: CluemainProps, context: Context): JSX.Element =>
 
 
 const Home = ({setPage, username, appWidth}: PageProps) => (
-  <zstack height="100%" width="100%" alignment="center middle" backgroundColor="#c0c9cc">
+  <zstack height="100%" width="100%" alignment="center middle" backgroundColor={BACKGROUND_COLOR}>
     
     <vstack alignment="center middle" gap="medium">
       <StyledSolution

@@ -1,8 +1,7 @@
-import { Devvit, useAsync, useForm, useState} from "@devvit/public-api";
+import { Devvit, useAsync, useState} from "@devvit/public-api";
 import type { Context } from "@devvit/public-api";
 import { DataStorage } from "../util/DataStorage.js";
 import { BACKGROUND_COLOR } from "../data/config.js";
-import { StyledButton } from "../data/styledButton.js";
 import { StarRating } from "../data/stars.js";
 
 Devvit.configure({
@@ -24,7 +23,7 @@ export const ScorePage = ({setPage, postId, username}: ScorePageProps, context: 
     if (loading) {
         return <text>Loading...</text>;
     }
-    
+
     const [rating, setRating] = useState<number>(0);
     
     async function addRating() {

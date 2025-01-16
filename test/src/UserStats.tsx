@@ -67,8 +67,8 @@ export const UserStats = ({setPage, username}: UserStatsProps, context: Context)
                     <text color={TEXT_COLOR}>Number of Clues written: {userData.authoredPosts.length}</text>
                     <text color={TEXT_COLOR}>Average rating: {averageRating}</text>
                     <text color={TEXT_COLOR}>Number of clues completed: {userData.solvedPosts.length}</text>
-                    <text color={TEXT_COLOR}>Wins: {wins}</text>
-                    <text color={TEXT_COLOR}>Losses: {losses}</text>
+                    <text color={TEXT_COLOR}>Solved: {wins}</text>
+                    <text color={TEXT_COLOR}>Gave up: {losses}</text>
                 </vstack>
             )}
             {errorUserData && <text>Error: {errorUserData.message}</text>}

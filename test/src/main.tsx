@@ -3,8 +3,6 @@ import {Cluemain} from './Cluemain.js';
 import { Guessmain } from "./Guessmain.js";
 import type { Context } from "@devvit/public-api";
 import { installGame } from "./installGame.js";
-import { DataStorage } from "./util/DataStorage.js";
-import { UserData } from "./util/DataStorage.js";
 
 Devvit.configure({
   redditAPI: true,

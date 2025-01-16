@@ -1,12 +1,13 @@
 import {Devvit, } from '@devvit/public-api'
-import { BACKGROUND_COLOR } from '../data/config.js';
+import { BACKGROUND_COLOR, TEXT_COLOR} from '../data/config.js';
+import type { Context } from '@devvit/public-api';
 
 type PageProps = {
     setPage: (page: string) => void;
     username: string;
   };
 
-const HowToPlay = ({ setPage }: PageProps) => (
+const HowToPlay = ({ setPage }: PageProps, context: Context) => (
      <zstack 
        height="100%" width="100%" alignment="center middle" backgroundColor={BACKGROUND_COLOR}>
        <vstack
@@ -15,14 +16,19 @@ const HowToPlay = ({ setPage }: PageProps) => (
             alignment="middle center"
             gap="medium"
         >
-            <text weight="bold" size='xxlarge' color="Black">How to Play</text>
+            <text weight="bold" size='xxlarge' color={TEXT_COLOR}>How to Play</text>
             <vstack> 
                 <spacer size="small" /> 
-                <text wrap size="large" color="Black">Think you have what it takes to write cryptic clues?</text>
+                <text wrap size="large" color={TEXT_COLOR}>Think you have what it takes to write cryptic clues?</text>
                 <spacer size ="xsmall" />
-                <text wrap size="large" color="Black">Want to solve some cryptic crossword answers but not a whole grid?</text>
+                <text wrap size="large" color={TEXT_COLOR}>Want to solve some cryptic crossword answers but not a whole grid?</text>
                 <spacer size="xsmall" />
-                <text wrap size="large" color="Black">This game is for people who want to write or solve cryptic crossword clues, but don't want to do an entire puzzle.</text>
+                <text wrap size="large" color={TEXT_COLOR}>This game is for you. Scroll to solve/rate clues, or submit your own up top.</text>
+                <hstack alignment="middle center" onPress={() => context.ui.navigateTo('https://s.wsj.net/blogs/html/wsjcrypticguide.pdf')}>
+                    <text wrap color="Blue"> 
+                        What's a cryptic crossword?
+                    </text>
+                </hstack>
             </vstack>
             <button icon="home" onPress={() => setPage('Home')} appearance='media'/>
         </vstack> 

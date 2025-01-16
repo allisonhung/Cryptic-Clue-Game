@@ -5,6 +5,7 @@ import {ScorePage} from './Guess/ScorePage.js';
 import { GuessLeaderBoard } from "./Guess/GuessLeaderBoard.js";
 import { StyledButton } from "./data/styledButton.js";
 import { StyledSolution, EmptySolution } from "./data/styledSolution.js";
+import { BACKGROUND_COLOR, TEXT_COLOR } from "./data/config.js";
 
 Devvit.configure({
     redditAPI: true,
@@ -144,10 +145,10 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
 
         return (
             <blocks>
-                <zstack height="100%" width="100%" alignment="center middle" backgroundColor="#c0c9cc">
+                <zstack height="100%" width="100%" alignment="center middle" backgroundColor={BACKGROUND_COLOR}>
 
                     <vstack height="100%" width="100%" alignment="center middle">
-                        <text wrap weight="bold" size='xlarge' color = "Black">Clue: {clue}</text>
+                        <text wrap weight="bold" size='xlarge' color = {TEXT_COLOR}>Clue: {clue}</text>
                         <StyledButton
                             width="200px"
                             height="25px"
@@ -182,7 +183,7 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                         <spacer size="xsmall" />
 
                         
-                        <text color="Black">Number of guesses: {guesses}</text>
+                        <text color={TEXT_COLOR}>Number of guesses: {guesses}</text>
                         
                     </vstack>
                     {confirmation && (
@@ -227,9 +228,9 @@ export const Guessmain = (props: GuessmainProps, context: Context): JSX.Element 
                             <text color={color}>{solved ? "You have already solved this clue": feedback}</text>
                             <StyledSolution label={solution} width={appWidth * 0.8}/>
                             <spacer size="xsmall" />
-                            <text color="Black">Clue setter: {authorId}</text>
+                            <text color={TEXT_COLOR}>Clue setter: {authorId}</text>
                             <spacer size="xsmall" />
-                            <text color="Black" wrap overflow="ellipsis">Explanation: {explanation}</text>
+                            <text color={TEXT_COLOR} wrap overflow="ellipsis">Explanation: {explanation}</text>
                             <spacer size="xsmall" />
                             <StyledButton
                                 width="200px"

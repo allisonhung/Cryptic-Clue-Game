@@ -146,7 +146,7 @@ async submitClue(data: {
             const winData = await this.redis.hGet(winKey, 'loggedSolves');
             //parse the winData array
             const winDataPost = winData ? JSON.parse(winData) : [];
-            console.log('old win data', winDataPost);
+            //console.log('old win data', winDataPost);
             
             winDataPost.push({
                 username: data.username,
@@ -154,7 +154,7 @@ async submitClue(data: {
                 numGuesses: data.numGuesses.toString(),
                 score: data.score.toString(),
             });
-            console.log('new win data array:', winDataPost);
+            //console.log('new win data array:', winDataPost);
 
             //add winDataArray to hset
             await this.redis.hSet(winKey,{
@@ -293,7 +293,7 @@ async submitClue(data: {
             const newScores = await this.redis.hGet(hSetKey, 'loggedSolves');
 
             //console.log('old scores:', oldScores);
-            console.log('new scores:', newScores);
+            //console.log('new scores:', newScores);
             //for each item in oldScores, create a new WinData object with member being saved as username and score being saved as score
             /*const oldWinData = oldScores.map(score => {
                 return {
@@ -306,7 +306,7 @@ async submitClue(data: {
             console.log('old win data:', oldWinData);*/
             //for each item in oldWinData, push it onto newScores
             const newWinData = newScores ? JSON.parse(newScores) : [];
-            console.log('new win data:', newWinData);
+            //console.log('new win data:', newWinData);
             /*oldWinData.forEach(score => {
                 newWinData.push(score);
             });
@@ -326,7 +326,7 @@ async submitClue(data: {
                     score: score.score,
                 };
             });
-            console.log('returning win data: ', result);
+            //console.log('returning win data: ', result);
 
             return result;
 

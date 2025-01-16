@@ -4,6 +4,7 @@
 import type { Context } from '@devvit/public-api';
 import { Devvit, useState, useInterval, useForm} from "@devvit/public-api";
 import { StyledButton } from '../data/styledButton.js';
+import { TEXT_COLOR } from '../data/config.js';
 
 Devvit.configure({
     redditAPI: true,
@@ -124,7 +125,7 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
                 <text 
                     weight="bold" 
                     outline="none" 
-                    color ="Black" 
+                    color = {TEXT_COLOR}
                     size="xxlarge">Give a clue</text>
 
                 <hstack width="95%" alignment="middle center">

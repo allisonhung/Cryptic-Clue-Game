@@ -1,7 +1,7 @@
-import { Devvit, useAsync} from "@devvit/public-api";
+import { Devvit, useAsync, useState} from "@devvit/public-api";
 import type { Context } from "@devvit/public-api";
 import { DataStorage } from "../util/DataStorage.js";
-import { BACKGROUND_COLOR } from "../data/config.js";
+import { BACKGROUND_COLOR, TEXT_COLOR} from "../data/config.js";
 import type { WinData } from "../util/DataStorage.js";
 
 //leaderboard should show first 5 people to guess correctly
@@ -21,7 +21,7 @@ export const GuessLeaderBoard = ({setPage, postId, username}: GuessLeaderBoardPr
 
     //retrieve all scores by post ID. This returns an array of WinData objects
     const {data: scores, loading, error} = useAsync(async () => {
-        console.log('retrieving scores')
+        //console.log('retrieving scores')
         return await dataStorage.getScores(postId);
     },{depends: [postId]});
 
@@ -50,64 +50,86 @@ export const GuessLeaderBoard = ({setPage, postId, username}: GuessLeaderBoardPr
         date: new Date(Number(score.date)).toLocaleString() 
     }));
 
-    
     const winSolvers = parsedScores.filter((score: WinData) => score.score === 1);
-    console.log('winSolvers', winSolvers);
-    const lossSolvers = parsedScores.filter((score: WinData) => score.score === 0);
-    console.log('lossSolvers', lossSolvers);
-    console.log('scores', parsedScores);
 
 
     //sort winSolvers by date and take the first 5
     const firstSolvers = winSolvers
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     .slice(0, 5);
+
+    //check if user is in firstSolvers. If not, set userShow to true
+    const [userShow, setUserShow] = useState<boolean>(false);
+    if (!firstSolvers.find((score: WinData) => score.username === username)) {
+        setUserShow(true);
+        console.log('user not in first solvers');
+    }
+    else{
+        console.log('user in first solvers');
+    }
+
+    //identify ranking, date, and numGuesses of user
+    const userRanking = winSolvers.findIndex((score: WinData) => score.username === username) + 1;
+    const userDate = winSolvers.find((score: WinData) => score.username === username)?.date;
+    const userGuesses = winSolvers.find((score: WinData) => score.username === username)?.numGuesses;
+    
     
 
     
     return(
-             <zstack height="100%" width="100%" alignment="center" backgroundColor={BACKGROUND_COLOR}>
-                
-      <vstack width="100%" alignment="center">
-            <text weight="bold" size="xxlarge" color="Black">
-                First 5 Solvers
-            </text>
-            <text color="Black">Number of successful solves: {winSolvers.length}</text>
-            <text color="Black">People who gave up: {scores.length - winSolvers.length}</text>
-            <text color="Black">Average rating of this clue: {averageRating}</text>
-            <text color="Black">Out of {rating.length} ratings</text>
-            
+        <zstack height="100%" width="100%" alignment="center" backgroundColor={BACKGROUND_COLOR}>
+            <vstack width="100%" alignment="center">
+                <spacer height="20px" />
 
-
-            <spacer height="20px" />
-            <hstack width="100%" alignment="center">
-                <text weight="bold" size="xlarge" color="Red"  width="10%">
-                    Rank
+                <text weight="bold" size="xxlarge" color={TEXT_COLOR}>
+                    Stats
                 </text>
-                <text weight="bold" size="xlarge" color="Red" width="30%">
-                    Username
+                <text color={TEXT_COLOR}>Number of successful solves: {winSolvers.length}</text>
+                <text color={TEXT_COLOR}>People who gave up: {scores.length - winSolvers.length}</text>
+                <text color={TEXT_COLOR}>Average rating of this clue: {averageRating}</text>
+                <text color={TEXT_COLOR}>Out of {rating.length} ratings</text>
+                <spacer height="20px" />
+                <text weight="bold" size="xxlarge" color={TEXT_COLOR}>
+                    Fastest 5 Solvers
                 </text>
-                <text weight="bold" size="xlarge" color="Red" width="30%">
-                    Guesses
-                </text>
-                <text weight="bold" size="xlarge" color="Red" width="30%">
-                    Date and time submitted
-                </text>
-            </hstack>
-            
-            {firstSolvers && firstSolvers.map(({ username, numGuesses, date}, index) => (
-
-                <hstack key={username} width="100%" alignment="center">
-                    <text color="Black" width="10%">{index + 1}</text>
-                    <text color="Black" width="30%">{username}</text>
-                    <text color = "Black" width = "30%">{numGuesses}</text>
-                    <text color="Black" width="30%">{date}</text>
+                <hstack width="100%" alignment="center">
+                    <text weight="bold" size="large" color="Red"  width="10%">
+                        Rank
+                    </text>
+                    <text weight="bold" size="large" color="Red" width="30%">
+                        Username
+                    </text>
+                    <text weight="bold" size="large" color="Red" width="30%">
+                        Guesses
+                    </text>
+                    <text wrap weight="bold" size="large" color="Red" width="30%">
+                        Date and time submitted
+                    </text>
                 </hstack>
-            ))} <vstack alignment="bottom">
-                <spacer height="40px" />
-                <button icon="back" onPress={() => setPage('Home')} appearance='media'/>
+            
+                {firstSolvers && firstSolvers.map(({ username, numGuesses, date}, index) => (
+
+                    <hstack key={username} width="100%" alignment="center">
+                        <text color={TEXT_COLOR} width="10%">{index + 1}</text>
+                        <text color={TEXT_COLOR} width="30%">{username}</text>
+                        <text color = {TEXT_COLOR} width = "30%">{numGuesses}</text>
+                        <text wrap color={TEXT_COLOR} width="30%">{date}</text>
+                    </hstack>
+                ))} 
+                {userShow && (
+                    <hstack width="100%" alignment="center">
+                        <text color={TEXT_COLOR} width="10%">{userRanking}</text>
+                        <text color={TEXT_COLOR} width="30%">{username}</text>
+                        <text color={TEXT_COLOR} width="30%">{userGuesses}</text>
+                        <text color={TEXT_COLOR} width="30%">{userDate}</text>
+                    </hstack>
+                )}
+                <vstack alignment="bottom">
+                    <spacer height="40px" />
+                    <button icon="back" onPress={() => setPage('Home')} appearance='media'/>
                 </vstack>
-            </vstack>
+
+        </vstack>
         </zstack>
     )
 }

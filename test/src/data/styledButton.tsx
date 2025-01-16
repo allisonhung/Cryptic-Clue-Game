@@ -1,5 +1,5 @@
 import { Devvit } from '@devvit/public-api';
-import { BACKGROUND_COLOR } from './config.js';
+import { BACKGROUND_COLOR, TEXT_COLOR, ACCENT_COLOR} from './config.js';
 
 interface StyledButtonProps {
     onPress?: () => void | Promise<void>;
@@ -15,7 +15,7 @@ export const StyledButton = (props: StyledButtonProps): JSX.Element => {
       label,
       width = '100px',
       height = '40px',
-      backgroundColor = BACKGROUND_COLOR
+      backgroundColor = ACCENT_COLOR
     } = props;
   
     return (
@@ -35,7 +35,7 @@ export const StyledButton = (props: StyledButtonProps): JSX.Element => {
             alignment="middle center"
             backgroundColor= {backgroundColor}
           >
-            <text color="Black" size="medium">{label}</text>
+            <text color={TEXT_COLOR} size="medium">{label}</text>
           </hstack>
         </hstack>
     );

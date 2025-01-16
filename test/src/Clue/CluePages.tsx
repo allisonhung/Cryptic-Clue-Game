@@ -1,5 +1,4 @@
 import {Devvit, useState} from '@devvit/public-api';
-import type { Context } from '@devvit/public-api';
 
 import {ConfirmClue} from './ConfirmClue.js';
 import {GiveClue} from './GiveClue.js';

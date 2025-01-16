@@ -13,7 +13,7 @@ export const installGame: MenuItem = {
 
     // Create a pinned post
     const post = await reddit.submitPost({
-      title: 'Pinned post',
+      title: 'Submit clues and see leaderboards here!',
       subredditName: community.name,
       preview: 
       <zstack height="100%" width="100%" alignment="center middle" backgroundColor={BACKGROUND_COLOR}>

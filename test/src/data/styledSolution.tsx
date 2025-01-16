@@ -1,4 +1,5 @@
 import { Devvit, useState} from '@devvit/public-api';
+import { TEXT_COLOR } from './config.js';
 
 interface StyledSolutionProps {
     label?: string;
@@ -41,7 +42,7 @@ export const StyledSolution = (props: StyledSolutionProps): JSX.Element => {
                     border="thick"
                     borderColor="black"
                 >
-                    <text color="black" size="medium">{char}</text>
+                    <text color={TEXT_COLOR} size="medium">{char}</text>
                 </hstack>
                 
             ))}
@@ -81,7 +82,7 @@ export const EmptySolution = (props: EmptySolutionProps): JSX.Element => {
                     border="thick"
                     borderColor="black"
                 >
-                    <text color="black" size="medium"> </text>
+                    <text color={TEXT_COLOR} size="medium"> </text>
                 </hstack>
                 
             ))}

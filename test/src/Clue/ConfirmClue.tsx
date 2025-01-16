@@ -54,7 +54,7 @@ export const ConfirmClue = ({clue, solution, explanation, setPage, username, app
       <vstack alignment="center middle" width="100%" height="100%">
         <text weight="bold" color = {TEXT_COLOR} size='xxlarge'>confirm submission</text>
         <spacer size="xsmall" />
-        <text size='xlarge' color = {TEXT_COLOR}>Clue: {clue}</text>
+        <text wrap size='xlarge' color = {TEXT_COLOR}>Clue: {clue}</text>
         <spacer size="xsmall" />
         <StyledSolution label={solution} width = {appWidth}/>
         <spacer size="xsmall" />
