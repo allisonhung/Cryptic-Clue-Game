@@ -22,10 +22,10 @@ export const ConfirmClue = ({clue, solution, explanation, setPage, username, app
     const postdata = new DataStorage(context);
 
     async function postClue() {
-      const community = await context.reddit.getCurrentSubreddit();
+      const subredditName = context.subredditName ?? await context.reddit.getCurrentSubredditName();
       const post = await context.reddit.submitPost({
           title: clue,
-          subredditName: community.name,
+          subredditName,
           preview: (
             <zstack height="100%" width="100%" alignment="center middle" backgroundColor={BACKGROUND_COLOR}>
               

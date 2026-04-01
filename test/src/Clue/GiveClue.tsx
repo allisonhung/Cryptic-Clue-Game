@@ -65,7 +65,7 @@ export const GiveClue = (props: GiveClueProps, context: Context): JSX.Element =>
                 {
                     name: "explanation",
                     label: "Enter your explanation. Be detailed! This is your chance to show off your cryptic skills.",
-                    type: "string",
+                    type: "paragraph",
                 },
             ],
         },

@@ -9,12 +9,12 @@ export const installGame: MenuItem = {
   forUserType: 'moderator',
   onPress: async (_event, context) => {
     const { ui, reddit } = context;
-    const community = await reddit.getCurrentSubreddit();
+    const subredditName = context.subredditName ?? await reddit.getCurrentSubredditName();
 
     // Create a pinned post
     const post = await reddit.submitPost({
       title: 'Submit clues and see leaderboards here!',
-      subredditName: community.name,
+      subredditName,
       preview: 
       <zstack height="100%" width="100%" alignment="center middle" backgroundColor={BACKGROUND_COLOR}>
     //background

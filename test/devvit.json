@@ -1,0 +1,15 @@
+{
+  "name": "cryptic-clue-app",
+  "blocks": {
+    "entry": "src/main.tsx",
+    "triggers": [
+      "onPostCreate"
+    ]
+  },
+  "media": {
+    "dir": "assets/"
+  },
+  "dev": {
+    "subreddit": "cryptic_clue_app_dev"
+  }
+}

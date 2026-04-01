@@ -1,4 +1,4 @@
-import {Devvit, PostType, useAsync} from '@devvit/public-api'
+import {Devvit, useAsync} from '@devvit/public-api'
 import { DataStorage } from './util/DataStorage.js';
 import type { Context } from '@devvit/public-api';
 import { BACKGROUND_COLOR, TEXT_COLOR } from './data/config.js';
@@ -14,15 +14,17 @@ type LeaderboardProps = {
 export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Context): JSX.Element => {
     const dataStorage = new DataStorage(context);
 
-
+    //retrieve all usernames in the database
     const {data: allUsers, loading: loadingUsers, error: errorUsers} = useAsync(async () => {
         return await dataStorage.getAllUsers();
     });
 
+    //retrieve top scorers
     const {data: topScores, loading: loadingTopScorer, error: errorTopScorer} = useAsync(async () => {
         return await dataStorage.getTopScorers();
     });
 
+    //retrieve average ratings for all users
     async function getAverageRatings(allUsers: string[]): Promise<{ username: string; postCount: number; totalAverageRating: number }[]> {
         return await Promise.all(
             allUsers.map(async (username) => {
@@ -115,6 +117,7 @@ export const Leaderboard = ({setPage, username}: LeaderboardProps, context: Cont
                         <text color='Black' width="25%">{totalAverageRating.toFixed(2)}</text>
                     </hstack>
                 ))}
+                <spacer height="10px" />
                 <button icon="home" onPress={() => setPage('Home')} appearance='media'/>
             </vstack>
         </zstack>

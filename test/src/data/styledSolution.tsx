@@ -5,27 +5,36 @@ interface StyledSolutionProps {
     label?: string;
     onPress?: () => void | Promise<void>;
     width?: number;
+    hiddenLetters?: number[];
 }
 
 export const StyledSolution = (props: StyledSolutionProps): JSX.Element => {
     const {
-      label,
+      label: originalLabel,
       onPress,
-      width
+      width,
+      hiddenLetters
     } = props;
 
 
-    if (!label) {
+    if (!originalLabel) {
       throw new Error('No label provided');
     }
     if (!width) {
         throw new Error('No width provided');
     }
-    const characters = label.toUpperCase().split('');
+    let displayLabel = originalLabel;
+    //replace hiddenLetters indices with a space
+    if (hiddenLetters) {
+        console.log("hiddenLetters: ", hiddenLetters);
+        let newLabel = displayLabel.split('');
+        hiddenLetters.forEach((index) => {
+            newLabel[index] = ' ';
+        });
+        displayLabel = newLabel.join('');
+    }
 
-    //test if width of all characters is less than width
-
-
+    const characters = displayLabel.toUpperCase().split('');
 
     const dynamicSize = (width/characters.length<40) ? (width / characters.length) : 40;
 
@@ -42,7 +51,7 @@ export const StyledSolution = (props: StyledSolutionProps): JSX.Element => {
                     border="thick"
                     borderColor="black"
                 >
-                    <text color={TEXT_COLOR} size="medium">{char}</text>
+                    <text color= {hiddenLetters ? "Red" : TEXT_COLOR} size="large">{char}</text>
                 </hstack>
                 
             ))}
@@ -50,42 +59,4 @@ export const StyledSolution = (props: StyledSolutionProps): JSX.Element => {
     );
   };
 
-interface EmptySolutionProps {
-    length?: number;
-    onPress?: () => void | Promise<void>;
-    width?: number;
-}
-export const EmptySolution = (props: EmptySolutionProps): JSX.Element => {
-    const {
-        length = 5,
-        onPress,
-        width
-    } = props;
 
-    const [reduce, setReduce] = useState<boolean>(false);
-
-    if (!width) {
-        throw new Error('No width provided');
-    }
-
-    const dynamicSize = (width/length<40) ? (width / length) : 40;
-
-    return (
-        <hstack onPress={onPress}>
-            {Array.from({ length }, (_, index) => (
-                <hstack
-                    key={index.toString()}
-                    height={`${dynamicSize}px`}
-                    width={`${dynamicSize}px`}
-                    alignment="middle center"
-                    backgroundColor="white"
-                    border="thick"
-                    borderColor="black"
-                >
-                    <text color={TEXT_COLOR} size="medium"> </text>
-                </hstack>
-                
-            ))}
-        </hstack>
-    );
-}

@@ -16,7 +16,7 @@ export class DataStorage {
     }
 
     readonly keys = {
-        //stores post data (clue, solution, explanation, authorId)
+        //stores post data (clue, solution, explanation, authorId, and scores)
         postData: (postId: string) => `post:${postId}`,
 
         //stores user data (username, authoredPosts, guessedPosts)
@@ -35,6 +35,8 @@ export class DataStorage {
         clueAuthors: () => 'clue-authors',
         //stores all existing solvers of clues
         clueSolvers: () => 'clue-solvers',
+
+        hintUsers: (postId: string) => `hint-users:${postId}`,
     }
 
 // when a clue is submitted, 
@@ -90,7 +92,7 @@ async submitClue(data: {
     }
 
     //retrieve post data by post id
-    async getClue(postId: string): Promise<[string, string, string, string]> {
+    async getClue(postId: string): Promise<[string, string, string, string, number[]]> {
         try {
             const key = this.keys.postData(postId);
             const data = await this.redis.hGetAll(key);
@@ -104,6 +106,7 @@ async submitClue(data: {
                 data.solution,
                 data.explanation,
                 data.authorId,
+                JSON.parse(data.scores)
             ];
         } catch (error) {
             console.error('Failed to get clue data:', error);
@@ -127,11 +130,13 @@ async submitClue(data: {
             const userData = await this.redis.hGet(key, 'solvedPosts');
             const postkey = this.keys.postData(data.postId);
             const winKey = this.keys.winHistory(data.postId);
-            const solvedPosts = userData ? JSON.parse(userData) : [];
 
+            //get the user's solved posts or create an empty array
+            const solvedPosts = userData ? JSON.parse(userData) : [];
+            //add the post to the user's solved posts
             solvedPosts.push(data.postId);
 
-            //store points. This will either be a 0 or a 1.
+            //get user's points
             const userPoints = await this.redis.hGet(key, 'points');
             const points = userPoints ? JSON.parse(userPoints) : [];
             //add score to points
@@ -282,6 +287,51 @@ async submitClue(data: {
         }
     }
 
+    async addClueUser(data: {postId: string, username: string, hiddenLetters: number[]}): Promise<void> {
+        try {
+            console.log("addClueUser")
+            const key = this.keys.hintUsers(data.postId);
+            //store username and hiddenLetters in hSet as a hintData object
+            const hintData = {
+                username: data.username,
+                hiddenLetters: data.hiddenLetters,
+            };
+            
+            //get the users who have submitted a clue for this post
+            const existingData = await this.redis.hGet(key, 'hintData');
+            const hintDataArray = existingData ? JSON.parse(existingData) : [];
+            console.log("existing data:", hintDataArray);
+            console.log("new data: ", hintData);
+            //add the new hintData to the array
+            hintDataArray.push(hintData);
+            console.log("adding hint data:", hintDataArray);
+            console.log("to key:", key);
+            //store the array in the hSet
+            await this.redis.hSet(key, {
+                hintData: JSON.stringify(hintDataArray),
+            });
+
+        } catch (error) {
+            console.error('Failed to add clue user:', error);
+            throw error;
+        }
+    }
+
+    async getClueUser(data: {postId: string, username: string}): Promise<number[]> {
+        try {
+            const key = this.keys.hintUsers(data.postId);
+            //find the hintData object with the matching username
+            const hintData = await this.redis.hGet(key, 'hintData');
+            const hintDataArray = hintData ? JSON.parse(hintData) : [];
+            const hintDataObject = hintDataArray.find((hintData: {username: string}) => hintData.username === data.username);
+            //return the hiddenLetters array
+            return hintDataObject.hiddenLetters;
+        } catch (error) {
+            console.error('Failed to get clue user:', error);
+            throw error;
+        }
+    }
+
     
     //get all the scores for a given post
     async getScores(postId: string): Promise<WinData[]> {
@@ -367,11 +417,20 @@ async submitClue(data: {
 
     async getTopScorers(): Promise<{scorer:string[], score:number[]}> {
         try{
+            //retrieve all guessers
             const guessers = await this.redis.zRange(this.keys.clueSolvers(), 0, -1);
+
+            //retrieve all points for each guesser
             const guesserPoints = await Promise.all(guessers.map(async guesser => {
-                const key = this.keys.userData(guesser.member);
-                const data = await this.redis.hGet(key, 'points');
-                return data ? JSON.parse(data).reduce((acc: number, score: number) => acc + score, 0) : 0;
+                try {
+                    const key = this.keys.userData(guesser.member);
+                    const data = await this.redis.hGet(key, 'points');
+                    return data ? JSON.parse(data).filter((score: number) => score === 1).length : 0;
+                }
+                catch (error) {
+                    console.error('Failed to get points:', error);
+                    throw error;
+                }
             }));
             //return top 5 scorers and scores
             const topScorers = guessers.map((guesser, index) => ({
@@ -423,4 +482,9 @@ export type WinData = {
     date: string;
     numGuesses: number;
     score: number;
+}
+
+export type HintData = {
+    username: string;
+    hiddenLetters: number[];
 }

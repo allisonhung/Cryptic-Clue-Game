@@ -32,7 +32,8 @@ export const GuessLeaderBoard = ({setPage, postId, username}: GuessLeaderBoardPr
 
     //retrieve average rating based on post ID
     const {data: averageRating, loading: loadingAverageRating, error: errorAverageRating} = useAsync(async () => {
-        return await dataStorage.getRating(postId);
+        //round to 2 decimal places
+        return Math.round((await dataStorage.getRating(postId)) * 100) / 100;
     },{depends: [postId]});
 
 
@@ -52,11 +53,15 @@ export const GuessLeaderBoard = ({setPage, postId, username}: GuessLeaderBoardPr
 
     const winSolvers = parsedScores.filter((score: WinData) => score.score === 1);
 
-
     //sort winSolvers by date and take the first 5
     const firstSolvers = winSolvers
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
     .slice(0, 5);
+
+    //count number of scores that are 0
+    const numGiveUp = parsedScores.filter((score: WinData) => score.score === 0).length;
+    //count number of scores that are 0.5
+    const numHint = parsedScores.filter((score: WinData) => score.score === 0.5).length;
 
     //check if user is in firstSolvers. If not, set userShow to true
     const [userShow, setUserShow] = useState<boolean>(false);
@@ -71,7 +76,6 @@ export const GuessLeaderBoard = ({setPage, postId, username}: GuessLeaderBoardPr
     //identify ranking, date, and numGuesses of user
     const userRanking = winSolvers.findIndex((score: WinData) => score.username === username) + 1;
     const userDate = winSolvers.find((score: WinData) => score.username === username)?.date;
-    const userGuesses = winSolvers.find((score: WinData) => score.username === username)?.numGuesses;
     
     
 
@@ -85,7 +89,8 @@ export const GuessLeaderBoard = ({setPage, postId, username}: GuessLeaderBoardPr
                     Stats
                 </text>
                 <text color={TEXT_COLOR}>Number of successful solves: {winSolvers.length}</text>
-                <text color={TEXT_COLOR}>People who gave up: {scores.length - winSolvers.length}</text>
+                <text color = {TEXT_COLOR}>Number of solves with hints: {numHint}</text>
+                <text color={TEXT_COLOR}>People who gave up: {numGiveUp}</text>
                 <text color={TEXT_COLOR}>Average rating of this clue: {averageRating}</text>
                 <text color={TEXT_COLOR}>Out of {rating.length} ratings</text>
                 <spacer height="20px" />
@@ -98,9 +103,6 @@ export const GuessLeaderBoard = ({setPage, postId, username}: GuessLeaderBoardPr
                     </text>
                     <text weight="bold" size="large" color="Red" width="30%">
                         Username
-                    </text>
-                    <text weight="bold" size="large" color="Red" width="30%">
-                        Guesses
                     </text>
                     <text wrap weight="bold" size="large" color="Red" width="30%">
                         Date and time submitted
@@ -120,7 +122,6 @@ export const GuessLeaderBoard = ({setPage, postId, username}: GuessLeaderBoardPr
                     <hstack width="100%" alignment="center">
                         <text color={TEXT_COLOR} width="10%">{userRanking}</text>
                         <text color={TEXT_COLOR} width="30%">{username}</text>
-                        <text color={TEXT_COLOR} width="30%">{userGuesses}</text>
                         <text color={TEXT_COLOR} width="30%">{userDate}</text>
                     </hstack>
                 )}

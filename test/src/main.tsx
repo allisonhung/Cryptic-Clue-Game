@@ -3,6 +3,7 @@ import {Cluemain} from './Cluemain.js';
 import { Guessmain } from "./Guessmain.js";
 import type { Context } from "@devvit/public-api";
 import { installGame } from "./installGame.js";
+import type { DataStorage } from "./util/DataStorage.js";
 
 Devvit.configure({
   redditAPI: true,
@@ -81,5 +82,14 @@ Devvit.addCustomPostType({
 
 // create a menu option to create a pinned post of the game
 Devvit.addMenuItem(installGame);
+
+//create a menu item to clean up leaderboard data
+Devvit.addMenuItem({
+  location: 'subreddit',
+  label: 'Clean up leaderboard data',
+  async onPress(event, context) {
+    
+  },
+});
 
 export default Devvit;
